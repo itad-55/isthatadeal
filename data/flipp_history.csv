@@ -1387,3 +1387,4 @@ date,cut_key,cut_name,store,item_name,raw_price,raw_unit,price_per_kg,postal_cod
 2026-03-20,chicken_thigh_bonein,Chicken thighs (bone-in),Loblaws,CHICKEN BREASTS OR THIGHS,4.99,inferred_lb,11.0,L4T0A1,2026-03-26T03:59:59+00:00,1000231384,7837844
 2026-03-20,chicken_thigh_bonein,Chicken thighs (bone-in),IGA,PRIX CLUB FRESH BONELESS CHICKEN THIGHS,25.0,assumed_kg,25.0,K1A0A1,2026-03-26T03:59:59+00:00,1000637030,7842461
 2026-03-20,chicken_thigh_bonein,Chicken thighs (bone-in),Zehrs,CHICKEN BREASTS OR THIGHS,4.99,inferred_lb,11.0,N2L3G1,2026-03-26T03:59:59+00:00,1000185092,7838057
+2026-03-20,veal_cutlets,Veal cutlets,T&T Supermarket,VEAL BREAST,9.99,inferred_lb,22.02,M5V3L9,2026-03-24T03:59:59+00:00,1001352264,7850260

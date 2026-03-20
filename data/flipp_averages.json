@@ -259,10 +259,10 @@
     },
     "veal_cutlets": {
       "name": "Veal cutlets",
-      "avg": 11.19,
+      "avg": 12.32,
       "lo": 5.99,
-      "hi": 17.99,
-      "observations": 7,
+      "hi": 22.02,
+      "observations": 8,
       "source": "flipp_historical"
     },
     "salmon_fillet": {
