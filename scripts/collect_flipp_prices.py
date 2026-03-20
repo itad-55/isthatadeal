@@ -257,6 +257,10 @@ def main():
                     flyer_id  = str(item.get('flyer_id') or item.get('flyerId') or '')
                     item_name = (item.get('name') or '').strip()
                     store     = (item.get('merchant') or item.get('merchant_name') or '').strip()
+                    
+                    # DEBUG: Check if IDs are empty
+                    if not item_id or not flyer_id:
+                        print(f"    [DEBUG] {item_name} @ {store}: item_id='{item_id}' flyer_id='{flyer_id}' (raw keys: {list(item.keys())})")
 
                     dedup_key = (item_id, store)
                     if dedup_key in seen_items:
