@@ -237,7 +237,8 @@ def main():
 
     new_rows  = []
     fieldnames = ['date', 'cut_key', 'cut_name', 'store', 'item_name',
-                  'raw_price', 'raw_unit', 'price_per_kg', 'postal_code', 'valid_to']
+                  'raw_price', 'raw_unit', 'price_per_kg', 'postal_code', 'valid_to',
+                  'item_id', 'flyer_id']
 
     for key, display_name, queries, unit_hint in CUTS:
         print(f"\n{display_name}")
@@ -253,6 +254,7 @@ def main():
                         continue
 
                     item_id   = str(item.get('id') or item.get('flyer_item_id') or '')
+                    flyer_id  = str(item.get('flyer_id') or item.get('flyerId') or '')
                     item_name = (item.get('name') or '').strip()
                     store     = (item.get('merchant') or item.get('merchant_name') or '').strip()
 
@@ -284,6 +286,8 @@ def main():
                         'price_per_kg': price_kg,
                         'postal_code':  postal,
                         'valid_to':     valid_to,
+                        'item_id':      item_id,
+                        'flyer_id':     flyer_id,
                     }
                     new_rows.append(row)
                     existing.add(dup_check)
