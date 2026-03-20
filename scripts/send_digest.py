@@ -428,7 +428,7 @@ def create_draft(subject, html_content):
         }
     )
     try:
-        with urllib.request.urlopen(req, timeout=15) as r:
+        with urllib.request.urlopen(req, timeout=30) as r:
             data = json.loads(r.read())
         campaign_id = data.get('data', {}).get('id', '?')
         print(f"✓ Draft campaign created in MailerLite — ID: {campaign_id}")
