@@ -179,10 +179,10 @@
     },
     "chicken_breast": {
       "name": "Chicken breast (boneless)",
-      "avg": 11.15,
+      "avg": 11.23,
       "lo": 5.0,
       "hi": 33.05,
-      "observations": 78,
+      "observations": 80,
       "source": "flipp_historical"
     },
     "chicken_thigh_bonein": {
