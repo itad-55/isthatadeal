@@ -1,0 +1,484 @@
+#!/usr/bin/env python3
+"""
+send_digest.py
+─────────────────────────────────────────────────────────────────────────────
+Reads flipp_history.csv + statcan_data.json, scores every current flyer price
+against the Ontario average, picks the top deals, builds an HTML email, and
+creates a draft campaign in MailerLite ready for you to review and send.
+
+Run manually or via GitHub Actions every Monday morning.
+Requires: MAILERLITE_API_KEY environment variable
+─────────────────────────────────────────────────────────────────────────────
+"""
+
+import csv, json, os, urllib.request, urllib.error
+from datetime import date, timedelta
+from collections import defaultdict
+
+SCRIPT_DIR   = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT    = os.path.dirname(SCRIPT_DIR)
+DATA_DIR     = os.path.join(REPO_ROOT, 'data')
+HISTORY_CSV  = os.path.join(DATA_DIR, 'flipp_history.csv')
+STATCAN_FILE = os.path.join(DATA_DIR, 'statcan_data.json')
+FLIPP_FILE     = os.path.join(DATA_DIR, 'flipp_averages.json')
+EMAIL_TEMPLATE = os.path.join(SCRIPT_DIR, 'email_template.html')
+
+MAILERLITE_API_KEY = os.environ.get('MAILERLITE_API_KEY', '')
+ONTARIO_GROUP_ID   = '182297132531713316'
+FROM_EMAIL         = 'deals@isthatadeal.ca'
+FROM_NAME          = 'Is That a Deal?'
+
+import zoneinfo
+TODAY     = date.today()
+try:
+    _eastern = zoneinfo.ZoneInfo('America/Toronto')
+    from datetime import datetime as _dt
+    TODAY = _dt.now(_eastern).date()
+except Exception:
+    pass  # fall back to UTC if zoneinfo unavailable
+
+STORE_FLYER_URLS = {
+    'food basics':                  'https://www.foodbasics.ca/flyer',
+    'freshco':                      'https://www.freshco.com/flyer',
+    'chalo freshco':                'https://www.freshco.com/flyer',
+    'metro':                        'https://www.metro.ca/en/online-grocery/flyer',
+    'no frills':                    'https://www.nofrills.ca/en/print-flyer',
+    'walmart':                      'https://www.walmart.ca/en/flyer',
+    'loblaws':                      'https://www.loblaws.ca/en/print-flyer',
+    'sobeys':                       'https://www.sobeys.com/flyer',
+    'real canadian superstore':     'https://www.realcanadiansuperstore.ca/en/print-flyer',
+    'superstore':                   'https://www.realcanadiansuperstore.ca/en/print-flyer',
+    'fortinos':                     'https://www.loblaws.ca/en/print-flyer',
+    'zehrs':                        'https://www.loblaws.ca/en/print-flyer',
+    'your independent grocer':      'https://www.loblaws.ca/en/print-flyer',
+    'independent grocer':           'https://www.loblaws.ca/en/print-flyer',
+    'valumart':                     'https://www.loblaws.ca/en/print-flyer',
+    'valu-mart':                    'https://www.loblaws.ca/en/print-flyer',
+    'giant tiger':                  'https://www.gianttiger.com/en/flyer',
+}
+
+def store_link(store_name, expiry_text):
+    """Return store line HTML with flyer link if available."""
+    url = STORE_FLYER_URLS.get(store_name.lower().strip())
+    if url:
+        store_html = f'<a href="{url}" style="color:inherit;text-decoration:underline;text-underline-offset:2px">{store_name}</a>'
+    else:
+        store_html = store_name
+    return store_html + (' · ' + expiry_text if expiry_text else '')
+WEEK_AGO  = TODAY - timedelta(days=7)
+SITE_URL      = 'https://isthatadeal.ca'
+VERIFY_FILE   = 'digest_verify_2833151ff2ae0f3d.html'  # secret review URL — do not share
+
+# ── Load StatCan averages ─────────────────────────────────────────────────────
+def load_statcan():
+    with open(STATCAN_FILE) as f:
+        raw = json.load(f)
+    ont = raw.get('data', {}).get('Ontario', {})
+    # key → {avg, lo, hi}
+    return {k: v for k, v in ont.items() if v.get('avg')}
+
+# ── Load Flipp averages ───────────────────────────────────────────────────────
+def load_flipp():
+    if not os.path.exists(FLIPP_FILE):
+        return {}
+    with open(FLIPP_FILE) as f:
+        raw = json.load(f)
+    return raw.get('cuts', {})
+
+# ── Score recent flyer prices ─────────────────────────────────────────────────
+
+# Realistic retail price ranges ($/kg) for Ontario grocery items
+# Used to catch obviously wrong data points
+REALISTIC_RANGES = {
+    'beef':     (5.0,  80.0),
+    'pork':     (4.0,  50.0),
+    'chicken':  (8.0,  25.0),
+    'turkey':   (5.0,  25.0),
+    'lamb':     (15.0, 60.0),
+    'veal':     (6.0,  60.0),
+    'salmon':   (7.0,  45.0),
+    'shrimp':   (5.0,  40.0),
+    'default':  (0.50, 100.0),
+}
+
+def realistic_range(cut_key):
+    k = cut_key.lower()
+    for prefix, rng in REALISTIC_RANGES.items():
+        if prefix in k:
+            return rng
+    return REALISTIC_RANGES['default']
+
+def score_deals(statcan, flipp):
+    """
+    Read flipp_history.csv, find rows from the last 7 days,
+    compare each price_per_kg to the StatCan or Flipp average,
+    return sorted list of deals.
+    """
+    # Build unified averages lookup: cut_key or statcan_key → avg
+    # Override raw_unit for cut_keys that were historically mis-recorded
+    # (CSV may still have old 'kg' values before the fix was deployed)
+    PKG_OVERRIDES = {'shrimp', 'turkey_breast', 'pork_ham', 'canned_tuna_170g', 'canned_salmon_213g'}
+
+    # Map Flipp cut_keys to StatCan keys where names differ
+    STATCAN_ALIASES = {
+        'canned_tuna_170g':   'Canned tuna, 170 grams',
+        'canned_salmon_213g': 'Canned salmon, 213 grams',
+        'shrimp':             'Shrimp, 300 grams',
+    }
+
+    averages = {}
+    for key, v in statcan.items():
+        averages[key] = {'avg': v['avg'], 'name': key, 'source': 'statcan'}
+    # Add aliases so Flipp keys can match StatCan entries
+    for flipp_key, statcan_key in STATCAN_ALIASES.items():
+        if statcan_key in averages:
+            averages[flipp_key] = averages[statcan_key].copy()
+    for key, v in flipp.items():
+        if v.get('avg') and v.get('observations', 0) >= 4:
+            averages[key] = {'avg': v['avg'], 'name': v['name'], 'source': 'flipp'}
+
+    # StatCan display names
+    DISPLAY = {
+        "Beef stewing cuts, per kilogram": "Beef stewing cuts",
+        "Beef striploin cuts, per kilogram": "Beef striploin steak",
+        "Beef top sirloin cuts, per kilogram": "Beef top sirloin steak",
+        "Beef rib cuts, per kilogram": "Beef rib cuts",
+        "Ground beef, per kilogram": "Ground beef",
+        "Pork loin cuts, per kilogram": "Pork loin cuts",
+        "Pork rib cuts, per kilogram": "Pork rib cuts",
+        "Pork shoulder cuts, per kilogram": "Pork shoulder cuts",
+        "Whole chicken, per kilogram": "Whole chicken",
+        "Chicken breasts, per kilogram": "Chicken breasts",
+        "Chicken thigh, per kilogram": "Chicken thighs",
+        "Chicken drumsticks, per kilogram": "Chicken drumsticks",
+        "Salmon, per kilogram": "Salmon",
+        "Bacon, 500 grams": "Bacon (500g)",
+        "Butter, 454 grams": "Butter (454g)",
+        "Block cheese, 500 grams": "Block cheese (500g)",
+        "Eggs, 1 dozen": "Eggs (dozen)",
+        "Canned tuna, 170 grams": "Canned tuna (170g)",
+        "Canned salmon, 213 grams": "Canned salmon (213g)",
+        "Milk, 4 litres": "Milk (4L)",
+    }
+
+    deals = []
+    cutoff = WEEK_AGO.isoformat()
+
+    if not os.path.exists(HISTORY_CSV):
+        print("No flipp_history.csv found")
+        return []
+
+    with open(HISTORY_CSV, newline='') as f:
+        for row in csv.DictReader(f):
+            if row['date'] < cutoff:
+                continue
+            key = row['cut_key']
+            if key not in averages:
+                continue
+            try:
+                # For pkg items that were mis-recorded as kg, use raw_price
+                if key in PKG_OVERRIDES:
+                    price = float(row['raw_price'])
+                else:
+                    price = float(row['price_per_kg'])
+            except ValueError:
+                continue
+
+            avg    = averages[key]['avg']
+            pct    = ((price - avg) / avg) * 100
+            name   = DISPLAY.get(averages[key]['name'], row['cut_name'])
+            store  = row['store']
+            source = averages[key]['source']
+
+            # Sanity check 0a — skip stores not broadly available across Ontario
+            # Use exact startswith/equality checks to avoid 'chalo freshco' matching 'freshco'
+            ONTARIO_STORES = [
+                'no frills', 'food basics', 'walmart', 'loblaws', 'metro',
+                'sobeys', 'freshco', 'real canadian superstore', 'fortinos',
+                'zehrs', 'your independent grocer', 'giant tiger', 'superstore',
+                'independent grocer', 'valumart', 'valu-mart',
+            ]
+            EXCLUDED_STORES = ['chalo freshco', 't&t', 'iga', 'provigo', 'maxi', 'marche']
+            store_lower = store.lower().strip()
+            is_excluded = any(store_lower.startswith(ex) for ex in EXCLUDED_STORES)
+            is_allowed  = any(store_lower == ok or store_lower.startswith(ok) for ok in ONTARIO_STORES)
+            if is_excluded or not is_allowed:
+                print(f"  Skipping {row['cut_name']} @ {store}: store not broadly available in Ontario")
+                continue
+
+            # Sanity check 0b — skip deli/processed meat (cooked, sliced, cured)
+            # These are sold per 100g at deli counters and get misread as $/kg
+            item_name_lower = row.get('item_name', '').lower()
+            DELI_KEYWORDS = ['cooked', 'sliced', 'deli', 'artisan', 'cured', 'smoked',
+                             'lunch meat', 'lunchmeat', 'bologna', 'salami', 'prosciutto',
+                             'pepperoni', 'pastrami', 'corned beef', 'roast beef deli',
+                             'schneiders', 'maple leaf deli', 'butterball deli',
+                             'flamingo', 'poitrine de dinde', 'great value tuna',
+                             'canned', 'chunk light', 'flaked']
+            if any(kw in item_name_lower for kw in DELI_KEYWORDS):
+                print(f"  Skipping {row['cut_name']} @ {row['store']}: deli/processed product")
+                continue
+
+            # Sanity check 1 — realistic price range for this type of product
+            lo, hi = realistic_range(key)
+            if not (lo <= price <= hi):
+                print(f"  Skipping {row['cut_name']} @ {row['store']}: ${price:.2f}/kg outside realistic range ${lo}-${hi}/kg")
+                continue
+
+            # Sanity check 2 — if more than 65% below average, flag it
+            # (could be a unit mismatch — e.g. price per 100g read as per kg)
+            if pct < -82:
+                print(f"  Skipping {row['cut_name']} @ {row['store']}: ${price:.2f}/kg is {pct:.1f}% below avg — likely bad data")
+                continue
+
+            # Only include genuine deals (15%+ below average)
+            if pct < -15:
+                deals.append({
+                    'key':       key,
+                    'name':      name,
+                    'store':     store,
+                    'item_name': row.get('item_name', '').strip().title(),
+                    'price':     price,
+                    'avg':       avg,
+                    'pct':       pct,
+                    'source':    source,
+                    'date':      row['date'],
+                    'valid_to':  row.get('valid_to', ''),
+                    'raw_unit':  'pkg' if key in PKG_OVERRIDES else row.get('raw_unit', ''),
+                    'flipp_url': (f'https://flipp.com/en-ca/item/{row.get("item_id")}?flyer_id={row.get("flyer_id")}'
+                                  if row.get('item_id') and row.get('flyer_id')
+                                  else f'https://flipp.com/en-ca/item/{row.get("item_id")}'
+                                  if row.get('item_id') else ''),
+                })
+
+    # Dedupe: keep best price per cut
+    best = {}
+    for d in deals:
+        if d['key'] not in best or d['pct'] < best[d['key']]['pct']:
+            best[d['key']] = d
+
+    # Sort by % below average, take top 10
+    # Hard filter — drop items whose flyer has already expired
+    import datetime, zoneinfo
+    try:
+        _eastern = zoneinfo.ZoneInfo('America/Toronto')
+        today_str = datetime.datetime.now(_eastern).date().isoformat()
+    except Exception:
+        today_str = datetime.date.today().isoformat()
+
+    print(f"  [filter] today_str={today_str}")
+    for d in best.values():
+        vt = (d.get('valid_to') or '')[:10]
+        print(f"  [filter] {d['name']} @ {d['store']}: valid_to={repr(vt)}")
+
+    active = [d for d in best.values()
+              if not (d.get('valid_to') or '')[:10]  # no date = keep (unknown expiry)
+              or (d.get('valid_to') or '')[:10] > today_str]  # strictly future = keep
+
+    print(f"  [filter] {len(best)} candidates → {len(active)} after expiry filter")
+    return sorted(active, key=lambda x: x['pct'])[:5]
+
+# ── Emoji for product categories ──────────────────────────────────────────────
+def format_valid_to(valid_to):
+    if not valid_to:
+        return ''
+    try:
+        # Format: 2026-03-19T03:59:59+00:00 → "Ends Mar 19"
+        d = valid_to[:10]  # grab just the date part
+        from datetime import datetime
+        dt = datetime.strptime(d, '%Y-%m-%d')
+        return 'Ends ' + dt.strftime('%b %-d')
+    except Exception:
+        return ''
+
+def emoji_for(name):
+    n = name.lower()
+    if any(w in n for w in ['beef','steak','brisket','striploin','sirloin','flank','rib','stewing','ground beef']): return '🥩'
+    if any(w in n for w in ['chicken','turkey','poultry','wing','drumstick','thigh']): return '🍗'
+    if any(w in n for w in ['pork','bacon','ham','ribs','belly']): return '🥓'
+    if any(w in n for w in ['salmon','fish','shrimp','tuna','seafood']): return '🐟'
+    if any(w in n for w in ['milk','butter','cheese','egg','cream','yogurt']): return '🥛'
+    if any(w in n for w in ['apple','banana','orange','grape','berry','fruit']): return '🍎'
+    if any(w in n for w in ['broccoli','carrot','potato','tomato','pepper','vegetable','lettuce','onion']): return '🥦'
+    return '🛒'
+
+# ── Verdict label ─────────────────────────────────────────────────────────────
+def verdict(pct):
+    if pct < -20: return ('Great deal', '#0A7A3E', '✓✓')
+    if pct < -15:  return ('Good deal',  '#0A6060', '✓')
+    return ('Fair', '#8A5A00', '~')
+
+# ── Build HTML email ──────────────────────────────────────────────────────────
+def build_email_html(deals, period, show_verify=False):
+    week_str = TODAY.strftime('%B %d, %Y')
+
+    best = deals[0] if deals else None
+    if best:
+        subject = f"This week: {best['name']} is {abs(best['pct']):.0f}% below average"
+    else:
+        subject = f"This week's Ontario grocery deals — {week_str}"
+
+    deal_rows = ''
+    for i, d in enumerate(deals):
+        label, color, check = verdict(d['pct'])
+        em = emoji_for(d['name'])
+        _iname = (d.get('item_name') or '')
+        # Truncate at " Or " — Flipp often bundles multiple items
+        for _sep in [' Or ', ' OR ', ' or ']:
+            if _sep in _iname:
+                _iname = _iname.split(_sep)[0].strip()
+                break
+        item_name_raw = _iname[:55] + ('...' if len(_iname) > 55 else '')
+        expiry = format_valid_to(d.get('valid_to', ''))
+        store_line = store_link(d['store'], expiry)
+        _furl = d.get('flipp_url', '')
+        flipp_verify = (f' · <a href="{_furl}" style="color:inherit;text-decoration:underline;text-underline-offset:2px;font-size:11px">verify ↗</a>'
+                        if (_furl and show_verify) else '')
+        is_per_kg  = d.get('raw_unit', 'kg') not in ('pkg', 'unit', 'each')
+        lb_price   = f'${d["price"]/2.20462:.2f}/lb' if is_per_kg else ''
+        kg_price   = f'${d["price"]:.2f}/kg' if is_per_kg else f'${d["price"]:.2f}'
+
+        if is_per_kg:
+            primary_price = lb_price
+            kg_span  = f'  <span style="font-size:18px;font-weight:400;color:rgba(255,255,255,0.5)">{kg_price}</span>'
+            kg_span2 = f'<span style="font-size:14px;font-weight:400;color:#8A8680;font-family:monospace">{kg_price}</span> '
+        else:
+            primary_price = kg_price
+            kg_span  = ''
+            kg_span2 = ''
+        pct_below  = f'{abs(d["pct"]):.0f}'
+
+        if i == 0:
+            deal_rows += (
+                f'<tr><td style="padding:10px 12px 8px">'
+                f'<table width="100%" cellpadding="0" cellspacing="0" style="background:#0D0D0D;border-radius:12px">'
+                f'<tr><td style="padding:14px">'
+                f'<div style="font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.4);font-family:monospace;margin-bottom:10px">Deal of the week</div>'
+                f'<div style="font-size:24px;margin-bottom:8px">{em}</div>'
+                f'<div style="font-size:24px;font-weight:700;color:#FAFAF7;margin-bottom:4px;line-height:1.2">{d["name"]}</div>'
+                f'<div style="font-size:15px;color:rgba(255,255,255,0.55);margin-bottom:6px;line-height:1.3">{item_name_raw}</div>'
+                f'<div style="font-size:14px;color:rgba(255,255,255,0.4);font-family:monospace;margin-bottom:14px">{store_line}{flipp_verify}</div>'
+                f'<div style="font-size:34px;font-weight:700;color:#FAFAF7;font-family:monospace;margin-bottom:4px">{primary_price}{kg_span}</div>'
+                f'<div style="font-size:17px;font-weight:700;color:#5DCAA5;font-family:monospace">{check} {pct_below}% below the Ontario average</div>'
+                f'</td></tr></table></td></tr>'
+                f'<tr><td style="padding:8px 12px 4px">'
+                f'<div style="font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8680;font-family:monospace">Also worth buying this week</div>'
+                f'</td></tr>'
+            )
+        else:
+            deal_rows += (
+                f'<tr><td style="padding:12px 16px;border-top:1px solid #E8E6DF">'
+                f'<table width="100%" cellpadding="0" cellspacing="0"><tr>'
+                f'<td width="56" style="vertical-align:top;padding-right:14px">'
+                f'<div style="width:52px;height:52px;border-radius:12px;background:#F2F1EC;text-align:center;line-height:52px;font-size:26px">{em}</div>'
+                f'</td>'
+                f'<td style="vertical-align:top">'
+                f'<div style="font-size:20px;font-weight:700;color:#0D0D0D;margin-bottom:3px;line-height:1.2">{d["name"]}</div>'
+                f'<div style="font-size:15px;color:#555555;margin-bottom:3px;line-height:1.3">{item_name_raw}</div>'
+                f'<div style="font-size:14px;color:#8A8680;font-family:monospace;margin-bottom:10px">{store_line}{flipp_verify}</div>'
+                f'<div style="font-size:24px;font-weight:700;color:#0D0D0D;font-family:monospace;margin-bottom:2px">{primary_price} {kg_span2}<span style="font-size:14px;font-weight:700;color:{color};font-family:monospace">{check} {pct_below}% below avg</span></div>'
+                f'</td></tr></table></td></tr>'
+            )
+
+    if not deal_rows:
+        deal_rows = '<tr><td style="padding:2rem;text-align:center;color:#8A8680">No deals 15%+ below average this week.</td></tr>'
+
+    # Load static template and fill placeholders
+    with open(EMAIL_TEMPLATE) as f:
+        tmpl = f.read()
+
+    html = tmpl.replace('{{WEEK_STR}}', week_str)
+    html = html.replace('{{PERIOD}}', period)
+    html = html.replace('{{SUBJECT}}', subject)
+    html = html.replace('{{DEAL_ROWS}}', deal_rows)
+
+    return subject, html
+
+
+def create_draft(subject, html_content):
+    if not MAILERLITE_API_KEY:
+        print("No MAILERLITE_API_KEY — saving email HTML to data/digest_draft.html instead")
+        with open(os.path.join(DATA_DIR, 'digest_draft.html'), 'w') as f:
+            f.write(html_content)
+        print("Saved to data/digest_draft.html")
+        return
+
+    payload = json.dumps({
+        'type':     'regular',
+        'status':   'draft',
+        'name':     f'Weekly Digest {TODAY.isoformat()}',
+        'language': {'id': 1},
+        'emails': [{
+            'subject':   subject,
+            'from_name': FROM_NAME,
+            'from':      FROM_EMAIL,
+            'reply_to':  FROM_EMAIL,
+            'content':   html_content,
+        }],
+        'groups': [ONTARIO_GROUP_ID],
+    }).encode('utf-8')
+
+    req = urllib.request.Request(
+        'https://connect.mailerlite.com/api/campaigns',
+        data    = payload,
+        headers = {
+            'Content-Type':  'application/json',
+            'Accept':        'application/json',
+            'Authorization': f'Bearer {MAILERLITE_API_KEY}',
+        }
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=15) as r:
+            data = json.loads(r.read())
+        campaign_id = data.get('data', {}).get('id', '?')
+        print(f"✓ Draft campaign created in MailerLite — ID: {campaign_id}")
+        print(f"  Review at: https://dashboard.mailerlite.com/campaigns/{campaign_id}")
+    except urllib.error.HTTPError as e:
+        body = e.read().decode()
+        print(f"✗ MailerLite API error {e.code}: {body[:300]}")
+
+
+def main():
+    # Only build digest on Thursdays (weekday() == 3) unless forced
+    force = os.environ.get('FORCE_DIGEST', '').lower() == 'true'
+    if TODAY.weekday() != 3 and not force:
+        print(f"Today is {TODAY.strftime('%A')} — digest only runs on Thursdays. Skipping.")
+        return
+    print(f"Building digest for week of {TODAY.isoformat()}...")
+
+    statcan = load_statcan()
+    flipp   = load_flipp()
+    print(f"StatCan products: {len(statcan)}  |  Flipp averages: {len(flipp)}")
+
+    deals = score_deals(statcan, flipp)
+    print(f"Deals found: {len(deals)}")
+    for d in deals:
+        print(f"  {d['name']} @ {d['store']}: ${d['price']:.2f}/kg ({d['pct']:+.1f}%)")
+
+    if not deals:
+        print("No deals this week — skipping draft creation.")
+        return
+
+    with open(STATCAN_FILE) as f:
+        period = json.load(f).get('period', 'unknown')
+
+    subject, html        = build_email_html(deals, period, show_verify=False)
+    _,       html_verify = build_email_html(deals, period, show_verify=True)
+    print(f"\nSubject: {subject}")
+    create_draft(subject, html)
+
+    # Save public version as thisweek.html
+    thisweek_path = os.path.join(DATA_DIR, 'digest_thisweek.html')
+    with open(thisweek_path, 'w') as f:
+        f.write(html)
+    print(f"✓ Saved to data/digest_thisweek.html")
+
+    # Save verify version to secret URL for pre-send review
+    verify_path = os.path.join(DATA_DIR, VERIFY_FILE)
+    with open(verify_path, 'w') as f:
+        f.write(html_verify)
+    print(f"✓ Saved verify copy to data/{VERIFY_FILE}")
+    print(f"  Review at: {SITE_URL}/{VERIFY_FILE.replace('digest_', '')}")
+
+if __name__ == '__main__':
+    main()

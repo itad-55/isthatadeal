@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Is That a Deal? 🇨🇦 SAVING YOU MONEY ON GROCERIES 🇨🇦 digest — every price scored against Statistics Canada data.">
+<title>Is That a Deal? — Ontario Grocery Price Digest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Bricolage+Grotesque:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#FAFAF7;--surface:#F2F1EC;--surface2:#E8E6DF;
+  --border:#D8D5CC;--border2:#C8C4B8;
+  --text:#0D0D0D;--text2:#4A4740;--text3:#8A8680;
+  --black:#0D0D0D;--white:#FAFAF7;
+  --green:#0A7A3E;--green-light:#E6F5ED;--green-mid:#B8E0CA;
+  --amber:#8A5A00;--amber-light:#FEF6E4;--amber-mid:#E8CC80;
+  --red:#C0192A;--red-light:#FDECEA;--red-mid:#F4AAAA;
+  --teal:#0A6060;--teal-light:#E4F4F4;--teal-mid:#B0DCDC;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);font-family:'Bricolage Grotesque',system-ui,sans-serif;color:var(--text);overflow-x:hidden}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(250,250,247,0.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-size:20px;font-weight:800;letter-spacing:-0.02em;color:var(--text);text-decoration:none}
+.nav-logo span{color:var(--green)}
+.nav-cta{font-size:13px;font-weight:700;background:var(--black);color:var(--white);padding:8px 18px;border-radius:100px;border:none;cursor:pointer;transition:opacity 0.15s;text-decoration:none}
+.nav-cta:hover{opacity:0.8}
+
+/* HERO */
+.hero{padding:5rem 2rem 4rem;max-width:900px;margin:0 auto;text-align:center}
+.hero-tag{display:inline-flex;align-items:center;gap:7px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;background:var(--green-light);color:var(--green);border:1px solid var(--green-mid);border-radius:100px;padding:5px 14px;margin-bottom:2rem}
+.hero-tag::before{display:none}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
+.hero h1{font-size:clamp(2rem,3.5vw,4rem);font-weight:800;line-height:1;letter-spacing:-0.04em;margin-bottom:1.5rem}
+.hero h1 .highlight{position:relative;display:inline-block;color:var(--green)}
+.hero h1 .highlight::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:4px;background:var(--green);border-radius:2px}
+.hero-sub-provinces{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.1em;color:var(--text3);margin-top:0.5rem}
+.hero-sub{font-size:clamp(1rem,2.5vw,1.2rem);color:var(--text2);max-width:520px;margin:0 auto 2.5rem;line-height:1.65;font-weight:400}
+.signup-form{display:flex;max-width:460px;margin:0 auto 1rem;border:1.5px solid var(--border2);border-radius:14px;overflow:hidden;background:var(--white);box-shadow:0 4px 24px rgba(0,0,0,0.08);transition:box-shadow 0.2s,border-color 0.2s}
+.signup-form:focus-within{border-color:var(--green);box-shadow:0 4px 32px rgba(10,122,62,0.15)}
+.signup-form input{flex:1;border:none;outline:none;font-family:'Bricolage Grotesque',sans-serif;font-size:15px;padding:0 18px;background:transparent;color:var(--text);min-width:0}
+.signup-form input::placeholder{color:var(--text3)}
+.signup-form button{font-family:'Bricolage Grotesque',sans-serif;font-size:14px;font-weight:700;background:var(--black);color:var(--white);border:none;padding:0 22px;cursor:pointer;white-space:nowrap;transition:opacity 0.15s;height:54px}
+.signup-form button:hover{opacity:0.85}
+.hero-proof{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);letter-spacing:0.04em;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+.hero-proof span{display:flex;align-items:center;gap:5px}
+.hero-proof span::before{content:'✓';color:var(--green);font-size:12px}
+
+/* PROOF STRIP */
+.proof-strip{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.25rem 2rem;display:flex;align-items:center;justify-content:center;gap:3rem;flex-wrap:wrap}
+.proof-item{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;letter-spacing:0.06em;text-transform:uppercase}
+.proof-item strong{font-size:22px;font-weight:800;color:var(--text);font-family:'Bricolage Grotesque',sans-serif;letter-spacing:-0.03em}
+
+/* EMAIL PREVIEW */
+.preview-section{max-width:680px;margin:5rem auto;padding:0 2rem}
+.section-label{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:1.25rem;display:flex;align-items:center;gap:10px}
+.section-label::before,.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.email-mockup{background:var(--white);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 8px 48px rgba(0,0,0,0.1)}
+.email-chrome{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;gap:8px}
+.email-chrome-dot{width:10px;height:10px;border-radius:50%}
+.email-body{padding:2rem}
+.email-from{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);margin-bottom:0.5rem}
+.email-subject{font-size:18px;font-weight:800;letter-spacing:-0.02em;margin-bottom:1.5rem;line-height:1.2}
+.email-intro{font-size:14px;color:var(--text2);margin-bottom:1.5rem;line-height:1.6;border-bottom:1px solid var(--surface);padding-bottom:1.25rem}
+.deal-row{display:flex;align-items:center;gap:1rem;padding:0.85rem 0;border-bottom:1px solid var(--surface)}
+.deal-row:last-child{border-bottom:none}
+.deal-badge{flex-shrink:0;width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.deal-badge.great{background:var(--green-light)}
+.deal-badge.good{background:var(--teal-light)}
+.deal-badge.fair{background:var(--amber-light)}
+.deal-info{flex:1;min-width:0}
+.deal-name{font-size:14px;font-weight:700;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.deal-store{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3)}
+.deal-right{text-align:right;flex-shrink:0}
+.deal-price{font-family:'DM Mono',monospace;font-size:16px;font-weight:500}
+.deal-pct{font-family:'DM Mono',monospace;font-size:11px;font-weight:500;margin-top:2px}
+.deal-pct.great{color:var(--green)}
+.deal-pct.good{color:var(--teal)}
+.deal-pct.fair{color:var(--amber)}
+
+/* HOW IT WORKS */
+.how{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:4rem 2rem}
+.how-inner{max-width:680px;margin:0 auto}
+.how h2{font-size:clamp(1.5rem,4vw,2.5rem);font-weight:800;letter-spacing:-0.03em;margin-bottom:2.5rem;text-align:center}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
+.step-num{font-family:'DM Mono',monospace;font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--green);margin-bottom:0.75rem}
+.step h3{font-size:16px;font-weight:700;margin-bottom:0.5rem;letter-spacing:-0.01em}
+.step p{font-size:14px;color:var(--text2);line-height:1.6}
+
+/* CHECKER SECTION */
+.checker-section{max-width:680px;margin:5rem auto;padding:0 2rem}
+.checker-intro{text-align:center;margin-bottom:1.5rem}
+.checker-intro h2{font-size:clamp(1.5rem,4vw,2.25rem);font-weight:800;letter-spacing:-0.03em;margin-bottom:0.5rem}
+.checker-intro p{font-size:15px;color:var(--text2);line-height:1.6}
+.checker-intro p strong{color:var(--text)}
+.coming-soon{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem 1.5rem;display:flex;align-items:center;gap:12px;font-size:13px;color:var(--text2);margin-bottom:1rem}
+.coming-soon strong{color:var(--text)}
+.coming-soon-flag{font-size:20px;flex-shrink:0}
+
+/* CHECKER CARD + FORM */
+.checker-card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:1.75rem;margin-bottom:1rem;box-shadow:0 2px 16px rgba(0,0,0,0.05)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.grid-3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:1rem;margin-bottom:1.25rem}
+.field{display:flex;flex-direction:column;gap:6px}
+.field-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3)}
+select,input[type="number"]{font-family:'DM Mono',monospace;font-size:13px;height:46px;padding:0 14px;background:var(--surface);border:1px solid var(--border);color:var(--text);width:100%;outline:none;transition:border-color 0.15s;appearance:none;-webkit-appearance:none;border-radius:10px}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238A8680' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+select:focus,input:focus{border-color:var(--green);outline:none;box-shadow:0 0 0 3px rgba(10,122,62,0.1)}
+select:disabled{opacity:0.4}
+input::placeholder{color:var(--text3)}
+.check-btn{width:100%;height:52px;font-family:'Bricolage Grotesque',sans-serif;font-size:15px;font-weight:800;background:var(--black);color:var(--white);border:none;border-radius:12px;cursor:pointer;transition:opacity 0.15s,transform 0.1s;letter-spacing:-0.01em}
+.check-btn:hover:not(:disabled){opacity:0.85}
+.check-btn:active:not(:disabled){transform:scale(0.99)}
+.check-btn:disabled{opacity:0.2;cursor:not-allowed}
+
+/* RESULT */
+.verdict{display:flex;align-items:center;gap:1rem;padding:1.25rem 1.5rem;border-radius:12px;border:1px solid;margin-bottom:1rem;animation:fadeUp 0.3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.verdict.great{background:var(--green-light);border-color:var(--green-mid)}
+.verdict.good{background:var(--teal-light);border-color:var(--teal-mid)}
+.verdict.fair{background:var(--amber-light);border-color:var(--amber-mid)}
+.verdict.poor{background:var(--red-light);border-color:var(--red-mid)}
+.verdict-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;flex-shrink:0}
+.great .verdict-icon{background:var(--green-mid);color:var(--green)}
+.good  .verdict-icon{background:var(--teal-mid);color:var(--teal)}
+.fair  .verdict-icon{background:var(--amber-mid);color:var(--amber)}
+.poor  .verdict-icon{background:var(--red-mid);color:var(--red)}
+.verdict-label{font-size:20px;font-weight:800;letter-spacing:-0.02em}
+.great .verdict-label{color:var(--green)}
+.good  .verdict-label{color:var(--teal)}
+.fair  .verdict-label{color:var(--amber)}
+.poor  .verdict-label{color:var(--red)}
+.verdict-sub{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);margin-top:3px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-bottom:1rem}
+.stat{background:var(--white);padding:1rem 1.25rem}
+.stat .sl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);margin-bottom:6px}
+.stat .sv{font-family:'DM Mono',monospace;font-size:18px;font-weight:500;color:var(--text)}
+.your-price{display:flex;justify-content:space-between;align-items:center;padding:0.85rem 1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:1rem}
+.your-price .yl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3)}
+.your-price .yv{font-family:'DM Mono',monospace;font-size:22px;font-weight:500}
+.bar-wrap{margin-bottom:1rem}
+.bar-lbl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+.bar-track{height:6px;background:var(--surface2);border-radius:3px;position:relative;overflow:visible}
+.bar-fill{height:100%;border-radius:3px;transition:width 0.7s cubic-bezier(0.22,1,0.36,1)}
+.bar-marker{position:absolute;top:-7px;width:20px;height:20px;border-radius:50%;background:var(--black);border:2px solid var(--white);transform:translateX(-50%);transition:left 0.7s cubic-bezier(0.22,1,0.36,1);box-shadow:0 2px 8px rgba(0,0,0,0.2)}
+.bar-ends{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:9px;color:var(--text3);margin-top:8px}
+.result-source{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);padding-top:1rem;border-top:1px solid var(--border);line-height:1.7}
+.result-source a{color:var(--text2)}
+
+/* DIGEST CTA */
+.digest-cta{background:var(--black);color:var(--white);border-radius:16px;padding:2rem;margin-top:0.85rem}
+.digest-cta .cta-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:0.6rem}
+.digest-cta h3{font-size:22px;font-weight:800;letter-spacing:-0.02em;line-height:1.2;margin-bottom:0.5rem}
+.digest-cta p{font-size:14px;color:rgba(255,255,255,0.55);line-height:1.65;margin-bottom:1.5rem}
+.digest-cta p strong{color:rgba(255,255,255,0.9)}
+.digest-cta-form{display:flex;border:1.5px solid rgba(255,255,255,0.18);border-radius:12px;overflow:hidden;background:rgba(255,255,255,0.06);transition:border-color 0.2s;margin-bottom:0.75rem}
+.digest-cta-form:focus-within{border-color:rgba(255,255,255,0.4)}
+.digest-cta-form input{flex:1;border:none;outline:none;font-family:'Bricolage Grotesque',sans-serif;font-size:15px;padding:0 18px;background:transparent;color:var(--white);min-width:0;height:52px}
+.digest-cta-form input::placeholder{color:rgba(255,255,255,0.28)}
+.digest-cta-form button{font-family:'Bricolage Grotesque',sans-serif;font-size:14px;font-weight:800;background:var(--white);color:var(--black);border:none;padding:0 22px;cursor:pointer;white-space:nowrap;transition:opacity 0.15s;height:52px}
+.digest-cta-form button:hover{opacity:0.85}
+.cta-dismiss{display:block;font-size:12px;color:rgba(255,255,255,0.25);background:none;border:none;cursor:pointer;font-family:inherit;padding:0;transition:color 0.15s}
+.cta-dismiss:hover{color:rgba(255,255,255,0.5)}
+
+/* BOTTOM SIGNUP */
+.bottom-signup{background:var(--black);color:var(--white);padding:5rem 2rem;text-align:center}
+.bottom-signup h2{font-size:clamp(2rem,5vw,3.5rem);font-weight:800;letter-spacing:-0.03em;margin-bottom:1rem}
+.bottom-signup p{font-size:16px;color:rgba(255,255,255,0.6);max-width:480px;margin:0 auto 2rem;line-height:1.6}
+.bottom-form{display:flex;max-width:420px;margin:0 auto;border:1.5px solid rgba(255,255,255,0.2);border-radius:14px;overflow:hidden;background:rgba(255,255,255,0.06);transition:border-color 0.2s}
+.bottom-form:focus-within{border-color:rgba(255,255,255,0.5)}
+.bottom-form input{flex:1;border:none;outline:none;font-family:'Bricolage Grotesque',sans-serif;font-size:15px;padding:0 18px;background:transparent;color:var(--white);min-width:0}
+.bottom-form input::placeholder{color:rgba(255,255,255,0.35)}
+.bottom-form button{font-family:'Bricolage Grotesque',sans-serif;font-size:14px;font-weight:700;background:var(--white);color:var(--black);border:none;padding:0 22px;cursor:pointer;height:54px;white-space:nowrap;transition:opacity 0.15s}
+.bottom-form button:hover{opacity:0.85}
+
+/* FAQ */
+.faq-section{max-width:640px;margin:5rem auto;padding:0 2rem 5rem}
+.faq-title{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:2rem;display:flex;align-items:center;gap:10px}
+.faq-title::before,.faq-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.faq-item{border-bottom:1px solid var(--border);padding:1.25rem 0}
+.faq-item:first-of-type{border-top:1px solid var(--border)}
+.faq-q{font-size:15px;font-weight:700;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:1rem;letter-spacing:-0.01em}
+.faq-q::after{content:'+';font-family:'DM Mono',monospace;font-size:20px;color:var(--text3);flex-shrink:0;transition:transform 0.2s;line-height:1}
+.faq-item.open .faq-q::after{transform:rotate(45deg)}
+.faq-a{font-size:14px;color:var(--text2);line-height:1.7;display:none;padding-top:0.75rem}
+.faq-item.open .faq-a{display:block}
+.faq-a a{color:var(--green)}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);z-index:1000;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{display:flex}
+.modal{background:var(--white);border-radius:20px;padding:2.5rem;max-width:420px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,0.2);animation:modalIn 0.25s cubic-bezier(0.22,1,0.36,1)}
+@keyframes modalIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.modal h3{font-size:22px;font-weight:800;letter-spacing:-0.03em;margin-bottom:0.5rem}
+.modal p{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:1.5rem}
+.modal-field{display:flex;flex-direction:column;gap:6px;margin-bottom:1rem}
+.modal-field label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3)}
+.modal-field input,.modal-field select{font-family:'Bricolage Grotesque',sans-serif;font-size:15px;height:48px;padding:0 14px;background:var(--surface);border:1.5px solid var(--border);color:var(--text);border-radius:10px;width:100%;outline:none;transition:border-color 0.15s;appearance:none;-webkit-appearance:none}
+.modal-field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238A8680' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+.modal-field input:focus,.modal-field select:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(10,122,62,0.1)}
+.modal-submit{width:100%;height:52px;font-family:'Bricolage Grotesque',sans-serif;font-size:15px;font-weight:800;background:var(--black);color:var(--white);border:none;border-radius:12px;cursor:pointer;transition:opacity 0.15s;margin-top:0.5rem}
+.modal-submit:hover{opacity:0.85}
+.modal-close{display:block;text-align:center;margin-top:1rem;font-size:13px;color:var(--text3);cursor:pointer;background:none;border:none;font-family:inherit}
+.modal-close:hover{color:var(--text)}
+.modal-success{text-align:center;padding:1rem 0}
+.modal-success .check{font-size:48px;margin-bottom:1rem}
+
+footer{border-top:1px solid var(--border);padding:2rem;text-align:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);line-height:2}
+footer a{color:var(--text2);text-decoration:none}
+
+@media(max-width:600px){
+  .hero{padding-top:2rem;padding-bottom:2rem}
+  .steps{grid-template-columns:1fr}
+  .proof-strip{gap:1.5rem}
+  .grid-2,.grid-3{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr 1fr}
+  .signup-form,.bottom-form{flex-direction:column;border-radius:14px;height:auto}
+  .signup-form input,.bottom-form input{height:56px;min-height:56px;flex:none;width:100%;padding:0 20px;font-size:16px;border-radius:12px 12px 0 0}
+  .signup-form button,.bottom-form button{border-radius:0 0 12px 12px;height:56px;width:100%;font-size:16px}
+  .digest-cta-form{flex-direction:column}
+  .digest-cta-form input{height:48px;border-radius:10px 10px 0 0}
+  .digest-cta-form button{height:48px;width:100%;border-radius:0 0 10px 10px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">is<span>that</span>adeal<span>.ca</span></a>
+  <button class="nav-cta" onclick="openModal(event)">Get the digest</button>
+</nav>
+
+<section class="hero">
+  <div class="hero-tag">🇨🇦 SAVING YOU MONEY ON GROCERIES 🇨🇦</div>
+  <h1>The best Canadian grocery deals,<br>free in your inbox <span class="highlight">every Thursday.</span></h1>
+  <p class="hero-sub">We scan every Ontario flyer and send you only the deals that are genuinely worth it.</p>
+  <div class="signup-form" onclick="openModal(event)" style="cursor:pointer">
+    <input type="email" id="heroEmail" placeholder="your@email.com"
+      onfocus="openModal(event)" onclick="openModal(event)" readonly
+      style="cursor:pointer">
+    <button type="button" onclick="openModal(event)">Get the digest →</button>
+  </div>
+  <div class="hero-proof">
+    <span>Free forever</span>
+    <span>No spam</span>
+    <span>Unsubscribe anytime</span>
+    <span>Ontario only for now</span>
+  </div>
+  <div class="coming-soon" style="max-width:560px;margin:1.5rem auto 0">
+    <div class="coming-soon-flag">🇨🇦</div>
+    <div><strong>Ontario only for now.</strong> More provinces coming soon — <a href="#" onclick="openModal(event)" style="color:var(--green)">sign up to be notified</a>.</div>
+  </div>
+</section>
+
+<div class="proof-strip">
+  <div class="proof-item"><strong>110</strong>products tracked</div>
+  <div class="proof-item"><strong>__DATA_PERIOD__</strong>data current</div>
+  <div class="proof-item"><strong>Weekly</strong>digest</div>
+  <div class="proof-item"><strong>100%</strong>free</div>
+</div>
+
+<div class="preview-section">
+  <div class="section-label">What you'll get</div>
+  <div class="email-mockup">
+    <div class="email-chrome">
+      <div class="email-chrome-dot" style="background:#FF5F57"></div>
+      <div class="email-chrome-dot" style="background:#FEBC2E"></div>
+      <div class="email-chrome-dot" style="background:#28C840"></div>
+    </div>
+    <div class="email-body">
+      <div class="email-from">from: deals@isthatadeal.ca &middot; this week's Ontario grocery deals</div>
+      <div class="email-subject">🥩 Chicken breast is at a 2-year low. Here's what else is on.</div>
+      <div class="email-intro">Hey — here are this week’s best Ontario grocery deals. Every item below is at least 15% below the provincial average — genuinely worth buying.</div>
+      <div class="deal-row">
+        <div class="deal-badge great">🍗</div>
+        <div class="deal-info"><div class="deal-name">Chicken breast, boneless skinless</div><div class="deal-store">No Frills &middot; per kg</div></div>
+        <div class="deal-right"><div class="deal-price">$9.88/kg</div><div class="deal-pct great">↓ 39% below avg ✓✓</div></div>
+      </div>
+      <div class="deal-row">
+        <div class="deal-badge great">🥩</div>
+        <div class="deal-info"><div class="deal-name">Ground beef (lean)</div><div class="deal-store">Food Basics &middot; per kg</div></div>
+        <div class="deal-right"><div class="deal-price">$11.99/kg</div><div class="deal-pct great">↓ 25% below avg ✓✓</div></div>
+      </div>
+      <div class="deal-row">
+        <div class="deal-badge good">🐟</div>
+        <div class="deal-info"><div class="deal-name">Salmon fillets</div><div class="deal-store">Metro &middot; per kg</div></div>
+        <div class="deal-right"><div class="deal-price">$19.99/kg</div><div class="deal-pct good">↓ 22% below avg ✓</div></div>
+      </div>
+      <div class="deal-row">
+        <div class="deal-badge good">🥛</div>
+        <div class="deal-info"><div class="deal-name">Butter, 454g</div><div class="deal-store">Walmart &middot; per pkg</div></div>
+        <div class="deal-right"><div class="deal-price">$5.47</div><div class="deal-pct good">↓ 18% below avg ✓</div></div>
+      </div>
+      <div class="deal-row">
+        <div class="deal-badge fair">🥦</div>
+        <div class="deal-info"><div class="deal-name">Broccoli</div><div class="deal-store">Loblaws &middot; per unit</div></div>
+        <div class="deal-right"><div class="deal-price">$2.99</div><div class="deal-pct fair">↓ 10% below avg</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="how">
+  <div class="how-inner">
+    <h2>How it works</h2>
+    <div class="steps">
+      <div class="step"><div class="step-num">Step 01</div><h3>We read every flyer</h3><p>Every Thursday we pull every major Ontario grocery flyer — No Frills, Food Basics, Loblaws, Metro, Walmart, Sobeys and more.</p></div>
+      <div class="step"><div class="step-num">Step 02</div><h3>We score every item</h3><p>Every price gets compared to the provincial average (from Statistics Canada). We calculate exactly how far above or below average it is.</p></div>
+      <div class="step"><div class="step-num">Step 03</div><h3>You get the real deals</h3><p>Only items 15%+ below the provincial average make the cut. No fluff. Every item in the digest is genuinely worth buying this week.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKER -->
+<div class="checker-section">
+  <div class="section-label">Or check it yourself</div>
+  <div class="checker-intro">
+    <h2>Check any price right now</h2>
+    <p>See a price in a flyer? Check it here. <strong>This is what we do for every item in every Ontario flyer, every week.</strong></p>
+  </div>
+  <div class="coming-soon">
+    <div class="coming-soon-flag">🇨🇦</div>
+    <div><strong>Ontario only for now.</strong> More provinces coming soon — <a href="#" onclick="openModal(event)" style="color:var(--green)">sign up to be notified</a>.</div>
+  </div>
+
+  <div class="checker-card">
+    <div class="grid-2">
+      <div class="field">
+        <div class="field-label">Category</div>
+        <select id="category" onchange="populateProducts()">
+          <option value="">— select a category —</option>
+          <option value="Meat & fish">🥩 Meat &amp; fish</option>
+          <option value="Dairy & eggs">🥛 Dairy &amp; eggs</option>
+          <option value="Fresh fruit">🍎 Fresh fruit</option>
+          <option value="Fresh vegetables">🥦 Fresh vegetables</option>
+          <option value="Frozen foods">🧊 Frozen foods</option>
+          <option value="Bread & grains">🍞 Bread &amp; grains</option>
+          <option value="Pantry & condiments">🫙 Pantry &amp; condiments</option>
+          <option value="Beverages">☕ Beverages</option>
+          <option value="Plant protein & nuts">🌱 Plant protein &amp; nuts</option>
+          <option value="Baby & infant">👶 Baby &amp; infant</option>
+          <option value="Household & personal care">🧴 Household &amp; personal care</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">Store (optional)</div>
+        <select id="store">
+          <option value="">Any store</option>
+          <option>No Frills</option><option>Food Basics</option><option>Walmart</option>
+          <option>Loblaws</option><option>Metro</option><option>Sobeys</option>
+          <option>FreshCo</option><option>Costco</option><option>T&amp;T Supermarket</option>
+          <option>Giant Tiger</option>
+        </select>
+      </div>
+    </div>
+    <div class="field" style="margin-bottom:1rem">
+      <div class="field-label">Product</div>
+      <select id="product" disabled><option value="">— select a category first —</option></select>
+    </div>
+    <div class="grid-3">
+      <div class="field">
+        <div class="field-label">Your price</div>
+        <input type="number" id="price" min="0.01" step="0.01" placeholder="e.g.  9.99">
+      </div>
+      <div class="field" id="unitRow" style="display:none">
+        <div class="field-label">Your price is</div>
+        <select id="unit">
+          <option value="per_kg">per kg</option>
+          <option value="per_lb">per lb</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">Weight (g)</div>
+        <input type="number" id="weight" min="1" step="1" placeholder="optional">
+      </div>
+    </div>
+    <button class="check-btn" id="checkBtn" onclick="checkPrice()" disabled>Is that a deal? →</button>
+  </div>
+  <div id="result"></div>
+</div>
+
+<div class="bottom-signup">
+  <h2>Start saving more money on groceries.</h2>
+  <p>The best Ontario grocery deals in your inbox every Thursday. Free forever.</p>
+  <div class="bottom-form" onclick="openModal(event)" style="cursor:pointer">
+    <input type="email" placeholder="your@email.com"
+      onfocus="openModal(event)" onclick="openModal(event)" readonly
+      style="cursor:pointer">
+    <button type="button" onclick="openModal(event)">Sign me up</button>
+  </div>
+</div>
+
+<div class="faq-section">
+  <div class="faq-title">Frequently asked questions</div>
+  <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Where does the data come from?</div><div class="faq-a">All price benchmarks come from <a href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810024501" target="_blank">Statistics Canada Table 18-10-0245</a> — the official monthly survey of average retail prices across Ontario. It covers 110 products and is updated every month.</div></div>
+  <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Why is this better than just reading flyers?</div><div class="faq-a">Flyers are designed to make every price look like a deal. "Was $8.99, now $6.99!" — but if the average price is $5.50, that's still expensive. We give you the actual benchmark so you know if the "sale" price is genuinely good or just regular retail with a sticker on it.</div></div>
+  <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How often does the digest go out?</div><div class="faq-a">Every Thursday morning — right when the new flyers drop. You get the full week to act on them.</div></div>
+  <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Is it really free?</div><div class="faq-a">Yes. No premium tier, no credit card, no trial period. Free forever.</div></div>
+  <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">When are other provinces coming?</div><div class="faq-a">We're starting with Ontario to make sure everything works properly. BC, Alberta, and Quebec are next. Sign up and we'll email you when your province launches.</div></div>
+</div>
+
+<footer>
+  <strong style="color:var(--text);font-size:13px">isthatadeal.ca</strong><br>
+  Data: Statistics Canada, Table 18-10-0245 &middot; Ontario &middot; __DATA_PERIOD__<br>
+  Not affiliated with Statistics Canada or any retailer. &middot; v2.5<br>
+  <a href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810024501" target="_blank">View source data ↗</a> &middot; <a href="/contact.html">Contact</a>
+</footer>
+
+<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <div id="modalContent">
+      <h3>Get the weekly digest</h3>
+      <p>Every Thursday — the best Ontario grocery deals, scored against government data. Free forever.</p>
+      <form onsubmit="handleModalSignup(event)">
+        <div class="modal-field"><label>First name</label><input type="text" id="modalName" placeholder="Your name" required></div>
+        <div class="modal-field"><label>Email</label><input type="email" id="modalEmail" placeholder="you@email.com" required></div>
+        <div class="modal-field">
+          <label>Province</label>
+          <select id="modalProvince">
+            <option value="Ontario" selected>Ontario</option>
+            <option value="British Columbia">British Columbia (coming soon)</option>
+            <option value="Alberta">Alberta (coming soon)</option>
+            <option value="Quebec">Quebec (coming soon)</option>
+            <option value="Other">Other province (coming soon)</option>
+          </select>
+        </div>
+        <button type="submit" class="modal-submit">Sign me up →</button>
+      </form>
+      <button class="modal-close" onclick="closeModal()">No thanks</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STATCAN_DATA = __STATCAN_DATA_BLOB__;
+const FLIPP_DATA   = __FLIPP_DATA_BLOB__;
+
+const DISPLAY_NAMES = {"Beef stewing cuts, per kilogram":"Beef stewing cuts","Beef striploin cuts, per kilogram":"Beef striploin steak","Beef top sirloin cuts, per kilogram":"Beef top sirloin steak","Beef rib cuts, per kilogram":"Beef rib cuts","Ground beef, per kilogram":"Ground beef","Pork loin cuts, per kilogram":"Pork loin cuts","Pork rib cuts, per kilogram":"Pork rib cuts","Pork shoulder cuts, per kilogram":"Pork shoulder cuts","Whole chicken, per kilogram":"Whole chicken","Chicken breasts, per kilogram":"Chicken breasts (boneless, skinless)","Chicken thigh, per kilogram":"Chicken thighs","Chicken drumsticks, per kilogram":"Chicken drumsticks","Salmon, per kilogram":"Salmon","Bacon, 500 grams":"Bacon (500g pkg)","Wieners, 400 grams":"Wieners (400g pkg)","Canned tuna, 170 grams":"Canned tuna (170g)","Canned salmon, 213 grams":"Canned salmon (213g)","Meatless burgers, 226 grams":"Meatless burgers (226g)","Shrimp, 300 grams":"Shrimp (300g pkg)","Milk, 1 litre":"Milk (1L)","Milk, 2 litres":"Milk (2L)","Milk, 4 litres":"Milk (4L)","Cream, 1 litre":"Cream (1L)","Butter, 454 grams":"Butter (454g)","Margarine, 907 grams":"Margarine (907g)","Block cheese, 500 grams":"Block cheese (500g)","Yogurt, 500 grams":"Yogurt (500g)","Eggs, 1 dozen":"Eggs (1 dozen)","Soy milk, 1.89 litres":"Soy milk (1.89L)","Nut milk, 1.89 litres":"Nut milk (1.89L)","Apples, per kilogram":"Apples","Oranges, per kilogram":"Oranges (loose)","Oranges, 1.36 kilograms":"Oranges (bag, 1.36kg)","Bananas, per kilogram":"Bananas","Pears, per kilogram":"Pears","Grapes, per kilogram":"Grapes","Strawberries, 454 grams":"Strawberries (454g)","Lemons, unit":"Lemons (each)","Limes, unit":"Limes (each)","Avocado, unit":"Avocado (each)","Cantaloupe, unit":"Cantaloupe (each)","Tomatoes, per kilogram":"Tomatoes","Potatoes, per kilogram":"Potatoes (loose)","Potatoes, 4.54 kilograms":"Potatoes (10lb bag)","Sweet potatoes, per kilogram":"Sweet potatoes","Cabbage, per kilogram":"Cabbage","Carrots, 1.36 kilograms":"Carrots (1.36kg bag)","Onions, per kilogram":"Onions (loose)","Onions, 1.36 kilograms":"Onions (1.36kg bag)","Peppers, per kilogram":"Peppers","Broccoli, unit":"Broccoli (head)","Celery, unit":"Celery (bunch)","Cucumber, unit":"Cucumber (each)","Mushrooms, 227 grams":"Mushrooms (227g)","Iceberg lettuce, unit":"Iceberg lettuce (head)","Romaine lettuce, unit":"Romaine lettuce (head)","Salad greens, 142 grams":"Salad greens (142g)","Squash, per kilogram":"Squash","Frozen french fried potatoes, 750 grams":"Frozen french fries (750g)","Frozen green beans, 750 grams":"Frozen green beans (750g)","Frozen broccoli, 500 grams":"Frozen broccoli (500g)","Frozen corn, 750 grams":"Frozen corn (750g)","Frozen mixed vegetables, 750 grams":"Frozen mixed veg (750g)","Frozen peas, 750 grams":"Frozen peas (750g)","Frozen spinach, 300 grams":"Frozen spinach (300g)","Frozen strawberries, 600 grams":"Frozen strawberries (600g)","Frozen pizza, 390 grams":"Frozen pizza (390g)","White bread, 675 grams":"White bread (675g)","Flatbread and pita, 500 grams":"Flatbread & pita (500g)","Crackers and crisp breads, 200 grams":"Crackers (200g)","Cookies and sweet biscuits, 300 grams":"Cookies (300g)","Dry or fresh pasta, 500 grams":"Pasta (500g)","Cereal, 400 grams":"Cereal (400g)","Wheat flour, 2.5 kilograms":"Wheat flour (2.5kg)","Brown rice, 900 grams":"Brown rice (900g)","White rice, 2 kilograms":"White rice (2kg)","White sugar, 2 kilograms":"White sugar (2kg)","Vegetable oil, 3 litres":"Vegetable oil (3L)","Canola oil, 3 litres":"Canola oil (3L)","Olive oil, 1 litre":"Olive oil (1L)","Ketchup, 1 litre":"Ketchup (1L)","Mayonnaise, 890 millilitres":"Mayonnaise (890mL)","Salad dressing, 475 millilitres":"Salad dressing (475mL)","Pasta sauce, 650 millilitres":"Pasta sauce (650mL)","Salsa, 418 millilitres":"Salsa (418mL)","Canned baked beans, 398 millilitres":"Canned baked beans (398mL)","Canned beans and lentils, 540 millilitres":"Canned beans & lentils (540mL)","Canned tomatoes, 796 millilitres":"Canned tomatoes (796mL)","Canned soup, 284 millilitres":"Canned soup (284mL)","Canned corn, 341 millilitres":"Canned corn (341mL)","Canned peach, 398 millilitres":"Canned peach (398mL)","Canned pear, 398 millilitres":"Canned pear (398mL)","Dried lentils, 900 grams":"Dried lentils (900g)","Dry beans and legumes, 900 grams":"Dry beans & legumes (900g)","Peanut butter, 1 kilogram":"Peanut butter (1kg)","Apple juice, 2 litres":"Apple juice (2L)","Orange juice, 2 litres":"Orange juice (2L)","Roasted or ground coffee, 340 grams":"Coffee (340g)","Tea (20 bags)":"Tea (20 bags)","Tofu, 350 grams":"Tofu (350g)","Hummus, 227 grams":"Hummus (227g)","Almonds, 200 grams":"Almonds (200g)","Peanuts, 450 grams":"Peanuts (450g)","Sunflower seeds, 400 grams":"Sunflower seeds (400g)","Baby food, 128 millilitres":"Baby food (128mL)","Infant formula, 900 grams":"Infant formula (900g)","Deodorant, 85 grams":"Deodorant (85g)","Toothpaste, 100 millilitres":"Toothpaste (100mL)","Shampoo, 400 millilitres":"Shampoo (400mL)","Laundry detergent, 4.43 litres":"Laundry detergent (4.43L)"};
+
+const PER_KG_KEYS = new Set(["Apples, per kilogram","Bananas, per kilogram","Beef rib cuts, per kilogram","Beef stewing cuts, per kilogram","Beef striploin cuts, per kilogram","Beef top sirloin cuts, per kilogram","Cabbage, per kilogram","Chicken breasts, per kilogram","Chicken drumsticks, per kilogram","Chicken thigh, per kilogram","Grapes, per kilogram","Ground beef, per kilogram","Onions, per kilogram","Oranges, per kilogram","Pears, per kilogram","Peppers, per kilogram","Pork loin cuts, per kilogram","Pork rib cuts, per kilogram","Pork shoulder cuts, per kilogram","Potatoes, per kilogram","Salmon, per kilogram","Squash, per kilogram","Sweet potatoes, per kilogram","Tomatoes, per kilogram","Whole chicken, per kilogram"]);
+
+const CATEGORIES = {
+  "Meat & fish":["Beef stewing cuts, per kilogram","Beef striploin cuts, per kilogram","Beef top sirloin cuts, per kilogram","Beef rib cuts, per kilogram","Ground beef, per kilogram","Pork loin cuts, per kilogram","Pork rib cuts, per kilogram","Pork shoulder cuts, per kilogram","Whole chicken, per kilogram","Chicken breasts, per kilogram","Chicken thigh, per kilogram","Chicken drumsticks, per kilogram","Salmon, per kilogram","Bacon, 500 grams","Wieners, 400 grams","Shrimp, 300 grams","Canned tuna, 170 grams","Canned salmon, 213 grams","Meatless burgers, 226 grams"],
+  "Dairy & eggs":["Milk, 1 litre","Milk, 2 litres","Milk, 4 litres","Cream, 1 litre","Butter, 454 grams","Margarine, 907 grams","Block cheese, 500 grams","Yogurt, 500 grams","Eggs, 1 dozen","Soy milk, 1.89 litres","Nut milk, 1.89 litres"],
+  "Fresh fruit":["Apples, per kilogram","Oranges, per kilogram","Oranges, 1.36 kilograms","Bananas, per kilogram","Pears, per kilogram","Grapes, per kilogram","Strawberries, 454 grams","Lemons, unit","Limes, unit","Avocado, unit","Cantaloupe, unit"],
+  "Fresh vegetables":["Tomatoes, per kilogram","Potatoes, per kilogram","Potatoes, 4.54 kilograms","Sweet potatoes, per kilogram","Cabbage, per kilogram","Carrots, 1.36 kilograms","Onions, per kilogram","Onions, 1.36 kilograms","Peppers, per kilogram","Broccoli, unit","Celery, unit","Cucumber, unit","Mushrooms, 227 grams","Iceberg lettuce, unit","Romaine lettuce, unit","Salad greens, 142 grams","Squash, per kilogram"],
+  "Frozen foods":["Frozen french fried potatoes, 750 grams","Frozen green beans, 750 grams","Frozen broccoli, 500 grams","Frozen corn, 750 grams","Frozen mixed vegetables, 750 grams","Frozen peas, 750 grams","Frozen spinach, 300 grams","Frozen strawberries, 600 grams","Frozen pizza, 390 grams"],
+  "Bread & grains":["White bread, 675 grams","Flatbread and pita, 500 grams","Crackers and crisp breads, 200 grams","Cookies and sweet biscuits, 300 grams","Dry or fresh pasta, 500 grams","Cereal, 400 grams","Wheat flour, 2.5 kilograms","Brown rice, 900 grams","White rice, 2 kilograms"],
+  "Pantry & condiments":["White sugar, 2 kilograms","Vegetable oil, 3 litres","Canola oil, 3 litres","Olive oil, 1 litre","Ketchup, 1 litre","Mayonnaise, 890 millilitres","Salad dressing, 475 millilitres","Pasta sauce, 650 millilitres","Salsa, 418 millilitres","Canned baked beans, 398 millilitres","Canned beans and lentils, 540 millilitres","Canned tomatoes, 796 millilitres","Canned soup, 284 millilitres","Canned corn, 341 millilitres","Canned peach, 398 millilitres","Canned pear, 398 millilitres","Dried lentils, 900 grams","Dry beans and legumes, 900 grams","Peanut butter, 1 kilogram"],
+  "Beverages":["Apple juice, 2 litres","Orange juice, 2 litres","Roasted or ground coffee, 340 grams","Tea (20 bags)"],
+  "Plant protein & nuts":["Tofu, 350 grams","Hummus, 227 grams","Almonds, 200 grams","Peanuts, 450 grams","Sunflower seeds, 400 grams"],
+  "Baby & infant":["Baby food, 128 millilitres","Infant formula, 900 grams"],
+  "Household & personal care":["Deodorant, 85 grams","Toothpaste, 100 millilitres","Shampoo, 400 millilitres","Laundry detergent, 4.43 litres"]
+};
+
+// Dynamically add Flipp-tracked cuts once we have data
+(function(){
+  const FLIPP_CUTS=[["beef_ground_regular","Ground beef (regular)"],["beef_ground_medium","Ground beef (medium)"],["beef_ground_lean","Ground beef (lean)"],["beef_ground_extra_lean","Ground beef (extra lean)"],["beef_flank","Flank steak"],["beef_striploin","Beef striploin / NY strip"],["beef_ribeye","Beef ribeye steak"],["beef_tenderloin","Beef tenderloin"],["beef_sirloin","Beef top sirloin"],["beef_inside_round","Beef inside round roast"],["beef_blade_roast","Beef blade roast"],["beef_short_ribs","Beef short ribs"],["beef_brisket","Beef brisket"],["pork_chop_bonein","Pork chops (bone-in)"],["pork_chop_boneless","Pork chops (boneless)"],["pork_tenderloin","Pork tenderloin"],["pork_shoulder","Pork shoulder roast"],["pork_back_ribs","Pork back ribs"],["pork_side_ribs","Pork side ribs"],["pork_belly","Pork belly"],["pork_ground","Ground pork"],["pork_ham","Ham roast"],["chicken_breast","Chicken breast (boneless)"],["chicken_thigh_bonein","Chicken thighs (bone-in)"],["chicken_thigh_boneless","Chicken thighs (boneless)"],["chicken_wings","Chicken wings"],["chicken_ground","Ground chicken"],["turkey_whole","Whole turkey"],["turkey_breast","Turkey breast"],["turkey_ground","Ground turkey"],["lamb_leg","Leg of lamb"],["lamb_chops","Lamb chops"],["veal_cutlets","Veal cutlets"]];
+  FLIPP_CUTS.forEach(([key,name])=>{if(!DISPLAY_NAMES[key])DISPLAY_NAMES[key]=name;if(FLIPP_DATA[key])PER_KG_KEYS.add(key);});
+  const available=FLIPP_CUTS.filter(([key])=>FLIPP_DATA[key]);
+  if(available.length>0)CATEGORIES['Meat cuts (flyer data)']=available.map(([key])=>key);
+})();
+
+// ── Modal ──────────────────────────────────────────────────────────────────
+function openModal(e){if(e)e.preventDefault();document.getElementById('modalOverlay').classList.add('open')}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('open')}
+function handleOverlayClick(e){if(e.target===document.getElementById('modalOverlay'))closeModal()}
+function handleHeroSignup(e){
+  e.preventDefault();
+  const emailEl = e.target.querySelector('input[type="email"]');
+  if (emailEl) document.getElementById('modalEmail').value = emailEl.value;
+  openModal(e);
+}
+
+function handleModalSignup(e){
+  e.preventDefault();
+  const name     = document.getElementById('modalName').value.trim();
+  const email    = document.getElementById('modalEmail').value.trim();
+  const province = document.getElementById('modalProvince').value;
+  const btn      = e.target.querySelector('.modal-submit');
+
+  btn.disabled   = true;
+  btn.textContent = 'Signing you up...';
+
+  fetch('/subscribe.php', {
+    method:  'POST',
+    headers: {'Content-Type': 'application/json'},
+    body:    JSON.stringify({name, email, province})
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.success) {
+      document.getElementById('modalContent').innerHTML =
+        '<div class="modal-success">'
+        + '<div class="check">&#127881;</div>'
+        + '<h3>You&#39;re in, ' + name + '!</h3>'
+        + '<p>First digest lands Thursday morning.</p>'
+        + '</div>';
+      setTimeout(closeModal, 3000);
+    } else {
+      btn.disabled    = false;
+      btn.textContent = 'Try again';
+      alert('Something went wrong — please try again.');
+    }
+  })
+  .catch(() => {
+    btn.disabled    = false;
+    btn.textContent = 'Try again';
+    alert('Something went wrong — please try again.');
+  });
+}
+
+function getProductData(key){
+  const ont=STATCAN_DATA.data&&STATCAN_DATA.data['Ontario'];
+  if(ont&&ont[key])return{...ont[key],source:'statcan'};
+  if(FLIPP_DATA[key])return{...FLIPP_DATA[key],source:'flipp'};
+  return null;
+}
+
+function populateProducts(){
+  const cat=document.getElementById('category').value;
+  const el=document.getElementById('product');
+  el.innerHTML='<option value="">— select a product —</option>';
+  el.disabled=!cat;
+  if(cat&&CATEGORIES[cat]){
+    CATEGORIES[cat].forEach(key=>{
+      const o=document.createElement('option');
+      o.value=key;
+      o.textContent=DISPLAY_NAMES[key]||key;
+      el.appendChild(o);
+    });
+  }
+  validate();
+}
+
+function onProductChange(){
+  const key=document.getElementById('product').value;
+  document.getElementById('unitRow').style.display=PER_KG_KEYS.has(key)?'':'none';
+  validate();
+}
+
+function validate(){
+  const ok=document.getElementById('product').value&&document.getElementById('price').value&&parseFloat(document.getElementById('price').value)>0;
+  document.getElementById('checkBtn').disabled=!ok;
+}
+
+document.getElementById('product').addEventListener('change',onProductChange);
+document.getElementById('price').addEventListener('input',validate);
+
+function normalisePrice(price,unit,key){
+  if(PER_KG_KEYS.has(key)){return unit==='per_lb'?price*2.20462:price;}
+  return price;
+}
+
+var ctaDismissed = false;
+
+function buildCtaHtml(){
+  if(ctaDismissed)return'';
+  return`<div class="digest-cta" id="digestCta"><div class="cta-eyebrow">Save time every week</div><h3>We do this for every item<br>in every Ontario flyer.</h3><p>Get the weekly digest — <strong>the best Ontario grocery deals, already scored</strong>, delivered every Thursday. Free forever.</p><form class="digest-cta-form" onclick="openModal(event)" style="cursor:pointer"><input type="email" id="ctaEmail" placeholder="your@email.com" onfocus="openModal(event)" onclick="openModal(event)" readonly style="cursor:pointer"><button type="button" onclick="openModal(event)">Get the digest →</button></form><button class="cta-dismiss" onclick="dismissCta()">Not interested</button></div>`;
+}
+function handleCtaSignup(e){
+  e.preventDefault();
+  // TODO: POST to MailerLite API
+  document.getElementById('digestCta').innerHTML=`<div style="display:flex;align-items:center;gap:14px;padding:0.5rem 0"><div style="font-size:36px">🎉</div><div><div style="font-size:18px;font-weight:800;margin-bottom:4px">You&#39;re in!</div><div style="font-size:14px;color:rgba(255,255,255,0.55)">First digest lands Thursday morning.</div></div></div>`;
+  ctaDismissed=true;
+}
+function dismissCta(){ctaDismissed=true;const el=document.getElementById('digestCta');if(el)el.style.display='none';}
+
+function checkPrice(){
+  const key=document.getElementById('product').value;
+  const price=parseFloat(document.getElementById('price').value);
+  const unit=document.getElementById('unit')?document.getElementById('unit').value:'per_kg';
+  const store=document.getElementById('store').value;
+  if(!key||!price)return;
+
+  const prod=getProductData(key);
+  if(!prod){document.getElementById('result').innerHTML='<div style="padding:1rem;background:var(--surface);border-radius:12px;font-size:14px;color:var(--text2)">No data found for this product.</div>';return;}
+
+  const norm=normalisePrice(price,unit,key);
+  const avg=prod.avg,lo=prod.lo,hi=prod.hi;
+  const vsAvg=((norm-avg)/avg)*100;
+  const barLo=lo<avg*0.98?lo:avg*0.70;
+  const barHi=hi>avg*1.02?hi:avg*1.35;
+  const pct=Math.max(0,Math.min(100,Math.round(((norm-barLo)/(barHi-barLo))*100)));
+  const isPerKg=PER_KG_KEYS.has(key);
+  const unitLabel=isPerKg?(unit==='per_lb'?'per lb':'per kg'):'per package';
+  const dispUnit=(isPerKg&&unit==='per_lb')?'per_lb':'per_kg';
+  const dispDiv=(dispUnit==='per_lb')?2.20462:1;
+  const dispSuffix=!isPerKg?'':(dispUnit==='per_lb')?'/lb':'/kg';
+  const avgDisp=avg/dispDiv;
+  const loDisp=barLo/dispDiv;
+  const hiDisp=barHi/dispDiv;
+
+  let verdict,vClass,icon,tagline;
+  if(vsAvg<-20){verdict='Great deal!';vClass='great';icon='✓✓';tagline=Math.abs(vsAvg).toFixed(0)+'% below the Ontario average';}
+  else if(vsAvg<-8){verdict='Good deal';vClass='good';icon='✓';tagline=Math.abs(vsAvg).toFixed(0)+'% below the Ontario average';}
+  else if(vsAvg<8){verdict='Fair price';vClass='fair';icon='~';tagline='Within 8% of the Ontario average';}
+  else{verdict='Not a deal';vClass='poor';icon='✗';tagline=Math.abs(vsAvg).toFixed(0)+'% above the Ontario average';}
+
+  const barColor=vClass==='great'||vClass==='good'?'#0A7A3E':vClass==='poor'?'#C0192A':'#8A5A00';
+  const storeNote=store?` · ${store}`:'';
+  const displayName=DISPLAY_NAMES[key]||key;
+  const sourceNote=prod.source==='flipp'?`Flipp/Wishabi flyer data · Ontario · ${prod.observations||'?'} observations`:`Statistics Canada, Table 18-10-0245, Ontario, __DATA_PERIOD__`;
+
+  document.getElementById('result').innerHTML=`
+    <div class="verdict ${vClass}">
+      <div class="verdict-icon">${icon}</div>
+      <div><div class="verdict-label">${verdict}</div><div class="verdict-sub">${tagline}${storeNote}</div></div>
+    </div>
+    <div class="your-price"><span class="yl">${displayName} · ${unitLabel}</span><span class="yv">$${price.toFixed(2)}</span></div>
+    <div class="stats">
+      <div class="stat"><div class="sl">Ontario avg</div><div class="sv">$${avgDisp.toFixed(2)}${dispSuffix}</div></div>
+      <div class="stat"><div class="sl">vs avg</div><div class="sv">${vsAvg>0?'+':''}${vsAvg.toFixed(1)}%</div></div>
+      <div class="stat"><div class="sl">Good ≤</div><div class="sv">$${(avgDisp*0.92).toFixed(2)}${dispSuffix}</div></div>
+      <div class="stat"><div class="sl">Great ≤</div><div class="sv">$${(avgDisp*0.80).toFixed(2)}${dispSuffix}</div></div>
+    </div>
+    <div class="bar-wrap">
+      <div class="bar-lbl">Your price within observed range</div>
+      <div class="bar-track">
+        <div class="bar-fill" id="bFill" style="width:0%;background:${barColor}"></div>
+        <div class="bar-marker" id="bMark" style="left:0%"></div>
+      </div>
+      <div class="bar-ends"><span>Low $${loDisp.toFixed(2)}${dispSuffix}</span><span>Avg $${avgDisp.toFixed(2)}${dispSuffix}</span><span>High $${hiDisp.toFixed(2)}${dispSuffix}</span></div>
+    </div>
+    <div class="result-source">Source: ${sourceNote} · <a href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810024501" target="_blank">StatCan dataset ↗</a></div>
+    ${buildCtaHtml()}`;
+
+  requestAnimationFrame(()=>setTimeout(()=>{
+    document.getElementById('bFill').style.width=pct+'%';
+    document.getElementById('bMark').style.left=pct+'%';
+    document.getElementById('result').scrollIntoView({behavior:'smooth',block:'nearest'});
+  },50));
+}
+
+function toggleFaq(el){el.closest('.faq-item').classList.toggle('open')}
+</script>
+</body>
+</html>
