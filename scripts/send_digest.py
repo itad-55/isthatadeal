@@ -332,8 +332,13 @@ def build_email_html(deals, period, show_verify=False):
         expiry = format_valid_to(d.get('valid_to', ''))
         store_line = store_link(d['store'], expiry)
         _furl = d.get('flipp_url', '')
-        flipp_verify = (f' · <a href="{_furl}" style="color:inherit;text-decoration:underline;text-underline-offset:2px;font-size:11px">verify ↗</a>'
-                        if (_furl and show_verify) else '')
+        if show_verify:
+            if _furl:
+                flipp_verify = f' · <a href="{_furl}" style="color:inherit;text-decoration:underline;text-underline-offset:2px;font-size:11px">verify ↗</a>'
+            else:
+                flipp_verify = ' · <span style="color:#C00;font-size:11px">No Flipp verify link available</span>'
+        else:
+            flipp_verify = ''
         is_per_kg  = d.get('raw_unit', 'kg') not in ('pkg', 'unit', 'each')
         lb_price   = f'${d["price"]/2.20462:.2f}/lb' if is_per_kg else ''
         kg_price   = f'${d["price"]:.2f}/kg' if is_per_kg else f'${d["price"]:.2f}'
