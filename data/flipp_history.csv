@@ -1380,3 +1380,7 @@ date,cut_key,cut_name,store,item_name,raw_price,raw_unit,price_per_kg,postal_cod
 2026-03-20,chicken_breast,Chicken breast (boneless),IGA,C'EST PRÊT! À CUIRE FRESH SEASONED CHICKEN BREAST OR PORK CUTLETS,11.99,inferred_lb,26.43,K1A0A1,2026-03-26T03:59:59+00:00,,
 2026-03-20,chicken_breast,Chicken breast (boneless),Zehrs,CHICKEN BREASTS OR THIGHS,4.99,inferred_lb,11.0,N2L3G1,2026-03-26T03:59:59+00:00,1000185092,7838057
 2026-03-20,chicken_breast,Chicken breast (boneless),Zehrs,"PC® BLUE MENU® CHICKEN BREASTS, 3'S",13.0,inferred_lb,28.66,N2L3G1,2026-03-26T03:59:59+00:00,1000202230,7838057
+2026-03-20,chicken_thigh_bonein,Chicken thighs (bone-in),Walmart,Mina halal boneless skinless chicken thighs,8.38,inferred_lb,18.47,M5V3L9,2026-03-26T03:59:59+00:00,1000934548,7829202
+2026-03-20,chicken_thigh_bonein,Chicken thighs (bone-in),Food Basics,MAPLE LEAF PRIME RAISED WITHOUT ANTIBIOTICS CHICKEN DRUMSTICKS OR THIGHS FAMILY PACK,4.49,inferred_lb,9.9,M5V3L9,2026-03-26T03:59:59+00:00,1000500330,7838080
+2026-03-20,chicken_thigh_bonein,Chicken thighs (bone-in),Metro,YORKSHIRE VALLEY FARMS ORGANIC FRESH BONELESS SKINLESS CHICKEN BREAST OR THIGHS,12.99,inferred_lb,28.64,M5V3L9,2026-03-26T03:59:59+00:00,1000395720,7838110
+2026-03-20,chicken_thigh_bonein,Chicken thighs (bone-in),Real Canadian Superstore,"SUFRA® HALAL CHICKEN DRUMS OR THIGHS, UP TO 1.58 KG",16.0,inferred_lb,35.27,M5V3L9,2026-03-26T03:59:59+00:00,1000085687,7837770
