@@ -187,10 +187,10 @@
     },
     "chicken_thigh_bonein": {
       "name": "Chicken thighs (bone-in)",
-      "avg": 12.61,
+      "avg": 12.53,
       "lo": 8.38,
       "hi": 35.27,
-      "observations": 22,
+      "observations": 23,
       "source": "flipp_historical"
     },
     "chicken_thigh_boneless": {
