@@ -3,16 +3,10 @@
   "cuts": {
     "beef_ground_regular": {
       "name": "Ground beef (regular)",
-      "avg": 9.43,
-      "lo": 5.44,
-      "hi": 22.02,
-      "observations": 95,
-=======
       "avg": 18.01,
       "lo": 10.74,
       "hi": 22.02,
       "observations": 9,
->>>>>>> c9b0900 (Reset flipp_history.csv and regenerate digest with strict $/lb-first logic)
       "source": "flipp_historical"
     },
     "beef_ground_medium": {
