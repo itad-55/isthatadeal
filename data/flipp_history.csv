@@ -1650,3 +1650,5 @@ date,cut_key,cut_name,store,item_name,raw_price,raw_unit,price_per_kg,postal_cod
 2026-03-21,limes,Limes,Maxi,"LIMES NATURELLEMENT IMPARFAITS SANS NOM®, sac de 1,5 lb",5.0,lb,11.02,K1A0A1,2026-03-26T03:59:59+00:00,999854823,7836354,
 2026-03-21,beef_ground_regular,Ground beef (regular),No Frills,"SUFRA® HALAL LEAN GROUND BEEF, 454 g",7.49,defaulted_lb,16.51,L4T0A1,2026-03-26T03:59:59+00:00,1000151946,7838425,
 2026-03-21,beef_ground_regular,Ground beef (regular),Loblaws,"GRASS FED EXTRA LEAN GROUND BEEF, 450 G",8.5,defaulted_lb,18.74,L4T0A1,2026-03-26T03:59:59+00:00,1000153244,7837844,
+2026-03-21,beef_ground_regular,Ground beef (regular),Metro,BOEUF HACHÉ MAIGRE | LEAN GROUND BEEF,8.99,defaulted_lb,19.82,K1A0A1,2026-03-26T03:59:59+00:00,1000091726,7838031,
+2026-03-21,beef_ground_regular,Ground beef (regular),Maxi,BŒUF HACHÉ EXTRA-MAIGRE | extra lean ground beef,9.0,defaulted_lb,19.84,K1A0A1,2026-03-26T03:59:59+00:00,999854658,7836354,
