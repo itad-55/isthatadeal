@@ -79,6 +79,14 @@
       "observations": 7,
       "source": "flipp_historical"
     },
+    "chicken_thigh_bonein": {
+      "name": "Chicken thighs (bone-in)",
+      "avg": 15.84,
+      "lo": 9.9,
+      "hi": 26.46,
+      "observations": 4,
+      "source": "flipp_historical"
+    },
     "chicken_drumsticks": {
       "name": "Chicken drumsticks",
       "avg": 14.54,

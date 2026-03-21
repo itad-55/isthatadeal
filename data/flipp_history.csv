@@ -219,3 +219,6 @@ date,cut_key,cut_name,store,item_name,raw_price,raw_unit,price_per_kg,postal_cod
 2026-03-21,beef_ground_regular,Ground beef (regular),Zehrs,"GRASS FED EXTRA LEAN GROUND BEEF, 450 G",8.5,defaulted_lb,18.74,N2L3G1,2026-03-26T03:59:59+00:00,1000302016,7838057,
 =======
 >>>>>>> c9b0900 (Reset flipp_history.csv and regenerate digest with strict $/lb-first logic)
+=======
+2026-03-21,chicken_thigh_bonein,Chicken thighs (bone-in),Real Canadian Superstore,"SUFRA® HALAL CHICKEN DRUMS OR THIGHS, UP TO 1.58 KG",16.0,kg,16.0,M5V3L9,2026-03-26T03:59:59+00:00,1000085687,7837770,
+>>>>>>> ba34bb3 (Fix $/lb to $/kg logic for loose produce, regenerate data)

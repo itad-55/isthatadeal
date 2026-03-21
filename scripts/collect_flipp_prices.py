@@ -196,7 +196,7 @@ def extract_price_per_kg(item, unit_hint):
     if re.search(r'/\s*lb|per\s+lb|\bper\s+pound|\blb\b', all_text):
         return round(price * 2.20462, 2), price, 'lb'
 
-    # Strict $/lb-first fallback for Ontario flyers: if no explicit $/kg or $/100g, always treat as $/lb for lb-first stores
+    # Only apply $/lb fallback for loose produce (like zucchini) if the item is not packaged/processed
     lb_first_stores = {
         'no frills', 'food basics', 'loblaws', 'metro', 'sobeys',
         'freshco', 'walmart', 'superstore', 'giant tiger', 'maxi',
@@ -204,8 +204,13 @@ def extract_price_per_kg(item, unit_hint):
         "t&t", "fortinos", "independent"
     }
     store = (item.get('merchant') or item.get('merchant_name') or '').strip().lower()
+    # Only fallback for zucchini and similar loose produce
+    loose_produce = ['zucchini', 'asparagus', 'bananas', 'grapes', 'peppers', 'tomatoes', 'sweet potato']
+    # Exclude packaged/processed items
     if unit_hint == 'kg' and store in lb_first_stores:
-        return round(price * 2.20462, 2), price, 'defaulted_lb'
+        # Only fallback for loose produce, not for packaged
+        if any(prod in name for prod in loose_produce) and not re.search(r'swirls|noodles|spirals|pack|pkg|tray|bag|container|pre-cut|precut|sliced|sticks|snack|kit|mix|medley|steam|frozen|prepared|zoodles|spiralized', all_text):
+            return round(price * 2.20462, 2), price, 'defaulted_lb'
 
     # No fallback to $/kg
     return None, None, None
