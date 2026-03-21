@@ -108,11 +108,11 @@ def realistic_range(cut_key):
             return rng
     return REALISTIC_RANGES['default']
 
-def score_deals(statcan, flipp):
+def score_deals(statcan, flipp, limit=5):
     """
     Read flipp_history.csv, find rows from the last 7 days,
     compare each price_per_kg to the StatCan or Flipp average,
-    return sorted list of deals.
+    return sorted list of deals (limit controls how many to return).
     """
     # Build unified averages lookup: cut_key or statcan_key → avg
     # Override raw_unit for cut_keys that were historically mis-recorded
@@ -249,6 +249,7 @@ def score_deals(statcan, flipp):
                                   if row.get('item_id') and row.get('flyer_id')
                                   else f'https://flipp.com/en-ca/item/{row.get("item_id")}'
                                   if row.get('item_id') else ''),
+                    'retailer_url': row.get('retailer_url', ''),
                 })
 
     # Dedupe: keep best price per cut
@@ -276,7 +277,7 @@ def score_deals(statcan, flipp):
               or (d.get('valid_to') or '')[:10] > today_str]  # strictly future = keep
 
     print(f"  [filter] {len(best)} candidates → {len(active)} after expiry filter")
-    return sorted(active, key=lambda x: x['pct'])[:5]
+    return sorted(active, key=lambda x: x['pct'])[:limit]
 
 # ── Emoji for product categories ──────────────────────────────────────────────
 def format_valid_to(valid_to):
@@ -330,7 +331,13 @@ def build_email_html(deals, period, show_verify=False):
                 break
         item_name_raw = _iname[:55] + ('...' if len(_iname) > 55 else '')
         expiry = format_valid_to(d.get('valid_to', ''))
-        store_line = store_link(d['store'], expiry)
+        # Prefer retailer_url for store link if available
+        retailer_url = d.get('retailer_url', '')
+        if retailer_url:
+            store_html = f'<a href="{retailer_url}" style="color:inherit;text-decoration:underline;text-underline-offset:2px">{d["store"]}</a>'
+        else:
+            store_html = store_link(d['store'], expiry)
+        store_line = store_html + (f' · {expiry}' if expiry and not retailer_url else '')
         _furl = d.get('flipp_url', '')
         if show_verify:
             if _furl:
@@ -339,17 +346,25 @@ def build_email_html(deals, period, show_verify=False):
                 flipp_verify = ' · <span style="color:#C00;font-size:11px">No Flipp verify link available</span>'
         else:
             flipp_verify = ''
-        is_per_kg  = d.get('raw_unit', 'kg') not in ('pkg', 'unit', 'each')
-        lb_price   = f'${d["price"]/2.20462:.2f}/lb' if is_per_kg else ''
-        kg_price   = f'${d["price"]:.2f}/kg' if is_per_kg else f'${d["price"]:.2f}'
-
-        if is_per_kg:
+        # Improve price/unit display logic
+        raw_unit = d.get('raw_unit', 'kg')
+        is_per_kg = raw_unit not in ('pkg', 'unit', 'each')
+        # If the raw_unit is 'lb', show price as $/lb and $/kg
+        if raw_unit == 'lb':
+            lb_price = f'${d["price"]:.2f}/lb'
+            kg_price = f'${d["price"]*2.20462:.2f}/kg'
             primary_price = lb_price
-            kg_span  = f'  <span style="font-size:18px;font-weight:400;color:rgba(255,255,255,0.5)">{kg_price}</span>'
+            kg_span = f'  <span style="font-size:18px;font-weight:400;color:rgba(255,255,255,0.5)">{kg_price}</span>'
+            kg_span2 = f'<span style="font-size:14px;font-weight:400;color:#8A8680;font-family:monospace">{kg_price}</span> '
+        elif is_per_kg:
+            lb_price = f'${d["price"]/2.20462:.2f}/lb'
+            kg_price = f'${d["price"]:.2f}/kg'
+            primary_price = lb_price
+            kg_span = f'  <span style="font-size:18px;font-weight:400;color:rgba(255,255,255,0.5)">{kg_price}</span>'
             kg_span2 = f'<span style="font-size:14px;font-weight:400;color:#8A8680;font-family:monospace">{kg_price}</span> '
         else:
-            primary_price = kg_price
-            kg_span  = ''
+            primary_price = f'${d["price"]:.2f}'
+            kg_span = ''
             kg_span2 = ''
         pct_below  = f'{abs(d["pct"]):.0f}'
 
@@ -443,19 +458,26 @@ def create_draft(subject, html_content):
         print(f"✗ MailerLite API error {e.code}: {body[:300]}")
 
 
+
+import sys
 def main():
-    # Only build digest on Thursdays (weekday() == 3) unless forced
+    review_mode = '--review-page' in sys.argv
+    # Only build digest on Thursdays (weekday() == 3) unless forced or review mode
     force = os.environ.get('FORCE_DIGEST', '').lower() == 'true'
-    if TODAY.weekday() != 3 and not force:
+    if not review_mode and TODAY.weekday() != 3 and not force:
         print(f"Today is {TODAY.strftime('%A')} — digest only runs on Thursdays. Skipping.")
         return
-    print(f"Building digest for week of {TODAY.isoformat()}...")
+    print(f"Building digest for week of {TODAY.isoformat()}...{' (review mode)' if review_mode else ''}")
 
     statcan = load_statcan()
     flipp   = load_flipp()
     print(f"StatCan products: {len(statcan)}  |  Flipp averages: {len(flipp)}")
 
-    deals = score_deals(statcan, flipp)
+    if review_mode:
+        deals = score_deals(statcan, flipp, limit=50)
+    else:
+        deals = score_deals(statcan, flipp)
+
     print(f"Deals found: {len(deals)}")
     for d in deals:
         print(f"  {d['name']} @ {d['store']}: ${d['price']:.2f}/kg ({d['pct']:+.1f}%)")
@@ -466,6 +488,15 @@ def main():
 
     with open(STATCAN_FILE) as f:
         period = json.load(f).get('period', 'unknown')
+
+    if review_mode:
+        _, html_review = build_email_html(deals, period, show_verify=True)
+        review_path = os.path.join(DATA_DIR, 'digest_review.html')
+        with open(review_path, 'w') as f:
+            f.write(html_review)
+        print(f"✓ Saved review page to data/digest_review.html")
+        print(f"  Open data/digest_review.html in your browser to review the top 50 deals.")
+        return
 
     subject, html        = build_email_html(deals, period, show_verify=False)
     _,       html_verify = build_email_html(deals, period, show_verify=True)

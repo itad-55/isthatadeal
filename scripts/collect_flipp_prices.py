@@ -191,16 +191,21 @@ def extract_price_per_kg(item, unit_hint):
     # Explicit unit detection — check everything we have
     if re.search(r'/\s*100\s*g', all_text):
         return round(price * 10, 2), price, '100g'
-    if re.search(r'/\s*lb|per\s+lb|per\s+pound|lb', all_text):
+    if re.search(r'/\s*lb|per\s+lb|\bper\s+pound|\blb\b', all_text):
         return round(price * 2.20462, 2), price, 'lb'
-    if re.search(r'/\s*kg|per\s+kg|kg', all_text):
+    if re.search(r'/\s*kg|per\s+kg|\bkg\b', all_text):
         return round(price, 2), price, 'kg'
 
-    # All major Ontario flyers price meat in $/lb, not $/kg.
-    # If no explicit unit found in Flipp text, always treat as $/lb for meat (unit_hint='kg').
-    # The only exception is if the price is clearly already per kg (>= $20),
-    # which would be an unusually high $/lb price even for premium cuts.
-    if unit_hint == 'kg' and price < 20.0:
+    # Only use $/lb fallback for known Ontario $/lb-first flyers
+    lb_first_stores = {
+        'no frills', 'food basics', 'loblaws', 'metro', 'sobeys',
+        'freshco', 'walmart', 'superstore', 'giant tiger', 'maxi',
+        'provigo', 'iga', 'zehrs', 'valumart', 'save on foods',
+        "t&t", "fortinos", "independent"
+    }
+    store = (item.get('merchant') or item.get('merchant_name') or '').strip().lower()
+    # If no explicit unit found, fallback ONLY if store is in lb_first_stores and unit_hint is 'kg' and price < 20
+    if unit_hint == 'kg' and price < 20.0 and store in lb_first_stores:
         return round(price * 2.20462, 2), price, 'inferred_lb'
 
     # High price with no unit — assume $/kg (e.g. $25 beef tenderloin/kg)
@@ -238,7 +243,7 @@ def main():
     new_rows  = []
     fieldnames = ['date', 'cut_key', 'cut_name', 'store', 'item_name',
                   'raw_price', 'raw_unit', 'price_per_kg', 'postal_code', 'valid_to',
-                  'item_id', 'flyer_id']
+                  'item_id', 'flyer_id', 'retailer_url']
 
     for key, display_name, queries, unit_hint in CUTS:
         print(f"\n{display_name}")
@@ -257,6 +262,15 @@ def main():
                     flyer_id  = str(item.get('flyer_id') or item.get('flyerId') or '')
                     item_name = (item.get('name') or '').strip()
                     store     = (item.get('merchant') or item.get('merchant_name') or '').strip()
+
+                    # Try to get the retailer-specific URL (external_url, retailer_url, or see_it_url)
+                    retailer_url = (
+                        item.get('external_url') or
+                        item.get('retailer_url') or
+                        item.get('see_it_url') or
+                        item.get('seeItUrl') or
+                        ''
+                    )
 
                     dedup_key = (item_id, store)
                     if dedup_key in seen_items:
@@ -288,10 +302,11 @@ def main():
                         'valid_to':     valid_to,
                         'item_id':      item_id,
                         'flyer_id':     flyer_id,
+                        'retailer_url': retailer_url,
                     }
                     new_rows.append(row)
                     existing.add(dup_check)
-                    print(f"  ✓ {store}: {item_name} — ${raw_price}/{raw_unit} (${price_kg}/kg)")
+                    print(f"  ✓ {store}: {item_name} — ${raw_price}/{raw_unit} (${price_kg}/kg) [retailer_url: {retailer_url}]")
 
                 if new_rows and len(queries) > 1:
                     break  # found results from first query, skip fallback queries
