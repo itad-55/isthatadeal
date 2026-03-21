@@ -147,10 +147,10 @@
     },
     "peppers": {
       "name": "Bell peppers",
-      "avg": 9.9,
+      "avg": 10.27,
       "lo": 8.8,
       "hi": 11.0,
-      "observations": 4,
+      "observations": 5,
       "source": "flipp_historical"
     },
     "asparagus": {
