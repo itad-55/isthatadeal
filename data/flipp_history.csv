@@ -223,3 +223,6 @@ date,cut_key,cut_name,store,item_name,raw_price,raw_unit,price_per_kg,postal_cod
 2026-03-21,chicken_thigh_bonein,Chicken thighs (bone-in),Real Canadian Superstore,"SUFRA® HALAL CHICKEN DRUMS OR THIGHS, UP TO 1.58 KG",16.0,kg,16.0,M5V3L9,2026-03-26T03:59:59+00:00,1000085687,7837770,
 >>>>>>> ba34bb3 (Fix $/lb to $/kg logic for loose produce, regenerate data)
 2026-03-21,salmon_fillet,Salmon fillets,Real Canadian Superstore,"PC® CEDAR PLANK ATLANTIC SALMON 500 G OR ASC SHRIMP 21-30/LB, 400 G",13.99,lb,30.84,M5V3L9,2026-03-26T03:59:59+00:00,1000082792,7837770,
+2026-03-21,carrots_bag,Carrots (bag),FreshCo,"Iceberg Lettuce Product of USA or Mexico No. 1 Grade Compliments Carrots or Yellow Onions 3 lb Bag Product of Ontario, Canada No. 1, 1.36 kg",2.99,kg,2.99,M5V3L9,2026-03-19T04:00:00+00:00,2026-03-26T03:59:59+00:00,999971949,7834668,
+2026-03-21,carrots_bag,Carrots (bag),Independent City Market,"FARMER'S MARKET™ CARROTS, 3 LB BAG, OR YELLOW ONIONS, 3 LB BAG",4.0,lb,8.82,M5V3L9,2026-03-19T04:00:00+00:00,2026-03-26T03:59:59+00:00,1000145811,7837894,
+2026-03-21,carrots_bag,Carrots (bag),Your Independent Grocer,"FARMER'S MARKET™ CARROTS, 3 LB BAG OR YELLOW ONIONS, 3 LB BAG",4.0,lb,8.82,M5V3L9,2026-03-19T04:00:00+00:00,2026-03-26T03:59:59+00:00,1000358617,7838094,
