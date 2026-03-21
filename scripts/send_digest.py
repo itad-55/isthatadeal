@@ -67,6 +67,46 @@ def store_link(store_name, expiry_text):
     return store_html + (' · ' + expiry_text if expiry_text else '')
 WEEK_AGO  = TODAY - timedelta(days=7)
 SITE_URL      = 'https://isthatadeal.ca'
+
+# ── Canonical Flipp URL builder ───────────────────────────────────────────────
+import re as _re, datetime as _dt
+
+_POSTAL_TO_CITY = {
+    'M': 'toronto-on',
+    'L': 'toronto-on',   # GTA/Brampton/Mississauga — use toronto-on as canonical
+    'K': 'ottawa-on',
+    'N': 'waterloo-on',
+}
+
+def _fmt_flipp_date(iso_str):
+    """Convert ISO datetime string to Flipp date slug, e.g. 'thursday-mar-19'."""
+    if not iso_str:
+        return ''
+    try:
+        dt = _dt.datetime.fromisoformat(iso_str.replace('Z', '+00:00'))
+        et = dt.astimezone(_dt.timezone(_dt.timedelta(hours=-4)))
+        day = et.strftime('%A').lower()
+        month = et.strftime('%b').lower()
+        num = str(et.day)
+        return f'{day}-{month}-{num}'
+    except Exception:
+        return ''
+
+def make_flipp_url(item_id, store, postal_code, valid_from, valid_to, flyer_id=''):
+    """Build canonical Flipp item URL in the city/item/id-store-flyer-dates format."""
+    if not item_id:
+        return ''
+    city = _POSTAL_TO_CITY.get((postal_code or '')[:1], 'toronto-on')
+    from_slug = _fmt_flipp_date(valid_from)
+    to_slug   = _fmt_flipp_date(valid_to)
+    if from_slug and to_slug:
+        store_slug = _re.sub(r'[^a-z0-9]+', '-', (store or '').lower()).strip('-')
+        slug = f'{item_id}-{store_slug}-weekly-flyer-valid-{from_slug}-{to_slug}'
+        return f'https://flipp.com/en-ca/{city}/item/{slug}'
+    # Fallback to legacy format if dates unavailable
+    if flyer_id:
+        return f'https://flipp.com/en-ca/item/{item_id}?flyer_id={flyer_id}'
+    return f'https://flipp.com/en-ca/item/{item_id}'
 VERIFY_FILE   = 'digest_verify_2833151ff2ae0f3d.html'  # secret review URL — do not share
 
 # ── Load StatCan averages ─────────────────────────────────────────────────────
@@ -245,10 +285,14 @@ def score_deals(statcan, flipp, limit=5):
                     'date':      row['date'],
                     'valid_to':  row.get('valid_to', ''),
                     'raw_unit':  'pkg' if key in PKG_OVERRIDES else row.get('raw_unit', ''),
-                    'flipp_url': (f'https://flipp.com/en-ca/item/{row.get("item_id")}?flyer_id={row.get("flyer_id")}'
-                                  if row.get('item_id') and row.get('flyer_id')
-                                  else f'https://flipp.com/en-ca/item/{row.get("item_id")}'
-                                  if row.get('item_id') else ''),
+                    'flipp_url': make_flipp_url(
+                                      row.get('item_id', ''),
+                                      row.get('store', ''),
+                                      row.get('postal_code', ''),
+                                      row.get('valid_from', ''),
+                                      row.get('valid_to', ''),
+                                      row.get('flyer_id', ''),
+                                  ),
                     'retailer_url': row.get('retailer_url', ''),
                 })
 

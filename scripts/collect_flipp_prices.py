@@ -243,7 +243,7 @@ def main():
 
     new_rows  = []
     fieldnames = ['date', 'cut_key', 'cut_name', 'store', 'item_name',
-                  'raw_price', 'raw_unit', 'price_per_kg', 'postal_code', 'valid_to',
+                  'raw_price', 'raw_unit', 'price_per_kg', 'postal_code', 'valid_from', 'valid_to',
                   'item_id', 'flyer_id', 'retailer_url']
 
     for key, display_name, queries, unit_hint in CUTS:
@@ -287,7 +287,8 @@ def main():
                     if dup_check in existing:
                         continue
 
-                    valid_to = (item.get('valid_to') or item.get('flyer_valid_to') or
+                    valid_from = (item.get('valid_from') or item.get('flyer_valid_from') or '')
+                    valid_to   = (item.get('valid_to') or item.get('flyer_valid_to') or
                                  item.get('valid_until') or item.get('sale_story') or '')
 
                     row = {
@@ -300,6 +301,7 @@ def main():
                         'raw_unit':     raw_unit,
                         'price_per_kg': price_kg,
                         'postal_code':  postal,
+                        'valid_from':   valid_from,
                         'valid_to':     valid_to,
                         'item_id':      item_id,
                         'flyer_id':     flyer_id,
