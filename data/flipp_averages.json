@@ -3,10 +3,10 @@
   "cuts": {
     "beef_ground_regular": {
       "name": "Ground beef (regular)",
-      "avg": 18.01,
+      "avg": 18.31,
       "lo": 10.74,
       "hi": 22.02,
-      "observations": 9,
+      "observations": 14,
       "source": "flipp_historical"
     },
     "beef_ground_medium": {
@@ -99,10 +99,10 @@
     },
     "salmon_fillet": {
       "name": "Salmon fillets",
-      "avg": 30.63,
+      "avg": 30.65,
       "lo": 13.16,
       "hi": 44.07,
-      "observations": 12,
+      "observations": 13,
       "source": "flipp_historical"
     },
     "cod": {
