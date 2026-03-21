@@ -61,7 +61,7 @@ def store_link(store_name, expiry_text):
     """Return store line HTML with flyer link if available."""
     url = STORE_FLYER_URLS.get(store_name.lower().strip())
     if url:
-        store_html = f'<a href="{url}" style="color:inherit;text-decoration:underline;text-underline-offset:2px">{store_name}</a>'
+        store_html = f'<a href="{url}" style="color:inherit;text-decoration:underline;text-underline-offset:2px">{store_name} ↗</a>'
     else:
         store_html = store_name
     return store_html + (' · ' + expiry_text if expiry_text else '')
@@ -412,10 +412,10 @@ def build_email_html(deals, period, show_verify=False):
         # Prefer retailer_url for store link if available
         retailer_url = d.get('retailer_url', '')
         if retailer_url:
-            store_html = f'<a href="{retailer_url}" style="color:inherit;text-decoration:underline;text-underline-offset:2px">{d["store"]}</a>'
+            store_html = f'<a href="{retailer_url}" style="color:inherit;text-decoration:underline;text-underline-offset:2px">{d["store"]} ↗</a>'
+            store_line = store_html + (f' · {expiry}' if expiry else '')
         else:
-            store_html = store_link(d['store'], expiry)
-        store_line = store_html + (f' · {expiry}' if expiry and not retailer_url else '')
+            store_line = store_link(d['store'], expiry)
         _furl = d.get('flipp_url', '')
         if show_verify:
             if _furl:
