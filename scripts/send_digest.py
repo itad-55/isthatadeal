@@ -259,6 +259,12 @@ def score_deals(statcan, flipp, limit=5):
                 print(f"  Skipping {row['cut_name']} @ {row['store']}: deli/processed product")
                 continue
 
+            # Skip frozen salmon/fish — StatCan tracks fresh fillets, not frozen bags
+            SALMON_KEYS = {'salmon_fillet', 'salmon_whole', 'tilapia', 'cod', 'tuna_steak'}
+            if key in SALMON_KEYS and 'frozen' in item_name_lower:
+                print(f"  Skipping {row['cut_name']} @ {row['store']}: frozen seafood excluded")
+                continue
+
             # Sanity check 1 — realistic price range for this type of product
             lo, hi = realistic_range(key)
             if not (lo <= price <= hi):
