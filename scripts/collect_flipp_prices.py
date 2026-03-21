@@ -340,12 +340,23 @@ def compute_averages():
 
     with open(HISTORY_CSV, newline='') as f:
         for row in csv.DictReader(f):
+            val = row.get('price_per_kg')
+            # Skip if missing, empty, or not a valid float
+            if val is None:
+                continue
+            val_str = str(val).strip()
+            if val_str == '' or val_str.lower() == 'none':
+                continue
             try:
-                pkg = float(row['price_per_kg'])
-                if 0.5 < pkg < 200:  # sanity filter
-                    prices_by_cut[row['cut_key']].append(pkg)
-                    names_by_cut[row['cut_key']] = row['cut_name']
-            except (ValueError, KeyError):
+                pkg = float(val_str)
+                if not (0.5 < pkg < 200):  # sanity filter
+                    continue
+            except (ValueError, TypeError):
+                continue
+            try:
+                prices_by_cut[row['cut_key']].append(pkg)
+                names_by_cut[row['cut_key']] = row['cut_name']
+            except (KeyError, TypeError):
                 continue
 
     averages = {}
