@@ -191,12 +191,12 @@ def extract_price_per_kg(item, unit_hint):
     # Explicit unit detection — check everything we have
     if re.search(r'/\s*100\s*g', all_text):
         return round(price * 10, 2), price, '100g'
-    if re.search(r'/\s*lb|per\s+lb|\bper\s+pound|\blb\b', all_text):
-        return round(price * 2.20462, 2), price, 'lb'
     if re.search(r'/\s*kg|per\s+kg|\bkg\b', all_text):
         return round(price, 2), price, 'kg'
+    if re.search(r'/\s*lb|per\s+lb|\bper\s+pound|\blb\b', all_text):
+        return round(price * 2.20462, 2), price, 'lb'
 
-    # Only use $/lb fallback for known Ontario $/lb-first flyers
+    # Strict $/lb-first fallback for Ontario flyers: if no explicit $/kg or $/100g, always treat as $/lb for lb-first stores
     lb_first_stores = {
         'no frills', 'food basics', 'loblaws', 'metro', 'sobeys',
         'freshco', 'walmart', 'superstore', 'giant tiger', 'maxi',
@@ -204,14 +204,10 @@ def extract_price_per_kg(item, unit_hint):
         "t&t", "fortinos", "independent"
     }
     store = (item.get('merchant') or item.get('merchant_name') or '').strip().lower()
-    # If no explicit unit found, fallback ONLY if store is in lb_first_stores and unit_hint is 'kg' and price < 20
-    if unit_hint == 'kg' and price < 20.0 and store in lb_first_stores:
-        return round(price * 2.20462, 2), price, 'inferred_lb'
+    if unit_hint == 'kg' and store in lb_first_stores:
+        return round(price * 2.20462, 2), price, 'defaulted_lb'
 
-    # High price with no unit — assume $/kg (e.g. $25 beef tenderloin/kg)
-    if unit_hint == 'kg' and price < 80.0:
-        return round(price, 2), price, 'assumed_kg'
-
+    # No fallback to $/kg
     return None, None, None
 
 # ── Flipp search ───────────────────────────────────────────────────────────────
