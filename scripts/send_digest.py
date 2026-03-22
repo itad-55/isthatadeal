@@ -456,7 +456,8 @@ def build_email_html(deals, period, show_verify=False):
                 f'<div class="dw-name" style="font-size:24px;font-weight:700;color:#FAFAF7;margin-bottom:4px;line-height:1.2">{d["name"]}</div>'
                 f'<div class="dw-desc" style="font-size:15px;color:rgba(255,255,255,0.55);margin-bottom:6px;line-height:1.3">{item_name_raw}</div>'
                 f'<div class="dw-meta" style="font-size:14px;color:rgba(255,255,255,0.4);font-family:monospace;margin-bottom:14px">{store_line}{flipp_verify}</div>'
-                f'<div class="dw-price" style="font-size:34px;font-weight:700;color:#FAFAF7;font-family:monospace;margin-bottom:4px">{primary_price}{kg_span}</div>'
+                f'<div class="dw-price" style="font-size:34px;font-weight:700;color:#FAFAF7;font-family:monospace;margin-bottom:2px">{primary_price}</div>'
+                f'<div style="font-size:16px;color:rgba(255,255,255,0.45);font-family:monospace;margin-bottom:10px">{kg_price if is_per_kg or raw_unit=="lb" else ""}</div>'
                 f'<div class="dw-pct" style="font-size:17px;font-weight:700;color:#5DCAA5;font-family:monospace">{check} {pct_below}% below the Ontario average</div>'
                 f'</td></tr></table></td></tr>'
                 f'<tr><td style="padding:8px 12px 4px">'
@@ -474,7 +475,9 @@ def build_email_html(deals, period, show_verify=False):
                 f'<div class="li-name" style="font-size:20px;font-weight:700;color:#0D0D0D;margin-bottom:3px;line-height:1.2">{d["name"]}</div>'
                 f'<div class="li-desc" style="font-size:15px;color:#555555;margin-bottom:3px;line-height:1.3">{item_name_raw}</div>'
                 f'<div class="li-meta" style="font-size:14px;color:#8A8680;font-family:monospace;margin-bottom:10px">{store_line}{flipp_verify}</div>'
-                f'<div class="li-price" style="font-size:24px;font-weight:700;color:#0D0D0D;font-family:monospace;margin-bottom:2px">{primary_price} {kg_span2}<span style="font-size:14px;font-weight:700;color:{color};font-family:monospace">{check} {pct_below}% below avg</span></div>'
+                f'<div class="li-price" style="font-size:24px;font-weight:700;color:#0D0D0D;font-family:monospace;margin-bottom:1px">{primary_price}</div>'
+                f'<div style="font-size:13px;color:#8A8680;font-family:monospace;margin-bottom:4px">{kg_price if is_per_kg or raw_unit=="lb" else ""}</div>'
+                f'<div style="font-size:14px;font-weight:700;color:{color};font-family:monospace">{check} {pct_below}% below avg</div>'
                 f'</td></tr></table></td></tr>'
             )
 
