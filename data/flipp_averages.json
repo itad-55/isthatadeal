@@ -123,10 +123,10 @@
     },
     "salmon_fillet": {
       "name": "Salmon fillets",
-      "avg": 30.3,
+      "avg": 30.34,
       "lo": 13.16,
       "hi": 44.07,
-      "observations": 14,
+      "observations": 15,
       "source": "flipp_historical"
     },
     "tilapia": {
