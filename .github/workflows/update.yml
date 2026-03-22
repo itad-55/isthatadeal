@@ -39,7 +39,6 @@ jobs:
           git commit -m "chore: weekly data update $(date +'%Y-%m-%d')"
           git push
       - name: Deploy via SFTP
-        if: steps.diff.outputs.changed == 'true'
         run: |
           sudo apt-get install -y sshpass
           sshpass -p "${{ secrets.FTP_PASSWORD }}" sftp \
@@ -47,6 +46,9 @@ jobs:
             ${{ secrets.FTP_USERNAME }}@${{ secrets.FTP_SERVER }} << 'SFTP'
           put index.html /home/dh_idwckm/isthatadeal.ca/index.html
           put checker.html /home/dh_idwckm/isthatadeal.ca/checker.html
+          put privacy.html /home/dh_idwckm/isthatadeal.ca/privacy.html
+          put terms.html /home/dh_idwckm/isthatadeal.ca/terms.html
+          put cookies.html /home/dh_idwckm/isthatadeal.ca/cookies.html
           -put data/digest_thisweek.html /home/dh_idwckm/isthatadeal.ca/thisweek.html
           -put data/digest_verify_2833151ff2ae0f3d.html /home/dh_idwckm/isthatadeal.ca/verify_2833151ff2ae0f3d.html
           bye
