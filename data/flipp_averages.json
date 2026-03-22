@@ -179,10 +179,10 @@
     },
     "peppers": {
       "name": "Bell peppers",
-      "avg": 10.06,
+      "avg": 10.18,
       "lo": 8.8,
       "hi": 11.0,
-      "observations": 9,
+      "observations": 10,
       "source": "flipp_historical"
     },
     "lettuce_romaine": {
