@@ -235,10 +235,10 @@
     },
     "carrots_bag": {
       "name": "Carrots (bag)",
-      "avg": 7.15,
+      "avg": 6.88,
       "lo": 2.99,
       "hi": 8.82,
-      "observations": 9,
+      "observations": 11,
       "source": "flipp_historical"
     }
   }
