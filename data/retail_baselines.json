@@ -2,6 +2,12 @@
   "_comment": "Manually verified regular (non-sale) shelf prices at major Ontario chains. Update monthly. Prices in $/kg unless noted. Median used for comparisons.",
   "updated": "2026-03-23",
   "cuts": {
+    "lamb_leg": {
+      "name": "Leg of lamb (bone-in)",
+      "prices_kg": {"metro": 24.22, "food_basics": 19.82, "walmart": 13.20, "loblaws": 19.82},
+      "median_kg": 19.82,
+      "notes": "Bone-in leg only. Excludes boneless rolled roasts."
+    },
     "pork_back_ribs": {
       "name": "Pork back ribs",
       "prices_kg": {
