@@ -49,7 +49,7 @@ STORE_FLYER_URLS = {
     'sobeys':                       'https://www.sobeys.com/flyer',
     'real canadian superstore':     'https://www.realcanadiansuperstore.ca/en/print-flyer',
     'superstore':                   'https://www.realcanadiansuperstore.ca/en/print-flyer',
-    'fortinos':                     'https://www.loblaws.ca/en/print-flyer',
+    'fortinos':                     'https://www.fortinos.ca/en/print-flyer',
     'zehrs':                        'https://www.loblaws.ca/en/print-flyer',
     'your independent grocer':      'https://www.loblaws.ca/en/print-flyer',
     'independent grocer':           'https://www.loblaws.ca/en/print-flyer',
@@ -157,7 +157,7 @@ def realistic_range(cut_key):
             return rng
     return REALISTIC_RANGES['default']
 
-def score_deals(statcan, flipp, baselines=None, limit=5):
+def score_deals(statcan, flipp, baselines=None, limit=10):
     """
     Read flipp_history.csv, find rows from the last 7 days,
     compare each price_per_kg to the StatCan or Flipp average,
@@ -711,7 +711,7 @@ def main():
     if review_mode:
         deals, rejected = score_deals(statcan, flipp, baselines=baselines, limit=50)
     else:
-        deals, rejected = score_deals(statcan, flipp, baselines=baselines)
+        deals, rejected = score_deals(statcan, flipp, baselines=baselines)  # limit=10
 
     print(f"Deals found: {len(deals)}")
     for d in deals:
