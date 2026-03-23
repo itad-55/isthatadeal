@@ -141,7 +141,7 @@ def load_retail_baselines():
 REALISTIC_RANGES = {
     'beef':     (5.0,  80.0),
     'pork':     (4.0,  50.0),
-    'chicken':  (8.0,  25.0),
+    'chicken':  (3.5,  25.0),  # floor lowered: drumsticks at $1.99/lb = $4.39/kg is a real deal
     'turkey':   (5.0,  25.0),
     'lamb':     (15.0, 60.0),
     'veal':     (6.0,  60.0),
