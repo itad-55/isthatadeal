@@ -2,6 +2,12 @@
   "_comment": "Manually verified regular (non-sale) shelf prices at major Ontario chains. Update monthly. Prices in $/kg unless noted. Median used for comparisons.",
   "updated": "2026-03-23",
   "cuts": {
+    "asparagus": {
+      "name": "Asparagus (fresh)",
+      "prices_kg": {"walmart": 8.70, "metro": 11.00, "loblaws": 15.41},
+      "median_kg": 11.00,
+      "notes": "Walmart 87¢/100g. Metro $11.00/kg (680g avg bunch). Loblaws $9.09 regular/bunch ÷ 0.59kg avg = $15.41/kg (sale price excluded)."
+    },
     "chicken_wings": {
       "name": "Chicken wings (fresh)",
       "prices_kg": {"metro": 17.61, "loblaws": 19.82, "walmart": 13.00},
