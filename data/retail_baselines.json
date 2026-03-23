@@ -2,6 +2,18 @@
   "_comment": "Manually verified regular (non-sale) shelf prices at major Ontario chains. Update monthly. Prices in $/kg unless noted. Median used for comparisons.",
   "updated": "2026-03-23",
   "cuts": {
+    "chicken_wings": {
+      "name": "Chicken wings (fresh)",
+      "prices_kg": {"metro": 17.61, "loblaws": 19.82, "walmart": 13.00},
+      "median_kg": 17.61,
+      "notes": "Fresh whole wings only. Excludes frozen bags and pre-marinated/breaded products."
+    },
+    "beef_brisket": {
+      "name": "Beef brisket",
+      "prices_kg": {"metro": 22.02, "loblaws": 26.42, "wholesale_club": 20.92, "fortinos": 28.64},
+      "median_kg": 24.22,
+      "notes": "Fresh flat/whole brisket. Metro vac-pack ($17.61/kg) excluded — regular fresh-case price used. Flipp historical avg ($35.81) was unreliable (4 obs, wide range)."
+    },
     "lamb_leg": {
       "name": "Leg of lamb (bone-in)",
       "prices_kg": {"metro": 24.22, "food_basics": 19.82, "loblaws": 19.82},
