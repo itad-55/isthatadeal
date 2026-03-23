@@ -2,6 +2,30 @@
   "_comment": "Manually verified regular (non-sale) shelf prices at major Ontario chains. Update monthly. Prices in $/kg unless noted. Median used for comparisons.",
   "updated": "2026-03-23",
   "cuts": {
+    "peppers": {
+      "name": "Bell peppers (loose)",
+      "prices_kg": {"food_basics": 10.98, "metro": 12.10, "loblaws": 12.10},
+      "median_kg": 12.10,
+      "notes": "Food Basics $4.98/lb, Metro/Loblaws $5.49/lb. Loose sweet/bell peppers only."
+    },
+    "potatoes_bag": {
+      "name": "Potatoes (10lb bag)",
+      "prices_kg": {"food_basics": 1.54, "metro": 1.54, "loblaws": 1.32},
+      "median_kg": 1.54,
+      "notes": "Food Basics $6.98, Metro $6.99, Loblaws $6.00 per 10lb (4.536kg) bag. NOTE: Flipp history has unit bug treating bag totals as $/lb — actual flyer deals will be recalculated once bug is fixed."
+    },
+    "carrots_bag": {
+      "name": "Carrots (2lb bag)",
+      "prices_kg": {"metro": 3.30, "food_basics": 3.29, "walmart": 4.38},
+      "median_kg": 3.30,
+      "notes": "Metro $2.99, Food Basics $2.98, Walmart $3.97 per 2lb (0.907kg) bag. Same unit bug caveat as potatoes_bag."
+    },
+    "lemons": {
+      "name": "Lemons (2lb bag)",
+      "prices_kg": {"walmart": 5.48, "food_basics": 6.59, "metro": 6.60, "loblaws": 7.17},
+      "median_kg": 6.60,
+      "notes": "Walmart $4.97, Food Basics $5.98, Metro $5.99 ($0.66/100g confirmed), Loblaws $6.50 per 2lb (0.907kg) bag. Replaces phantom Flipp avg of $8.80/kg (single observation repeated 6x)."
+    },
     "asparagus": {
       "name": "Asparagus (fresh)",
       "prices_kg": {"walmart": 8.70, "metro": 11.00, "loblaws": 15.41},
