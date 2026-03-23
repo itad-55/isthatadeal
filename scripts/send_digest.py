@@ -348,6 +348,7 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                     'date':      row['date'],
                     'valid_to':  row.get('valid_to', ''),
                     'raw_unit':  'pkg' if key in PKG_OVERRIDES else row.get('raw_unit', ''),
+                    '_item_id':  row.get('item_id', ''),  # for cross-cut dedup
                     'flipp_url': make_flipp_url(
                                       row.get('item_id', ''),
                                       row.get('store', ''),
@@ -365,9 +366,17 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                                  'price': price, 'avg': avg, 'pct': round(pct, 1), 'source': source,
                                  'note': f'only {pct:.1f}% below avg (need −15%)'})
 
-    # Dedupe: keep best price per cut
+    # Dedupe: keep best price per cut, and also dedupe by item_id so
+    # the same physical product can't appear twice under different cut keys
     best = {}
-    for d in deals:
+    seen_item_ids = set()
+    for d in sorted(deals, key=lambda x: x['pct']):  # best deal wins on item_id collision
+        iid = d.get('flipp_url', '') + d.get('item_name', '') + d['store']  # proxy dedup key
+        raw_iid = d.get('_item_id', '')
+        if raw_iid and raw_iid in seen_item_ids:
+            continue
+        if raw_iid:
+            seen_item_ids.add(raw_iid)
         if d['key'] not in best or d['pct'] < best[d['key']]['pct']:
             best[d['key']] = d
 

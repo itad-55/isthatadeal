@@ -153,6 +153,13 @@ CUTS = [
 ]
 # ── Keywords that indicate a product is NOT a basic grocery ──────────────────
 # Used to skip pre-cooked, frozen, deli, and restaurant-branded items
+# ── Item IDs permanently blacklisted due to known bad data ──────────────────
+# Add item IDs here when Flipp persistently returns contaminated data
+# that cannot be filtered by keywords alone.
+BLACKLISTED_ITEM_IDS = {
+    '1000407057',  # Loblaws lamb leg: $5.99 labelled as /kg (should be /lb = $13.21/kg)
+}
+
 PROCESSED_KEYWORDS = [
     'cooked', 'frozen', 'breaded', 'marinated', 'seasoned', 'stuffed',
     'rotisserie', 'pre-cooked', 'fully cooked', 'ready to cook', 'ready-to-cook',
@@ -314,6 +321,9 @@ def main():
 
                     dedup_key = (item_id, store)
                     if dedup_key in seen_items:
+                        continue
+                    if item_id in BLACKLISTED_ITEM_IDS:
+                        print(f"  ✗ Skipping blacklisted item {item_id}: {item_name[:50]}")
                         continue
                     seen_items.add(dedup_key)
 
