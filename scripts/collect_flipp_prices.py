@@ -210,6 +210,23 @@ def extract_price_per_kg(item, unit_hint):
     display_text = (item.get('display_text') or '').lower()
     all_text     = text + ' ' + price_text + ' ' + display_text
 
+    # ── Fixed-weight packages (e.g. "10 LB BAG", "2 lb Bag", "1.36 kg") ──────
+    # Must check BEFORE the generic /lb detection, because "10 LB BAG" contains
+    # \blb\b but the $X is the total bag price, not a per-lb rate.
+    if unit_hint == 'pkg':
+        pkg_kg_m = re.search(r'(\d+(?:\.\d+)?)\s*kg\b', all_text)
+        pkg_lb_m = re.search(r'(\d+(?:\.\d+)?)\s*(?:lb|lbs)\b', all_text)
+        if pkg_kg_m:
+            pkg_kg = float(pkg_kg_m.group(1))
+            if pkg_kg > 0:
+                return round(price / pkg_kg, 2), price, f'bag_{pkg_kg}kg'
+        elif pkg_lb_m:
+            pkg_lb = float(pkg_lb_m.group(1))
+            if pkg_lb > 0:
+                return round(price / (pkg_lb * 0.453592), 2), price, f'bag_{pkg_lb}lb'
+        # pkg item with no weight in name — skip (can't compute $/kg)
+        return None, None, None
+
     # Explicit unit detection — check everything we have
     if re.search(r'/\s*100\s*g', all_text):
         return round(price * 10, 2), price, '100g'
