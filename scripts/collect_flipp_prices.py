@@ -151,6 +151,28 @@ CUTS = [
     ('frozen_peas',            'Frozen peas (750g)',           ['frozen peas 750'],                             'pkg'),
     ('frozen_fries',           'Frozen french fries (750g)',   ['frozen french fries 750', 'frozen fries 750'], 'pkg'),
 ]
+# ── Keywords that indicate a product is NOT a basic grocery ──────────────────
+# Used to skip pre-cooked, frozen, deli, and restaurant-branded items
+PROCESSED_KEYWORDS = [
+    'cooked', 'frozen', 'breaded', 'marinated', 'seasoned', 'stuffed',
+    'rotisserie', 'pre-cooked', 'fully cooked', 'ready to cook', 'ready-to-cook',
+    'heat and serve', 'microwave',
+    # Deli / sliced
+    'sliced', 'deli', 'cured', 'smoked', 'lunch meat', 'lunchmeat',
+    'bologna', 'salami', 'prosciutto', 'pepperoni', 'pastrami',
+    # Restaurant / branded pre-cooked
+    'swiss chalet', "montana's", 'plaisirs gastronomiques', 'irresistible',
+    # Frozen / party-pack brands and ready-to-eat formats
+    "pinty", 'repas', 'meal',
+    # Canned / processed fish
+    'canned', 'chunk light', 'flaked',
+]
+
+def is_processed(item_name):
+    """Return True if the item name suggests a processed/pre-cooked product."""
+    name_lower = (item_name or '').lower()
+    return any(kw in name_lower for kw in PROCESSED_KEYWORDS)
+
 # ── Grocery store filter ───────────────────────────────────────────────────────
 GROCERY_STORES = {
     'no frills', 'food basics', 'loblaws', 'metro', 'sobeys',
@@ -282,6 +304,11 @@ def main():
                     if price_kg is None:
                         continue
 
+                    # Skip pre-cooked, frozen, and processed branded items
+                    if is_processed(item_name):
+                        print(f"  ✗ Skipping processed/frozen: {item_name[:60]}")
+                        continue
+
                     raw_price_str = str(raw_price)
                     dup_check = (TODAY, key, store, raw_price_str)
                     if dup_check in existing:
@@ -342,6 +369,9 @@ def compute_averages():
 
     with open(HISTORY_CSV, newline='') as f:
         for row in csv.DictReader(f):
+            # Skip processed/frozen items that may have been recorded before this filter
+            if is_processed(row.get('item_name', '')):
+                continue
             val = row.get('price_per_kg')
             # Skip if missing, empty, or not a valid float
             if val is None:

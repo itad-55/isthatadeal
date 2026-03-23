@@ -18,10 +18,11 @@ from collections import defaultdict
 SCRIPT_DIR   = os.path.dirname(os.path.abspath(__file__))
 REPO_ROOT    = os.path.dirname(SCRIPT_DIR)
 DATA_DIR     = os.path.join(REPO_ROOT, 'data')
-HISTORY_CSV  = os.path.join(DATA_DIR, 'flipp_history.csv')
-STATCAN_FILE = os.path.join(DATA_DIR, 'statcan_data.json')
-FLIPP_FILE     = os.path.join(DATA_DIR, 'flipp_averages.json')
-EMAIL_TEMPLATE = os.path.join(SCRIPT_DIR, 'email_template.html')
+HISTORY_CSV      = os.path.join(DATA_DIR, 'flipp_history.csv')
+STATCAN_FILE     = os.path.join(DATA_DIR, 'statcan_data.json')
+FLIPP_FILE       = os.path.join(DATA_DIR, 'flipp_averages.json')
+BASELINES_FILE   = os.path.join(DATA_DIR, 'retail_baselines.json')
+EMAIL_TEMPLATE   = os.path.join(SCRIPT_DIR, 'email_template.html')
 
 MAILERLITE_API_KEY = os.environ.get('MAILERLITE_API_KEY', '')
 ONTARIO_GROUP_ID   = '182297132531713316'
@@ -125,6 +126,14 @@ def load_flipp():
         raw = json.load(f)
     return raw.get('cuts', {})
 
+# ── Load manually-verified retail baselines ───────────────────────────────────
+def load_retail_baselines():
+    if not os.path.exists(BASELINES_FILE):
+        return {}
+    with open(BASELINES_FILE) as f:
+        raw = json.load(f)
+    return raw.get('cuts', {})
+
 # ── Score recent flyer prices ─────────────────────────────────────────────────
 
 # Realistic retail price ranges ($/kg) for Ontario grocery items
@@ -148,7 +157,7 @@ def realistic_range(cut_key):
             return rng
     return REALISTIC_RANGES['default']
 
-def score_deals(statcan, flipp, limit=5):
+def score_deals(statcan, flipp, baselines=None, limit=5):
     """
     Read flipp_history.csv, find rows from the last 7 days,
     compare each price_per_kg to the StatCan or Flipp average,
@@ -167,15 +176,23 @@ def score_deals(statcan, flipp, limit=5):
     }
 
     averages = {}
-    for key, v in statcan.items():
-        averages[key] = {'avg': v['avg'], 'name': key, 'source': 'statcan'}
-    # Add aliases so Flipp keys can match StatCan entries
-    for flipp_key, statcan_key in STATCAN_ALIASES.items():
-        if statcan_key in averages:
-            averages[flipp_key] = averages[statcan_key].copy()
+    # Priority 3 (lowest): Flipp historical sale-price averages
     for key, v in flipp.items():
         if v.get('avg') and v.get('observations', 0) >= 4:
             averages[key] = {'avg': v['avg'], 'name': v['name'], 'source': 'flipp'}
+    # Priority 2: StatCan official Ontario averages (overwrites Flipp)
+    for key, v in statcan.items():
+        averages[key] = {'avg': v['avg'], 'name': key, 'source': 'statcan'}
+    # Add aliases so Flipp cut_keys can match StatCan entries
+    for flipp_key, statcan_key in STATCAN_ALIASES.items():
+        if statcan_key in averages:
+            averages[flipp_key] = averages[statcan_key].copy()
+    # Priority 1 (highest): manually-verified retail shelf prices
+    if baselines:
+        for key, v in baselines.items():
+            if v.get('median_kg'):
+                name = averages[key]['name'] if key in averages else v.get('name', key)
+                averages[key] = {'avg': v['median_kg'], 'name': name, 'source': 'retail_baseline'}
 
     # StatCan display names
     DISPLAY = {
@@ -246,15 +263,21 @@ def score_deals(statcan, flipp, limit=5):
                 print(f"  Skipping {row['cut_name']} @ {store}: store not broadly available in Ontario")
                 continue
 
-            # Sanity check 0b — skip deli/processed meat (cooked, sliced, cured)
-            # These are sold per 100g at deli counters and get misread as $/kg
+            # Sanity check 0b — skip deli/processed/pre-cooked/frozen branded products
+            # These are not basic groceries and contaminate price averages
             item_name_lower = row.get('item_name', '').lower()
             DELI_KEYWORDS = ['cooked', 'sliced', 'deli', 'artisan', 'cured', 'smoked',
                              'lunch meat', 'lunchmeat', 'bologna', 'salami', 'prosciutto',
                              'pepperoni', 'pastrami', 'corned beef', 'roast beef deli',
                              'schneiders', 'maple leaf deli', 'butterball deli',
                              'flamingo', 'poitrine de dinde', 'great value tuna',
-                             'canned', 'chunk light', 'flaked']
+                             'canned', 'chunk light', 'flaked',
+                             # Pre-cooked / restaurant-branded / frozen processed
+                             'irresistible', 'swiss chalet', "montana's", 'plaisirs gastronomiques',
+                             "pinty's", 'repas', 'meal',
+                             'rotisserie', 'breaded', 'marinated', 'seasoned', 'stuffed',
+                             'pre-cooked', 'fully cooked', 'ready to cook', 'ready-to-cook',
+                             'frozen', 'heat and serve', 'microwave']
             if any(kw in item_name_lower for kw in DELI_KEYWORDS):
                 print(f"  Skipping {row['cut_name']} @ {row['store']}: deli/processed product")
                 continue
@@ -445,6 +468,17 @@ def build_email_html(deals, period, show_verify=False):
             kg_span = ''
             kg_span2 = ''
         pct_below  = f'{abs(d["pct"]):.0f}'
+        # Label text depends on what we're comparing against
+        src = d.get('source', 'flipp')
+        if src == 'retail_baseline':
+            pct_label_long  = 'below typical Ontario shelf price'
+            pct_label_short = 'below shelf avg'
+        elif src == 'statcan':
+            pct_label_long  = 'below the Ontario average'
+            pct_label_short = 'below avg'
+        else:
+            pct_label_long  = 'below typical flyer prices'
+            pct_label_short = 'below flyer avg'
 
         if i == 0:
             deal_rows += (
@@ -458,7 +492,7 @@ def build_email_html(deals, period, show_verify=False):
                 f'<div class="dw-meta" style="font-size:16px;color:rgba(255,255,255,0.4);font-family:monospace;margin-bottom:16px">{store_line}{flipp_verify}</div>'
                 f'<div class="dw-price" style="font-size:40px;font-weight:700;color:#FAFAF7;font-family:monospace;margin-bottom:3px">{primary_price}</div>'
                 f'<div style="font-size:18px;color:rgba(255,255,255,0.45);font-family:monospace;margin-bottom:12px">{kg_price if is_per_kg or raw_unit=="lb" else ""}</div>'
-                f'<div class="dw-pct" style="font-size:19px;font-weight:700;color:#5DCAA5;font-family:monospace">{check} {pct_below}% below the Ontario average</div>'
+                f'<div class="dw-pct" style="font-size:19px;font-weight:700;color:#5DCAA5;font-family:monospace">{check} {pct_below}% {pct_label_long}</div>'
                 f'</td></tr></table></td></tr>'
                 f'<tr><td style="padding:10px 14px 6px">'
                 f'<div class="also-label" style="font-size:15px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8680;font-family:monospace">Also worth buying this week</div>'
@@ -477,7 +511,7 @@ def build_email_html(deals, period, show_verify=False):
                 f'<div class="li-meta" style="font-size:16px;color:#8A8680;font-family:monospace;margin-bottom:12px">{store_line}{flipp_verify}</div>'
                 f'<div class="li-price" style="font-size:28px;font-weight:700;color:#0D0D0D;font-family:monospace;margin-bottom:2px">{primary_price}</div>'
                 f'<div style="font-size:15px;color:#8A8680;font-family:monospace;margin-bottom:5px">{kg_price if is_per_kg or raw_unit=="lb" else ""}</div>'
-                f'<div style="font-size:16px;font-weight:700;color:{color};font-family:monospace">{check} {pct_below}% below avg</div>'
+                f'<div style="font-size:16px;font-weight:700;color:{color};font-family:monospace">{check} {pct_below}% {pct_label_short}</div>'
                 f'</td></tr></table></td></tr>'
             )
 
@@ -550,14 +584,15 @@ def main():
         return
     print(f"Building digest for week of {TODAY.isoformat()}...{' (review mode)' if review_mode else ''}")
 
-    statcan = load_statcan()
-    flipp   = load_flipp()
-    print(f"StatCan products: {len(statcan)}  |  Flipp averages: {len(flipp)}")
+    statcan    = load_statcan()
+    flipp      = load_flipp()
+    baselines  = load_retail_baselines()
+    print(f"StatCan products: {len(statcan)}  |  Flipp averages: {len(flipp)}  |  Retail baselines: {len(baselines)}")
 
     if review_mode:
-        deals = score_deals(statcan, flipp, limit=50)
+        deals = score_deals(statcan, flipp, baselines=baselines, limit=50)
     else:
-        deals = score_deals(statcan, flipp)
+        deals = score_deals(statcan, flipp, baselines=baselines)
 
     print(f"Deals found: {len(deals)}")
     for d in deals:

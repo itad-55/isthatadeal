@@ -1,0 +1,18 @@
+{
+  "_comment": "Manually verified regular (non-sale) shelf prices at major Ontario chains. Update monthly. Prices in $/kg unless noted. Median used for comparisons.",
+  "updated": "2026-03-23",
+  "cuts": {
+    "pork_back_ribs": {
+      "name": "Pork back ribs",
+      "prices_kg": {
+        "metro": 20.92,
+        "walmart": 18.00,
+        "food_basics": 15.85,
+        "loblaws": 18.72,
+        "no_frills": 16.51
+      },
+      "median_kg": 18.00,
+      "notes": "Fresh raw back ribs only. Excludes pre-cooked/frozen branded products."
+    }
+  }
+}

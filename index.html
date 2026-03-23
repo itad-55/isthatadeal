@@ -506,6 +506,7 @@ function handleModalSignup(e){
   .then(r => r.json())
   .then(data => {
     if (data.success) {
+      if (typeof fbq === 'function') fbq('track', 'Lead');
       document.getElementById('modalContent').innerHTML =
         '<div class="modal-success">'
         + '<div class="check">&#127881;</div>'
