@@ -1,5 +1,5 @@
 {
-  "computed_on": "2026-03-22",
+  "computed_on": "2026-03-23",
   "cuts": {
     "beef_ground_regular": {
       "name": "Ground beef (regular)",
@@ -75,18 +75,18 @@
     },
     "chicken_thigh_bonein": {
       "name": "Chicken thighs (bone-in)",
-      "avg": 14.33,
+      "avg": 14.75,
       "lo": 9.9,
       "hi": 26.46,
-      "observations": 5,
+      "observations": 6,
       "source": "flipp_historical"
     },
     "chicken_drumsticks": {
       "name": "Chicken drumsticks",
-      "avg": 14.5,
+      "avg": 14.47,
       "lo": 4.39,
       "hi": 39.68,
-      "observations": 16,
+      "observations": 17,
       "source": "flipp_historical"
     },
     "chicken_wings": {
@@ -102,39 +102,39 @@
       "avg": 139.9,
       "lo": 139.9,
       "hi": 139.9,
-      "observations": 4,
+      "observations": 6,
       "source": "flipp_historical"
     },
     "lamb_leg": {
       "name": "Leg of lamb",
-      "avg": 13.46,
+      "avg": 8.4,
       "lo": 5.99,
       "hi": 28.64,
-      "observations": 4,
+      "observations": 5,
       "source": "flipp_historical"
     },
     "lamb_chops": {
       "name": "Lamb chops",
-      "avg": 15.61,
+      "avg": 16.4,
       "lo": 13.23,
       "hi": 17.99,
-      "observations": 4,
+      "observations": 5,
       "source": "flipp_historical"
     },
     "salmon_fillet": {
       "name": "Salmon fillets",
-      "avg": 30.34,
+      "avg": 30.06,
       "lo": 13.16,
       "hi": 44.07,
-      "observations": 15,
+      "observations": 16,
       "source": "flipp_historical"
     },
     "tilapia": {
       "name": "Tilapia",
-      "avg": 12.76,
+      "avg": 10.4,
       "lo": 9.0,
       "hi": 19.82,
-      "observations": 4,
+      "observations": 5,
       "source": "flipp_historical"
     },
     "cod": {
@@ -147,42 +147,42 @@
     },
     "shrimp": {
       "name": "Shrimp (300g)",
-      "avg": 16.61,
+      "avg": 16.26,
       "lo": 12.0,
       "hi": 33.05,
-      "observations": 14,
+      "observations": 21,
       "source": "flipp_historical"
     },
     "potatoes_bag": {
       "name": "Potatoes (bag)",
-      "avg": 4.82,
+      "avg": 4.91,
       "lo": 4.34,
       "hi": 7.72,
-      "observations": 10,
+      "observations": 15,
       "source": "flipp_historical"
     },
     "sweet_potato": {
       "name": "Sweet potatoes",
-      "avg": 4.84,
+      "avg": 4.65,
       "lo": 1.81,
       "hi": 15.41,
-      "observations": 16,
+      "observations": 24,
       "source": "flipp_historical"
     },
     "tomatoes": {
       "name": "Tomatoes (loose)",
-      "avg": 5.69,
+      "avg": 5.73,
       "lo": 5.49,
       "hi": 6.61,
-      "observations": 8,
+      "observations": 12,
       "source": "flipp_historical"
     },
     "peppers": {
       "name": "Bell peppers",
-      "avg": 10.18,
+      "avg": 10.08,
       "lo": 8.8,
       "hi": 11.0,
-      "observations": 10,
+      "observations": 14,
       "source": "flipp_historical"
     },
     "lettuce_romaine": {
@@ -190,31 +190,31 @@
       "avg": 2.99,
       "lo": 2.99,
       "hi": 2.99,
-      "observations": 4,
+      "observations": 6,
       "source": "flipp_historical"
     },
     "asparagus": {
       "name": "Asparagus",
-      "avg": 7.92,
+      "avg": 7.98,
       "lo": 6.59,
       "hi": 11.0,
-      "observations": 12,
+      "observations": 18,
       "source": "flipp_historical"
     },
     "zucchini": {
       "name": "Zucchini",
-      "avg": 7.7,
+      "avg": 7.33,
       "lo": 5.51,
       "hi": 9.9,
-      "observations": 6,
+      "observations": 8,
       "source": "flipp_historical"
     },
     "grapes": {
       "name": "Grapes",
-      "avg": 6.71,
+      "avg": 6.67,
       "lo": 3.99,
       "hi": 8.8,
-      "observations": 23,
+      "observations": 34,
       "source": "flipp_historical"
     },
     "mango": {
@@ -222,7 +222,7 @@
       "avg": 17.13,
       "lo": 17.13,
       "hi": 17.13,
-      "observations": 6,
+      "observations": 9,
       "source": "flipp_historical"
     },
     "lemons": {
@@ -230,7 +230,7 @@
       "avg": 8.8,
       "lo": 8.8,
       "hi": 8.8,
-      "observations": 4,
+      "observations": 6,
       "source": "flipp_historical"
     },
     "carrots_bag": {
