@@ -288,6 +288,7 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                              'pepperoni', 'pastrami', 'corned beef', 'roast beef deli',
                              'schneiders', 'maple leaf deli', 'butterball deli',
                              'flamingo', 'poitrine de dinde', 'great value tuna',
+                             'seaquest',
                              'canned', 'chunk light', 'flaked',
                              # Pre-cooked / restaurant-branded / frozen processed
                              'irresistible', 'swiss chalet', "montana's", 'plaisirs gastronomiques',
