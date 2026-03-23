@@ -4,9 +4,9 @@
   "cuts": {
     "lamb_leg": {
       "name": "Leg of lamb (bone-in)",
-      "prices_kg": {"metro": 24.22, "food_basics": 19.82, "walmart": 13.20, "loblaws": 19.82},
+      "prices_kg": {"metro": 24.22, "food_basics": 19.82, "loblaws": 19.82},
       "median_kg": 19.82,
-      "notes": "Bone-in leg only. Excludes boneless rolled roasts."
+      "notes": "Bone-in leg only. Excludes boneless rolled roasts. Walmart removed — product delisted/OOS."
     },
     "pork_back_ribs": {
       "name": "Pork back ribs",
