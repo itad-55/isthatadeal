@@ -170,9 +170,25 @@ def score_deals(statcan, flipp, baselines=None, limit=5):
 
     # Map Flipp cut_keys to StatCan keys where names differ
     STATCAN_ALIASES = {
+        # Package / unit items that don't follow the "per kilogram" pattern
         'canned_tuna_170g':   'Canned tuna, 170 grams',
         'canned_salmon_213g': 'Canned salmon, 213 grams',
         'shrimp':             'Shrimp, 300 grams',
+        # Produce — per kg in StatCan ↔ snake_case Flipp key
+        'sweet_potato':       'Sweet potatoes, per kilogram',
+        'tomatoes':           'Tomatoes, per kilogram',
+        'grapes':             'Grapes, per kilogram',
+        # Meat & fish — per kg in StatCan
+        'chicken_whole':      'Whole chicken, per kilogram',
+        'chicken_breast':     'Chicken breasts, per kilogram',
+        'chicken_thigh_bonein': 'Chicken thigh, per kilogram',
+        'chicken_drumsticks': 'Chicken drumsticks, per kilogram',
+        'salmon_fillet':      'Salmon, per kilogram',
+        # Ground beef — StatCan has one combined entry; applies to regular/medium/lean
+        'beef_ground_regular': 'Ground beef, per kilogram',
+        'beef_ground_medium':  'Ground beef, per kilogram',
+        'beef_ground_lean':    'Ground beef, per kilogram',
+        'beef_sirloin':        'Beef top sirloin cuts, per kilogram',
     }
 
     averages = {}
