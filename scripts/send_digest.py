@@ -143,7 +143,7 @@ REALISTIC_RANGES = {
     'pork':     (4.0,  50.0),
     'chicken':  (3.5,  25.0),  # floor lowered: drumsticks at $1.99/lb = $4.39/kg is a real deal
     'turkey':   (5.0,  25.0),
-    'lamb':     (15.0, 60.0),
+    'lamb':     (10.0, 60.0),  # floor lowered: bone-in leg at $5.99/lb = $13.21/kg is real
     'veal':     (6.0,  60.0),
     'salmon':   (7.0,  45.0),
     'shrimp':   (5.0,  40.0),

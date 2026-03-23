@@ -81,14 +81,6 @@
       "observations": 4,
       "source": "flipp_historical"
     },
-    "lamb_leg": {
-      "name": "Leg of lamb",
-      "avg": 8.4,
-      "lo": 5.99,
-      "hi": 28.64,
-      "observations": 5,
-      "source": "flipp_historical"
-    },
     "salmon_fillet": {
       "name": "Salmon fillets",
       "avg": 30.85,
