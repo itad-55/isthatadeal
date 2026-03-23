@@ -203,10 +203,10 @@
     },
     "onions_bag": {
       "name": "Onions (bag)",
-      "avg": 8.26,
+      "avg": 8.15,
       "lo": 2.99,
       "hi": 15.17,
-      "observations": 6,
+      "observations": 7,
       "source": "flipp_historical"
     }
   }
