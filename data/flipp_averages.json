@@ -89,14 +89,6 @@
       "observations": 16,
       "source": "flipp_historical"
     },
-    "tilapia": {
-      "name": "Tilapia",
-      "avg": 11.71,
-      "lo": 9.0,
-      "hi": 19.82,
-      "observations": 4,
-      "source": "flipp_historical"
-    },
     "shrimp": {
       "name": "Shrimp (300g)",
       "avg": 16.26,
