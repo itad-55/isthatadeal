@@ -235,6 +235,7 @@ def score_deals(statcan, flipp, baselines=None, limit=5):
     }
 
     deals = []
+    rejected = []  # items collected but not included — written to review page
     cutoff = WEEK_AGO.isoformat()
 
     if not os.path.exists(HISTORY_CSV):
@@ -296,24 +297,40 @@ def score_deals(statcan, flipp, baselines=None, limit=5):
                              'frozen', 'heat and serve', 'microwave']
             if any(kw in item_name_lower for kw in DELI_KEYWORDS):
                 print(f"  Skipping {row['cut_name']} @ {row['store']}: deli/processed product")
+                rejected.append({'reason_key': 'processed', 'cut_name': row['cut_name'],
+                                 'item_name': row.get('item_name', ''), 'store': store,
+                                 'price': price, 'avg': avg, 'pct': round(pct, 1), 'source': source,
+                                 'note': 'deli / processed / branded'})
                 continue
 
             # Skip frozen salmon/fish — StatCan tracks fresh fillets, not frozen bags
             SALMON_KEYS = {'salmon_fillet', 'salmon_whole', 'tilapia', 'cod', 'tuna_steak'}
             if key in SALMON_KEYS and 'frozen' in item_name_lower:
                 print(f"  Skipping {row['cut_name']} @ {row['store']}: frozen seafood excluded")
+                rejected.append({'reason_key': 'processed', 'cut_name': row['cut_name'],
+                                 'item_name': row.get('item_name', ''), 'store': store,
+                                 'price': price, 'avg': avg, 'pct': round(pct, 1), 'source': source,
+                                 'note': 'frozen seafood excluded'})
                 continue
 
             # Sanity check 1 — realistic price range for this type of product
             lo, hi = realistic_range(key)
             if not (lo <= price <= hi):
                 print(f"  Skipping {row['cut_name']} @ {row['store']}: ${price:.2f}/kg outside realistic range ${lo}-${hi}/kg")
+                rejected.append({'reason_key': 'range', 'cut_name': row['cut_name'],
+                                 'item_name': row.get('item_name', ''), 'store': store,
+                                 'price': price, 'avg': avg, 'pct': round(pct, 1), 'source': source,
+                                 'note': f'${price:.2f}/kg outside range ${lo}\u2013${hi}/kg'})
                 continue
 
             # Sanity check 2 — if more than 65% below average, flag it
             # (could be a unit mismatch — e.g. price per 100g read as per kg)
             if pct < -82:
                 print(f"  Skipping {row['cut_name']} @ {row['store']}: ${price:.2f}/kg is {pct:.1f}% below avg — likely bad data")
+                rejected.append({'reason_key': 'bad_data', 'cut_name': row['cut_name'],
+                                 'item_name': row.get('item_name', ''), 'store': store,
+                                 'price': price, 'avg': avg, 'pct': round(pct, 1), 'source': source,
+                                 'note': f'{pct:.0f}% below avg — possible unit mismatch'})
                 continue
 
             # Only include genuine deals (15%+ below average)
@@ -340,6 +357,12 @@ def score_deals(statcan, flipp, baselines=None, limit=5):
                                   ),
                     'retailer_url': row.get('retailer_url', ''),
                 })
+            elif pct < 0:
+                # Close miss — passed all filters but not quite 15% below avg
+                rejected.append({'reason_key': 'close_miss', 'cut_name': row['cut_name'],
+                                 'item_name': row.get('item_name', ''), 'store': store,
+                                 'price': price, 'avg': avg, 'pct': round(pct, 1), 'source': source,
+                                 'note': f'only {pct:.1f}% below avg (need −15%)'})
 
     # Dedupe: keep best price per cut
     best = {}
@@ -366,7 +389,7 @@ def score_deals(statcan, flipp, baselines=None, limit=5):
               or (d.get('valid_to') or '')[:10] > today_str]  # strictly future = keep
 
     print(f"  [filter] {len(best)} candidates → {len(active)} after expiry filter")
-    return sorted(active, key=lambda x: x['pct'])[:limit]
+    return sorted(active, key=lambda x: x['pct'])[:limit], rejected
 
 # ── Emoji for product categories ──────────────────────────────────────────────
 def format_valid_to(valid_to):
@@ -591,6 +614,86 @@ def create_draft(subject, html_content):
 
 
 import sys
+
+# ── Rejection audit table (appended to review page) ──────────────────────────
+def build_rejection_html(rejected):
+    """
+    Build an HTML audit table of items that were collected this week but
+    did not make the digest.  Appended to digest_review.html so you can
+    spot false-positive filter rejections every week without reading logs.
+    """
+    from collections import defaultdict
+
+    SECTIONS = [
+        ('close_miss',  'Close misses (< 15% below avg)',    '#fff3cd', '#856404'),
+        ('range',       'Price outside expected range ⚠️',   '#f8d7da', '#721c24'),
+        ('bad_data',    'Likely bad data ⛔',                '#f8d7da', '#721c24'),
+        ('processed',   'Deli / processed / frozen branded', '#e8f4f8', '#2c5f6e'),
+    ]
+
+    by_reason = defaultdict(list)
+    for r in rejected:
+        by_reason[r['reason_key']].append(r)
+
+    total = sum(len(v) for v in by_reason.values())
+
+    html = f'''
+<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+            margin:40px auto;max-width:900px;padding:20px 24px;
+            border-top:3px solid #ddd">
+  <h2 style="color:#333;margin-bottom:4px">🔍 Audit: Not Included This Week</h2>
+  <p style="color:#888;font-size:14px;margin-top:0">
+    {total} item(s) collected but filtered out.
+    Review weekly to catch false positives — especially the orange sections.
+  </p>
+'''
+
+    for reason_key, label, bg, fg in SECTIONS:
+        items = by_reason.get(reason_key)
+        if not items:
+            continue
+        items_sorted = sorted(items, key=lambda x: x.get('pct') or 0)
+        html += f'''
+  <h3 style="color:{fg};background:{bg};padding:8px 14px;border-radius:4px;
+             margin-top:28px;margin-bottom:0;font-size:15px">
+    {label} &mdash; {len(items)} item(s)
+  </h3>
+  <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:8px">
+    <thead>
+      <tr style="background:#f5f5f5">
+        <th style="padding:6px 8px;text-align:left;border-bottom:1px solid #ddd;font-weight:600">Flipp description</th>
+        <th style="padding:6px 8px;text-align:left;border-bottom:1px solid #ddd;font-weight:600">Store</th>
+        <th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd;font-weight:600">$/kg</th>
+        <th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd;font-weight:600">Avg</th>
+        <th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd;font-weight:600">vs avg</th>
+        <th style="padding:6px 8px;text-align:left;border-bottom:1px solid #ddd;font-weight:600">Source</th>
+        <th style="padding:6px 8px;text-align:left;border-bottom:1px solid #ddd;font-weight:600">Note</th>
+      </tr>
+    </thead>
+    <tbody>'''
+        for i, r in enumerate(items_sorted):
+            row_bg    = '#fff' if i % 2 == 0 else '#fafafa'
+            price_str = f"${r['price']:.2f}" if r.get('price') is not None else '—'
+            avg_str   = f"${r['avg']:.2f}"   if r.get('avg')   is not None else '—'
+            pct_val   = r.get('pct')
+            pct_str   = f"{pct_val:+.1f}%"   if pct_val  is not None else '—'
+            item_disp = (r.get('item_name') or r.get('cut_name') or '').title()
+            html += f'''
+      <tr style="background:{row_bg}">
+        <td style="padding:5px 8px;border-bottom:1px solid #eee;max-width:280px;word-break:break-word">{item_disp}</td>
+        <td style="padding:5px 8px;border-bottom:1px solid #eee">{r.get('store','')}</td>
+        <td style="padding:5px 8px;border-bottom:1px solid #eee;text-align:right;font-variant-numeric:tabular-nums">{price_str}</td>
+        <td style="padding:5px 8px;border-bottom:1px solid #eee;text-align:right;font-variant-numeric:tabular-nums;color:#888">{avg_str}</td>
+        <td style="padding:5px 8px;border-bottom:1px solid #eee;text-align:right;font-variant-numeric:tabular-nums">{pct_str}</td>
+        <td style="padding:5px 8px;border-bottom:1px solid #eee;color:#888">{r.get('source','')}</td>
+        <td style="padding:5px 8px;border-bottom:1px solid #eee;color:#888">{r.get('note','')}</td>
+      </tr>'''
+        html += '\n    </tbody>\n  </table>\n'
+
+    html += '</div>\n'
+    return html
+
+
 def main():
     review_mode = '--review-page' in sys.argv
     # Only build digest on Thursdays (weekday() == 3) unless forced or review mode
@@ -606,9 +709,9 @@ def main():
     print(f"StatCan products: {len(statcan)}  |  Flipp averages: {len(flipp)}  |  Retail baselines: {len(baselines)}")
 
     if review_mode:
-        deals = score_deals(statcan, flipp, baselines=baselines, limit=50)
+        deals, rejected = score_deals(statcan, flipp, baselines=baselines, limit=50)
     else:
-        deals = score_deals(statcan, flipp, baselines=baselines)
+        deals, rejected = score_deals(statcan, flipp, baselines=baselines)
 
     print(f"Deals found: {len(deals)}")
     for d in deals:
@@ -625,7 +728,7 @@ def main():
         _, html_review = build_email_html(deals, period, show_verify=True)
         review_path = os.path.join(DATA_DIR, 'digest_review.html')
         with open(review_path, 'w') as f:
-            f.write(html_review)
+            f.write(html_review + build_rejection_html(rejected))
         print(f"✓ Saved review page to data/digest_review.html")
         print(f"  Open data/digest_review.html in your browser to review the top 50 deals.")
         return
