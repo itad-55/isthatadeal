@@ -1,7 +1,8 @@
 name: Update Data & Deploy
 on:
   schedule:
-    - cron: '0 14 * * 1,4,0'  # Mon, Thu, Sun at 9am ET
+    - cron: '0 14 * * 1,0'   # Mon, Sun at 10am ET (data refresh only)
+    - cron: '0 1 * * 5'      # Fri 9pm ET (Thursday evening) — digest after flyers go live
   workflow_dispatch:
 jobs:
   update:

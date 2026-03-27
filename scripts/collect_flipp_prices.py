@@ -285,11 +285,12 @@ def main():
     if os.path.exists(HISTORY_CSV):
         with open(HISTORY_CSV, newline='') as f:
             for row in csv.DictReader(f):
-                existing.add((row['date'], row['cut_key'], row['store'], row['raw_price']))
+                vt = (row.get('valid_to') or '')[:10]
+                existing.add((row['date'], row['cut_key'], row['store'], row['raw_price'], vt))
 
     new_rows  = []
     fieldnames = ['date', 'cut_key', 'cut_name', 'store', 'item_name',
-                  'raw_price', 'raw_unit', 'price_per_kg', 'postal_code', 'valid_from', 'valid_to',
+                  'raw_price', 'raw_unit', 'price_per_kg', 'postal_code', 'valid_to',
                   'item_id', 'flyer_id', 'retailer_url']
 
     for key, display_name, queries, unit_hint in CUTS:
@@ -337,13 +338,12 @@ def main():
                         continue
 
                     raw_price_str = str(raw_price)
-                    dup_check = (TODAY, key, store, raw_price_str)
+                    valid_to   = (item.get('valid_to') or item.get('flyer_valid_to') or
+                                 item.get('valid_until') or '')
+                    valid_to_date = valid_to[:10]
+                    dup_check = (TODAY, key, store, raw_price_str, valid_to_date)
                     if dup_check in existing:
                         continue
-
-                    valid_from = (item.get('valid_from') or item.get('flyer_valid_from') or '')
-                    valid_to   = (item.get('valid_to') or item.get('flyer_valid_to') or
-                                 item.get('valid_until') or item.get('sale_story') or '')
 
                     row = {
                         'date':         TODAY,
@@ -355,7 +355,6 @@ def main():
                         'raw_unit':     raw_unit,
                         'price_per_kg': price_kg,
                         'postal_code':  postal,
-                        'valid_from':   valid_from,
                         'valid_to':     valid_to,
                         'item_id':      item_id,
                         'flyer_id':     flyer_id,
