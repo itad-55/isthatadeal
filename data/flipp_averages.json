@@ -3,10 +3,10 @@
   "cuts": {
     "beef_ground_regular": {
       "name": "Ground beef (regular)",
-      "avg": 17.98,
+      "avg": 17.56,
       "lo": 10.74,
       "hi": 22.02,
-      "observations": 20,
+      "observations": 24,
       "source": "flipp_historical"
     },
     "beef_ground_medium": {
@@ -284,9 +284,9 @@
     "carrots_bag": {
       "name": "Carrots (bag)",
       "avg": 2.97,
-      "lo": 1.84,
+      "lo": 2.94,
       "hi": 2.99,
-      "observations": 12,
+      "observations": 11,
       "source": "flipp_historical"
     },
     "potatoes_bag": {
