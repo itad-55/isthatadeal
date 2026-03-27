@@ -23,7 +23,7 @@ jobs:
         run: python3 scripts/send_digest.py
         env:
           MAILERLITE_API_KEY: ${{ secrets.MAILERLITE_API_KEY }}
-          FORCE_DIGEST: ${{ github.event_name == 'workflow_dispatch' && 'true' || 'false' }}
+          FORCE_DIGEST: 'true'
       - name: Check if anything changed
         id: diff
         run: |
