@@ -367,11 +367,24 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                                  'note': f'only {pct:.1f}% below avg (need −15%)'})
 
     # Dedupe: keep best price per cut, and also dedupe by item_id so
-    # the same physical product can't appear twice under different cut keys
+    # the same physical product can't appear twice under different cut keys.
+    # Apply expiry filter FIRST so an expired cheap price from last week
+    # can't crowd out a valid deal from this week.
+    import datetime, zoneinfo
+    try:
+        _eastern = zoneinfo.ZoneInfo('America/Toronto')
+        today_str = datetime.datetime.now(_eastern).date().isoformat()
+    except Exception:
+        today_str = datetime.date.today().isoformat()
+
     best = {}
     seen_item_ids = set()
     for d in sorted(deals, key=lambda x: x['pct']):  # best deal wins on item_id collision
-        iid = d.get('flipp_url', '') + d.get('item_name', '') + d['store']  # proxy dedup key
+        # Skip expired items before building the best-per-cut dict
+        vt = (d.get('valid_to') or '')[:10]
+        if vt and vt < today_str:
+            print(f"  [filter] {d['name']} @ {d['store']}: valid_to={repr(vt)}")
+            continue
         raw_iid = d.get('_item_id', '')
         if raw_iid and raw_iid in seen_item_ids:
             continue
@@ -380,23 +393,13 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
         if d['key'] not in best or d['pct'] < best[d['key']]['pct']:
             best[d['key']] = d
 
-    # Sort by % below average, take top 10
-    # Hard filter — drop items whose flyer has already expired
-    import datetime, zoneinfo
-    try:
-        _eastern = zoneinfo.ZoneInfo('America/Toronto')
-        today_str = datetime.datetime.now(_eastern).date().isoformat()
-    except Exception:
-        today_str = datetime.date.today().isoformat()
-
     print(f"  [filter] today_str={today_str}")
     for d in best.values():
         vt = (d.get('valid_to') or '')[:10]
         print(f"  [filter] {d['name']} @ {d['store']}: valid_to={repr(vt)}")
 
-    active = [d for d in best.values()
-              if not (d.get('valid_to') or '')[:10]  # no date = keep (unknown expiry)
-              or (d.get('valid_to') or '')[:10] >= today_str]  # today or future = keep
+    active = list(best.values())
+
 
     print(f"  [filter] {len(best)} candidates → {len(active)} after expiry filter")
     return sorted(active, key=lambda x: x['pct'])[:limit], rejected

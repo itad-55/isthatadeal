@@ -215,7 +215,9 @@ def extract_price_per_kg(item, unit_hint):
     # Check ALL available text fields for unit clues
     price_text   = (item.get('price_text') or item.get('current_price_text') or '').lower()
     display_text = (item.get('display_text') or '').lower()
-    all_text     = text + ' ' + price_text + ' ' + display_text
+    pre_price    = (item.get('pre_price_text') or '').lower()
+    post_price   = (item.get('post_price_text') or '').lower()
+    all_text     = text + ' ' + price_text + ' ' + display_text + ' ' + pre_price + ' ' + post_price
 
     # ── Fixed-weight packages (e.g. "10 LB BAG", "2 lb Bag", "1.36 kg") ──────
     # Must check BEFORE the generic /lb detection, because "10 LB BAG" contains
