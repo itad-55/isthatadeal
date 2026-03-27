@@ -502,10 +502,10 @@ def build_email_html(deals, period, show_verify=False):
         # Improve price/unit display logic
         raw_unit = d.get('raw_unit', 'kg')
         is_per_kg = raw_unit not in ('pkg', 'unit', 'each')
-        # If the raw_unit is 'lb', show price as $/lb and $/kg
-        if raw_unit == 'lb':
-            lb_price = f'${d["price"]:.2f}/lb'
-            kg_price = f'${d["price"]*2.20462:.2f}/kg'
+        # d["price"] is always price_per_kg. Convert back to /lb if that's the original unit.
+        if raw_unit in ('lb', 'defaulted_lb'):
+            lb_price = f'${d["price"]/2.20462:.2f}/lb'
+            kg_price = f'${d["price"]:.2f}/kg'
             primary_price = lb_price
             kg_span = f'  <span style="font-size:18px;font-weight:400;color:rgba(255,255,255,0.5)">{kg_price}</span>'
             kg_span2 = f'<span style="font-size:14px;font-weight:400;color:#8A8680;font-family:monospace">{kg_price}</span> '
