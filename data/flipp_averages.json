@@ -1,12 +1,12 @@
 {
-  "computed_on": "2026-03-26",
+  "computed_on": "2026-03-27",
   "cuts": {
     "beef_ground_regular": {
       "name": "Ground beef (regular)",
-      "avg": 18.26,
+      "avg": 18.25,
       "lo": 10.74,
       "hi": 22.02,
-      "observations": 16,
+      "observations": 17,
       "source": "flipp_historical"
     },
     "beef_ground_medium": {
@@ -19,10 +19,10 @@
     },
     "beef_ground_lean": {
       "name": "Ground beef (lean)",
-      "avg": 18.35,
+      "avg": 18.3,
       "lo": 11.99,
       "hi": 19.84,
-      "observations": 13,
+      "observations": 15,
       "source": "flipp_historical"
     },
     "beef_sirloin": {
@@ -31,6 +31,14 @@
       "lo": 17.61,
       "hi": 35.25,
       "observations": 6,
+      "source": "flipp_historical"
+    },
+    "beef_inside_round": {
+      "name": "Beef inside round roast",
+      "avg": 15.66,
+      "lo": 11.5,
+      "hi": 22.02,
+      "observations": 4,
       "source": "flipp_historical"
     },
     "beef_brisket": {
@@ -83,10 +91,10 @@
     },
     "lamb_leg": {
       "name": "Leg of lamb",
-      "avg": 13.71,
+      "avg": 9.06,
       "lo": 5.99,
       "hi": 28.64,
-      "observations": 4,
+      "observations": 5,
       "source": "flipp_historical"
     },
     "salmon_fillet": {
@@ -97,28 +105,36 @@
       "observations": 16,
       "source": "flipp_historical"
     },
+    "tuna_steak": {
+      "name": "Tuna steak",
+      "avg": 13.74,
+      "lo": 2.73,
+      "hi": 24.23,
+      "observations": 4,
+      "source": "flipp_historical"
+    },
     "sweet_potato": {
       "name": "Sweet potatoes",
-      "avg": 5.09,
+      "avg": 5.07,
       "lo": 1.49,
       "hi": 16.51,
-      "observations": 48,
+      "observations": 72,
       "source": "flipp_historical"
     },
     "tomatoes": {
       "name": "Tomatoes (loose)",
-      "avg": 5.78,
+      "avg": 5.82,
       "lo": 4.39,
       "hi": 7.69,
-      "observations": 14,
+      "observations": 16,
       "source": "flipp_historical"
     },
     "peppers": {
       "name": "Bell peppers",
-      "avg": 9.78,
+      "avg": 9.29,
       "lo": 4.99,
       "hi": 13.21,
-      "observations": 22,
+      "observations": 29,
       "source": "flipp_historical"
     },
     "lettuce_romaine": {
@@ -131,26 +147,26 @@
     },
     "asparagus": {
       "name": "Asparagus",
-      "avg": 7.58,
+      "avg": 7.3,
       "lo": 4.0,
       "hi": 11.0,
-      "observations": 22,
+      "observations": 26,
       "source": "flipp_historical"
     },
     "zucchini": {
       "name": "Zucchini",
-      "avg": 7.01,
+      "avg": 6.82,
       "lo": 5.49,
       "hi": 9.9,
-      "observations": 10,
+      "observations": 12,
       "source": "flipp_historical"
     },
     "grapes": {
       "name": "Grapes",
-      "avg": 6.97,
+      "avg": 7.26,
       "lo": 3.9,
       "hi": 15.41,
-      "observations": 47,
+      "observations": 60,
       "source": "flipp_historical"
     },
     "carrots_bag": {
@@ -163,10 +179,10 @@
     },
     "potatoes_bag": {
       "name": "Potatoes (bag)",
-      "avg": 1.78,
+      "avg": 1.79,
       "lo": 0.63,
       "hi": 5.5,
-      "observations": 13,
+      "observations": 25,
       "source": "flipp_historical"
     },
     "mango": {
@@ -179,26 +195,26 @@
     },
     "lemons": {
       "name": "Lemons",
-      "avg": 4.59,
+      "avg": 4.68,
       "lo": 4.4,
       "hi": 5.51,
-      "observations": 8,
+      "observations": 14,
       "source": "flipp_historical"
     },
     "limes": {
       "name": "Limes",
-      "avg": 4.68,
+      "avg": 5.51,
       "lo": 2.2,
       "hi": 5.51,
-      "observations": 4,
+      "observations": 7,
       "source": "flipp_historical"
     },
     "turkey_breast": {
       "name": "Turkey breast",
-      "avg": 18.0,
+      "avg": 18.14,
       "lo": 18.0,
       "hi": 19.16,
-      "observations": 5,
+      "observations": 10,
       "source": "flipp_historical"
     }
   }
