@@ -409,10 +409,11 @@ def format_valid_to(valid_to):
     if not valid_to:
         return ''
     try:
-        # Format: 2026-03-19T03:59:59+00:00 → "Ends Mar 19"
+        # Flipp stores valid_to as UTC end-of-day (e.g. 2026-04-02T03:59:59+00:00)
+        # which is 11:59 PM Eastern on April 1 — so subtract 1 day to get the true last day.
         d = valid_to[:10]  # grab just the date part
-        from datetime import datetime
-        dt = datetime.strptime(d, '%Y-%m-%d')
+        from datetime import datetime, timedelta
+        dt = datetime.strptime(d, '%Y-%m-%d') - timedelta(days=1)
         return 'Ends ' + dt.strftime('%b %-d')
     except Exception:
         return ''
