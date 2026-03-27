@@ -396,7 +396,7 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
 
     active = [d for d in best.values()
               if not (d.get('valid_to') or '')[:10]  # no date = keep (unknown expiry)
-              or (d.get('valid_to') or '')[:10] > today_str]  # strictly future = keep
+              or (d.get('valid_to') or '')[:10] >= today_str]  # today or future = keep
 
     print(f"  [filter] {len(best)} candidates → {len(active)} after expiry filter")
     return sorted(active, key=lambda x: x['pct'])[:limit], rejected
