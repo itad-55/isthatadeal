@@ -175,10 +175,17 @@ PROCESSED_KEYWORDS = [
     'canned', 'chunk light', 'flaked',
 ]
 
-def is_processed(item_name):
-    """Return True if the item name suggests a processed/pre-cooked product."""
+# Cuts that are intentionally frozen — 'frozen' keyword must not disqualify them
+FROZEN_CUTS = {'frozen_veg_750g', 'frozen_peas', 'frozen_fries'}
+
+def is_processed(item_name, cut_key=None):
+    """Return True if the item name suggests a processed/pre-cooked product.
+    For cuts that are intentionally frozen (FROZEN_CUTS), the 'frozen' keyword
+    is excluded from the check so those items are still collected.
+    """
     name_lower = (item_name or '').lower()
-    return any(kw in name_lower for kw in PROCESSED_KEYWORDS)
+    keywords = [kw for kw in PROCESSED_KEYWORDS if not (kw == 'frozen' and cut_key in FROZEN_CUTS)]
+    return any(kw in name_lower for kw in keywords)
 
 # ── Grocery store filter ───────────────────────────────────────────────────────
 GROCERY_STORES = {
@@ -335,7 +342,8 @@ def main():
                         continue
 
                     # Skip pre-cooked, frozen, and processed branded items
-                    if is_processed(item_name):
+                    # (pass cut key so intentionally-frozen cuts are not blocked)
+                    if is_processed(item_name, key):
                         print(f"  ✗ Skipping processed/frozen: {item_name[:60]}")
                         continue
 
