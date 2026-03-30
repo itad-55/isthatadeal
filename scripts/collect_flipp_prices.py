@@ -150,6 +150,11 @@ CUTS = [
     ('frozen_veg_750g',        'Frozen vegetables (750g)',     ['frozen vegetables 750', 'frozen mixed veg'],   'pkg'),
     ('frozen_peas',            'Frozen peas (750g)',           ['frozen peas 750'],                             'pkg'),
     ('frozen_fries',           'Frozen french fries (750g)',   ['frozen french fries 750', 'frozen fries 750'], 'pkg'),
+    # ── Bacon & sausage ───────────────────────────────────────────────────────
+    ('bacon_500g',             'Bacon (500g)',                 ['bacon 500g', 'bacon 375g', 'bacon 500'],       'pkg'),
+    ('sausage_500g',           'Pork sausage (500g)',          ['pork sausage 500', 'italian sausage 500', 'breakfast sausage 500'], 'pkg'),
+    # ── Beverages ─────────────────────────────────────────────────────────────
+    ('coffee_ground_300g',     'Ground coffee (300g)',         ['ground coffee 300', 'ground coffee 325', 'ground coffee 326'], 'pkg'),
 ]
 # ── Keywords that indicate a product is NOT a basic grocery ──────────────────
 # Used to skip pre-cooked, frozen, deli, and restaurant-branded items
@@ -175,16 +180,28 @@ PROCESSED_KEYWORDS = [
     'canned', 'chunk light', 'flaked',
 ]
 
-# Cuts that are intentionally frozen — 'frozen' keyword must not disqualify them
-FROZEN_CUTS = {'frozen_veg_750g', 'frozen_peas', 'frozen_fries'}
+# Maps cut_key -> set of PROCESSED_KEYWORDS to ignore for that cut.
+# Use when a cut's ingredient would otherwise be flagged by a keyword
+# (e.g. bacon is cured & smoked by nature; frozen items contain 'frozen').
+CUT_KEYWORD_EXEMPTIONS = {
+    # Intentionally-frozen cuts — 'frozen' in the name is expected
+    'frozen_veg_750g': {'frozen'},
+    'frozen_peas':     {'frozen'},
+    'frozen_fries':    {'frozen'},
+    # Bacon is cured, smoked, and sliced by definition — still a basic grocery
+    'bacon_500g':      {'cured', 'smoked', 'sliced'},
+    # Sausage may be smoked or seasoned — still a basic grocery
+    'sausage_500g':    {'smoked', 'seasoned'},
+}
 
 def is_processed(item_name, cut_key=None):
     """Return True if the item name suggests a processed/pre-cooked product.
-    For cuts that are intentionally frozen (FROZEN_CUTS), the 'frozen' keyword
-    is excluded from the check so those items are still collected.
+    For cuts in CUT_KEYWORD_EXEMPTIONS, specific keywords are ignored so those
+    items are still collected into the historical database.
     """
     name_lower = (item_name or '').lower()
-    keywords = [kw for kw in PROCESSED_KEYWORDS if not (kw == 'frozen' and cut_key in FROZEN_CUTS)]
+    exempt = CUT_KEYWORD_EXEMPTIONS.get(cut_key, set())
+    keywords = [kw for kw in PROCESSED_KEYWORDS if kw not in exempt]
     return any(kw in name_lower for kw in keywords)
 
 # ── Grocery store filter ───────────────────────────────────────────────────────
