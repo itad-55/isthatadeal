@@ -243,16 +243,21 @@ def extract_price_per_kg(item, unit_hint):
     post_price   = (item.get('post_price_text') or '').lower()
     all_text     = text + ' ' + price_text + ' ' + display_text + ' ' + pre_price + ' ' + post_price
 
-    # ── Fixed-weight packages (e.g. "10 LB BAG", "2 lb Bag", "1.36 kg") ──────
+    # ── Fixed-weight packages (e.g. "10 LB BAG", "2 lb Bag", "1.36 kg", "300g") ──
     # Must check BEFORE the generic /lb detection, because "10 LB BAG" contains
     # \blb\b but the $X is the total bag price, not a per-lb rate.
     if unit_hint == 'pkg':
         pkg_kg_m = re.search(r'(\d+(?:\.\d+)?)\s*kg\b', all_text)
+        pkg_g_m  = re.search(r'(\d+)\s*g\b', all_text)   # e.g. 300g, 375g, 500g
         pkg_lb_m = re.search(r'(\d+(?:\.\d+)?)\s*(?:lb|lbs)\b', all_text)
         if pkg_kg_m:
             pkg_kg = float(pkg_kg_m.group(1))
             if pkg_kg > 0:
                 return round(price / pkg_kg, 2), price, f'bag_{pkg_kg}kg'
+        elif pkg_g_m:
+            pkg_g = float(pkg_g_m.group(1))
+            if pkg_g >= 50:  # sanity floor — ignore stray small numbers (e.g. "1g fat")
+                return round(price / (pkg_g / 1000), 2), price, f'bag_{int(pkg_g)}g'
         elif pkg_lb_m:
             pkg_lb = float(pkg_lb_m.group(1))
             if pkg_lb > 0:
