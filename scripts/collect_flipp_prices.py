@@ -144,6 +144,8 @@ CUTS = [
     ('canola_oil_3l',          'Canola oil (3L)',              ['canola oil 3 litre', 'canola oil 3l'],         'pkg'),
     ('canned_tomatoes',        'Canned tomatoes (796mL)',      ['canned tomatoes 796', 'diced tomatoes 796'],   'pkg'),
     ('canned_beans',           'Canned beans (540mL)',         ['canned beans 540', 'black beans 540'],         'pkg'),
+    ('dried_lentils_1kg',      'Dried lentils (1kg)',          ['dried lentils 1kg', 'lentils 1kg'],            'pkg'),
+    ('dried_chickpeas_1kg',    'Dried chickpeas (1kg)',        ['dried chickpeas 1kg', 'chickpeas 1kg'],        'pkg'),
     ('peanut_butter_1kg',      'Peanut butter (1kg)',          ['peanut butter 1kg'],                           'pkg'),
     ('pasta_sauce',            'Pasta sauce (650mL)',          ['pasta sauce 650', 'tomato sauce 650'],         'pkg'),
     # ── Frozen ────────────────────────────────────────────────────────────────
