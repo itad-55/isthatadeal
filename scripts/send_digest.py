@@ -11,7 +11,7 @@ Requires: MAILERLITE_API_KEY environment variable
 ─────────────────────────────────────────────────────────────────────────────
 """
 
-import csv, json, os, urllib.request, urllib.error
+import csv, json, os, math, urllib.request, urllib.error
 from datetime import date, timedelta
 from collections import defaultdict
 
@@ -156,6 +156,34 @@ def realistic_range(cut_key):
         if prefix in k:
             return rng
     return REALISTIC_RANGES['default']
+
+# ── Category multipliers for weighted deal scoring ───────────────────────────
+def get_category_multiplier(cut_key):
+    """Return a category importance multiplier for the given cut_key.
+    Substring matching on cut_key; highest match wins; default 1.0.
+    """
+    k = cut_key.lower()
+    best = 1.0
+    # Beef — 1.5
+    if any(t in k for t in ['ribeye', 'striploin', 'sirloin', 'tenderloin',
+                              'ground_beef', 'chuck', 'brisket', 'flank', 'beef', 'steak']):
+        best = max(best, 1.5)
+    # Pork / Chicken / Turkey / Bacon / Ham — 1.4
+    if any(t in k for t in ['chicken', 'pork', 'turkey', 'bacon', 'ham']):
+        best = max(best, 1.4)
+    # Seafood / Fish — 1.3
+    if any(t in k for t in ['salmon', 'shrimp', 'tilapia', 'cod', 'tuna', 'fish', 'seafood']):
+        best = max(best, 1.3)
+    # Dairy / Eggs — 1.2
+    if any(t in k for t in ['milk', 'cheese', 'butter', 'eggs', 'yogurt', 'cream']):
+        best = max(best, 1.2)
+    # Frozen / Canned — 1.1
+    if any(t in k for t in ['frozen', 'canned']):
+        best = max(best, 1.1)
+    # Produce and everything else — 1.0 (default, no boost)
+    if best == 1.0:
+        print(f'  [scoring] No category match for {cut_key!r} — using default multiplier 1.0')
+    return best
 
 def score_deals(statcan, flipp, baselines=None, limit=10):
     """
@@ -336,6 +364,9 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
 
             # Only include genuine deals (15%+ below average)
             if pct < -15:
+                cat_mult     = get_category_multiplier(key)
+                dollar_impact = math.log(max(avg, 1))
+                w_score      = abs(pct) * cat_mult * dollar_impact
                 deals.append({
                     'key':       key,
                     'name':      name,
@@ -357,7 +388,10 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                                       row.get('valid_to', ''),
                                       row.get('flyer_id', ''),
                                   ),
-                    'retailer_url': row.get('retailer_url', ''),
+                    'retailer_url':       row.get('retailer_url', ''),
+                    'weighted_score':     round(w_score, 2),
+                    'category_multiplier': cat_mult,
+                    'raw_pct_below_average': round(abs(pct), 1),
                 })
             elif pct < 0:
                 # Close miss — passed all filters but not quite 15% below avg
@@ -400,9 +434,18 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
 
     active = list(best.values())
 
-
     print(f"  [filter] {len(best)} candidates → {len(active)} after expiry filter")
-    return sorted(active, key=lambda x: x['pct'])[:limit], rejected
+
+    # Rank by weighted score (descending) — highest weighted_score = best deal
+    ranked = sorted(active, key=lambda x: x['weighted_score'], reverse=True)[:limit]
+
+    print("\nDeal ranking (weighted):")
+    for i, d in enumerate(ranked, 1):
+        print(f"  {i}. {d['name']} — {d['raw_pct_below_average']:.0f}% below avg "
+              f"— weighted score: {d['weighted_score']:.1f} "
+              f"(multiplier: {d['category_multiplier']})")
+
+    return ranked, rejected
 
 # ── Emoji for product categories ──────────────────────────────────────────────
 def format_valid_to(valid_to):
