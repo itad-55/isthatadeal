@@ -166,7 +166,7 @@ def get_category_multiplier(cut_key):
     best = 1.0
     # Beef — 1.5
     if any(t in k for t in ['ribeye', 'striploin', 'sirloin', 'tenderloin',
-                              'ground_beef', 'chuck', 'brisket', 'flank', 'beef', 'steak']):
+                              'ground_beef', 'chuck', 'brisket', 'flank', 'beef', 'steak', 'lamb']):
         best = max(best, 1.5)
     # Pork / Chicken / Turkey / Bacon / Ham — 1.4
     if any(t in k for t in ['chicken', 'pork', 'turkey', 'bacon', 'ham']):
