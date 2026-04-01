@@ -463,7 +463,7 @@ def format_valid_to(valid_to):
 
 def emoji_for(name):
     n = name.lower()
-    if any(w in n for w in ['beef','steak','brisket','striploin','sirloin','flank','rib','stewing','ground beef']): return '🥩'
+    if any(w in n for w in ['beef','steak','brisket','striploin','sirloin','flank','rib','stewing','ground beef','lamb']): return '🥩'
     if any(w in n for w in ['chicken','turkey','poultry','wing','drumstick','thigh']): return '🍗'
     if any(w in n for w in ['pork','bacon','ham','ribs','belly']): return '🥓'
     if any(w in n for w in ['salmon','fish','shrimp','tuna','seafood','cod','tilapia']): return '🐟'
