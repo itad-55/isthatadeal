@@ -409,15 +409,33 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
         _eastern = zoneinfo.ZoneInfo('America/Toronto')
         today_str = datetime.datetime.now(_eastern).date().isoformat()
     except Exception:
+        _eastern = None
         today_str = datetime.date.today().isoformat()
+
+    def _eastern_date(vt_str):
+        """Convert a valid_to ISO string to Eastern date string (YYYY-MM-DD).
+        Flipp stores valid_to as UTC (e.g. 2026-04-02T03:59:59+00:00 = Apr 1 11:59PM Eastern).
+        We must convert to Eastern before comparing, or expired deals slip through.
+        """
+        if not vt_str:
+            return ''
+        try:
+            dt = datetime.datetime.fromisoformat(vt_str)
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=datetime.timezone.utc)
+            if _eastern:
+                return dt.astimezone(_eastern).date().isoformat()
+        except Exception:
+            pass
+        return vt_str[:10]  # fallback: truncate
 
     best = {}
     seen_item_ids = set()
     for d in sorted(deals, key=lambda x: x['pct']):  # best deal wins on item_id collision
         # Skip expired items before building the best-per-cut dict
-        vt = (d.get('valid_to') or '')[:10]
+        vt = _eastern_date(d.get('valid_to') or '')
         if vt and vt < today_str:
-            print(f"  [filter] {d['name']} @ {d['store']}: valid_to={repr(vt)}")
+            print(f"  [filter] {d['name']} @ {d['store']}: expired valid_to={repr(d.get('valid_to','')[:25])}")
             continue
         raw_iid = d.get('_item_id', '')
         if raw_iid and raw_iid in seen_item_ids:
@@ -429,7 +447,7 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
 
     print(f"  [filter] today_str={today_str}")
     for d in best.values():
-        vt = (d.get('valid_to') or '')[:10]
+        vt = _eastern_date(d.get('valid_to') or '')
         print(f"  [filter] {d['name']} @ {d['store']}: valid_to={repr(vt)}")
 
     active = list(best.values())
