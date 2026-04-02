@@ -165,6 +165,9 @@ CUTS = [
 # that cannot be filtered by keywords alone.
 BLACKLISTED_ITEM_IDS = {
     '1000407057',  # Loblaws lamb leg: $5.99 labelled as /kg (should be /lb = $13.21/kg)
+    '1004049334',  # Sobeys "Fresh Pork Shoulder Blade Roast" collected under beef_blade_roast
+    '1004068593',  # FreshCo salmon: Flipp stores $9.99/lb but labels unit as 'kg' — price in title says 22.02/kg
+    '1004033505',  # Chalo FreshCo same bad salmon item (same flyer, wrong unit)
 }
 
 PROCESSED_KEYWORDS = [
@@ -181,6 +184,21 @@ PROCESSED_KEYWORDS = [
     # Canned / processed fish
     'canned', 'chunk light', 'flaked',
 ]
+
+# Maps cut_key -> set of words that MUST NOT appear in the item name.
+# Use to prevent wrong-species contamination (e.g. pork items under beef cuts).
+CUT_REJECT_KEYWORDS = {
+    'beef_blade_roast':   {'pork', 'porc'},
+    'beef_ground_regular': {'pork', 'porc'},
+    'beef_ground_lean':   {'pork', 'porc'},
+    'beef_ground_medium': {'pork', 'porc'},
+    'beef_inside_round':  {'pork', 'porc'},
+    'beef_sirloin':       {'pork', 'porc'},
+    'beef_striploin':     {'pork', 'porc'},
+    'beef_stewing':       {'pork', 'porc'},
+    'beef_brisket':       {'pork', 'porc'},
+    'beef_flank':         {'pork', 'porc'},
+}
 
 # Maps cut_key -> set of PROCESSED_KEYWORDS to ignore for that cut.
 # Use when a cut's ingredient would otherwise be flagged by a keyword
@@ -369,6 +387,13 @@ def main():
                     # (pass cut key so intentionally-frozen cuts are not blocked)
                     if is_processed(item_name, key):
                         print(f"  ✗ Skipping processed/frozen: {item_name[:60]}")
+                        continue
+
+                    # Reject wrong-species contamination (e.g. pork showing under beef cuts)
+                    reject_words = CUT_REJECT_KEYWORDS.get(key, set())
+                    name_lower = item_name.lower()
+                    if any(rw in name_lower for rw in reject_words):
+                        print(f"  ✗ Skipping wrong-species item for {key}: {item_name[:60]}")
                         continue
 
                     raw_price_str = str(raw_price)

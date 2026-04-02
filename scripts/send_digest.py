@@ -196,6 +196,10 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
     # (CSV may still have old 'kg' values before the fix was deployed)
     PKG_OVERRIDES = {'shrimp', 'turkey_breast', 'pork_ham', 'canned_tuna_170g', 'canned_salmon_213g'}
 
+    # Cut keys to never surface in the digest — per-kg comparison doesn't make sense
+    # for items sold in small fixed-weight packages (cream cheese, etc.)
+    DIGEST_EXCLUDE = {'cream_cheese'}
+
     # Map Flipp cut_keys to StatCan keys where names differ
     STATCAN_ALIASES = {
         # Package / unit items that don't follow the "per kilogram" pattern
@@ -276,6 +280,19 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 continue
             key = row['cut_key']
             if key not in averages:
+                continue
+            if key in DIGEST_EXCLUDE:
+                continue
+            # Skip known-bad item IDs (wrong species, mis-labelled units, etc.)
+            # Mirrors BLACKLISTED_ITEM_IDS in collect_flipp_prices.py but applied
+            # at scoring time so already-collected bad rows are also excluded.
+            SCORER_ITEM_BLACKLIST = {
+                '1000407057',  # Loblaws lamb leg: $5.99 labelled as /kg
+                '1004049334',  # Sobeys pork shoulder blade collected under beef_blade_roast
+                '1004068593',  # FreshCo salmon: $9.99/lb stored as /kg
+                '1004033505',  # Chalo FreshCo same bad salmon item
+            }
+            if row.get('item_id', '') in SCORER_ITEM_BLACKLIST:
                 continue
             try:
                 # For pkg items that were mis-recorded as kg, use raw_price
