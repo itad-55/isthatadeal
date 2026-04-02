@@ -361,6 +361,14 @@
       "observations": 7,
       "source": "flipp_historical"
     },
+    "pork_chop_bonein": {
+      "name": "Pork chops (bone-in)",
+      "avg": 9.04,
+      "lo": 2.5,
+      "hi": 15.41,
+      "observations": 8,
+      "source": "flipp_historical"
+    },
     "strawberries": {
       "name": "Strawberries",
       "avg": 4.41,

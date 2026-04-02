@@ -1356,3 +1356,8 @@ date,cut_key,cut_name,store,item_name,raw_price,raw_unit,price_per_kg,postal_cod
 2026-04-02,zucchini,Zucchini,Walmart,Green zucchini,2.44,lb,5.38,M5V3L9,2026-04-09T03:59:59+00:00,1003170973,7860429,
 2026-04-02,zucchini,Zucchini,Zehrs,GREEN ZUCCHINI,2.99,lb,6.59,N2L3G1,2026-04-09T03:59:59+00:00,1003872267,7866222,
 2026-04-02,beef_ground_regular,Ground beef (regular),Metro,BOEUF HACHÉ EXTRA-MAIGRE | EXTRA LEAN GROUND BEEF,9.99,lb,22.02,K1A0A1,2026-04-09T03:59:59+00:00,1003443651,7860587,
+2026-04-02,pork_chop_bonein,Pork chops (bone-in),Sobeys,Fresh Pork Loin Rib and Sirloin Combo Chops,2.99,lb,6.59,M5V3L9,2026-04-09T03:59:59+00:00,1003193820,7861494,
+2026-04-02,pork_chop_bonein,Pork chops (bone-in),Your Independent Grocer,PORK LOIN CENTRE CUT CHOPS OR ROAST,5.0,lb,11.02,M5V3L9,2026-04-09T03:59:59+00:00,1003719539,7864735,
+2026-04-02,pork_chop_bonein,Pork chops (bone-in),Independent City Market,PORK LOIN CENTRE CUT CHOPS OR ROAST,5.0,lb,11.02,M5V3L9,2026-04-09T03:59:59+00:00,1003686799,7864369,
+2026-04-02,pork_chop_bonein,Pork chops (bone-in),Real Canadian Superstore,"PORK CENTRE AND RIB CHOPS BONELESS, FRESH",6.99,lb,15.41,M5V3L9,2026-04-09T03:59:59+00:00,1003467299,7864439,
+2026-04-02,pork_chop_bonein,Pork chops (bone-in),Metro,BONELESS PORK LOIN CHOPS VALUE PACK OR ROAST |,5.99,lb,13.21,M5V3L9,2026-04-09T03:59:59+00:00,1003391700,7863406,
