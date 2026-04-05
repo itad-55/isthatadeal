@@ -2,7 +2,7 @@ name: Update Data & Deploy
 on:
   schedule:
     - cron: '0 14 * * 1,0'   # Mon, Sun at 10am ET (data refresh only)
-    - cron: '0 1 * * 5'      # Fri 9pm ET (Thursday evening) — digest after flyers go live
+    - cron: '0 1 * * 5'      # Fri 9pm ET (Thursday evening) — collect flyer prices
   workflow_dispatch:
 jobs:
   update:
@@ -20,7 +20,8 @@ jobs:
         run: python3 scripts/update_data.py
       - name: Build site files
         run: python3 scripts/build_site.py
-      - name: Build digest draft (runs script, script decides if Thursday)
+      - name: Build digest draft (manual runs only)
+        if: github.event_name == 'workflow_dispatch'
         run: python3 scripts/send_digest.py
         env:
           MAILERLITE_API_KEY: ${{ secrets.MAILERLITE_API_KEY }}
@@ -50,6 +51,15 @@ jobs:
           put privacy.html /home/dh_idwckm/isthatadeal.ca/privacy.html
           put terms.html /home/dh_idwckm/isthatadeal.ca/terms.html
           put cookies.html /home/dh_idwckm/isthatadeal.ca/cookies.html
+          bye
+          SFTP
+      - name: Deploy digest (manual runs only)
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          sudo apt-get install -y sshpass
+          sshpass -p "${{ secrets.FTP_PASSWORD }}" sftp \
+            -o StrictHostKeyChecking=no \
+            ${{ secrets.FTP_USERNAME }}@${{ secrets.FTP_SERVER }} << 'SFTP'
           -put data/digest_thisweek.html /home/dh_idwckm/isthatadeal.ca/thisweek.html
           -put data/digest_verify_2833151ff2ae0f3d.html /home/dh_idwckm/isthatadeal.ca/verify_2833151ff2ae0f3d.html
           bye

@@ -197,8 +197,8 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
     PKG_OVERRIDES = {'shrimp', 'turkey_breast', 'pork_ham', 'canned_tuna_170g', 'canned_salmon_213g'}
 
     # Cut keys to never surface in the digest — per-kg comparison doesn't make sense
-    # for items sold in small fixed-weight packages (cream cheese, etc.)
-    DIGEST_EXCLUDE = {'cream_cheese'}
+    # for items sold in small fixed-weight packages or by-the-each (cream cheese, cucumbers, etc.)
+    DIGEST_EXCLUDE = {'cream_cheese', 'cucumber'}
 
     # Map Flipp cut_keys to StatCan keys where names differ
     STATCAN_ALIASES = {

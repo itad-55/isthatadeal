@@ -288,6 +288,20 @@ def extract_price_per_kg(item, unit_hint):
     # Explicit unit detection — check everything we have
     if re.search(r'/\s*100\s*g', all_text):
         return round(price * 10, 2), price, '100g'
+
+    # ── Catch mis-labelled units: item name shows "$X.XX/kg" but listed price
+    # is clearly per-lb.  E.g. FreshCo salmon: price=9.99, name contains "22.02/kg".
+    # If the text says $Y/kg and Y is between 1.8x and 2.5x of the listed price,
+    # the listed price is almost certainly per-lb.
+    embedded_kg = re.search(r'(\d+(?:\.\d+)?)\s*/\s*kg', text)
+    if embedded_kg:
+        embedded_val = float(embedded_kg.group(1))
+        ratio = embedded_val / price if price > 0 else 0
+        if 1.8 < ratio < 2.5:
+            # The embedded value IS the real $/kg — the listed price is $/lb
+            print(f"  ⚠ Unit mismatch: listed ${price} but item says {embedded_val}/kg (ratio {ratio:.2f}) — treating as /lb")
+            return round(price * 2.20462, 2), price, 'lb'
+
     if re.search(r'/\s*kg|per\s+kg|\bkg\b', all_text):
         return round(price, 2), price, 'kg'
     if re.search(r'/\s*lb|per\s+lb|\bper\s+pound|\blb\b', all_text):
