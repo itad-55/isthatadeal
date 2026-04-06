@@ -180,7 +180,7 @@ PROCESSED_KEYWORDS = [
     # Restaurant / branded pre-cooked
     'swiss chalet', "montana's", 'plaisirs gastronomiques', 'irresistible',
     # Frozen / party-pack brands and ready-to-eat formats
-    "pinty", 'repas', 'meal',
+    "pinty", 'repas', 'meal', 'janes', 'flamingo', 'bucket',
     # Canned / processed fish
     'canned', 'chunk light', 'flaked',
 ]
