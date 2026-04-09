@@ -66,6 +66,7 @@ CUTS = [
     # ── Chicken ───────────────────────────────────────────────────────────────
     ('chicken_whole',          'Whole chicken',                ['whole chicken'],                               'kg'),
     ('chicken_breast',         'Chicken breast (boneless)',    ['chicken breast boneless', 'chicken breasts'],  'kg'),
+    ('chicken_breast_bonein',  'Chicken breast (bone-in)',     ['chicken breast bone in', 'chicken breast split', 'split chicken breast'], 'kg'),
     ('chicken_thigh_bonein',   'Chicken thighs (bone-in)',     ['chicken thighs bone in', 'chicken thighs'],   'kg'),
     ('chicken_thigh_boneless', 'Chicken thighs (boneless)',    ['chicken thighs boneless'],                     'kg'),
     ('chicken_drumsticks',     'Chicken drumsticks',           ['chicken drumsticks', 'chicken legs'],          'kg'),
@@ -198,6 +199,8 @@ CUT_REJECT_KEYWORDS = {
     'beef_stewing':       {'pork', 'porc'},
     'beef_brisket':       {'pork', 'porc'},
     'beef_flank':         {'pork', 'porc'},
+    'chicken_breast_bonein': {'boneless', 'désossé'},
+    'mango': {'dried', 'séché'},
 }
 
 # Maps cut_key -> set of PROCESSED_KEYWORDS to ignore for that cut.

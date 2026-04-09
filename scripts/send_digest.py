@@ -197,8 +197,10 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
     PKG_OVERRIDES = {'shrimp', 'turkey_breast', 'pork_ham', 'canned_tuna_170g', 'canned_salmon_213g'}
 
     # Cut keys to never surface in the digest — per-kg comparison doesn't make sense
-    # for items sold in small fixed-weight packages or by-the-each (cream cheese, cucumbers, etc.)
-    DIGEST_EXCLUDE = {'cream_cheese', 'cucumber'}
+    # for items sold in small fixed-weight packages or by-the-each, or too niche to feature
+    DIGEST_EXCLUDE = {'cream_cheese', 'cucumber', 'tilapia', 'mango',
+                      'beef_ground_regular', 'beef_ground_medium', 'beef_ground_lean',
+                      'pork_side_ribs', 'broccoli'}
 
     # Map Flipp cut_keys to StatCan keys where names differ
     STATCAN_ALIASES = {
@@ -396,6 +398,7 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                     'date':      row['date'],
                     'valid_to':  row.get('valid_to', ''),
                     'raw_unit':  'pkg' if key in PKG_OVERRIDES else row.get('raw_unit', ''),
+                    'raw_price': row.get('raw_price', ''),
                     '_item_id':  row.get('item_id', ''),  # for cross-cut dedup
                     'flipp_url': make_flipp_url(
                                       row.get('item_id', ''),
@@ -447,6 +450,7 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
         return vt_str[:10]  # fallback: truncate
 
     best = {}
+    all_by_cut = {}   # cut_key → list of all valid deals (for price-match info)
     seen_item_ids = set()
     for d in sorted(deals, key=lambda x: x['pct']):  # best deal wins on item_id collision
         # Skip expired items before building the best-per-cut dict
@@ -459,6 +463,8 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
             continue
         if raw_iid:
             seen_item_ids.add(raw_iid)
+        # Track all valid deals per cut for price-match display
+        all_by_cut.setdefault(d['key'], []).append(d)
         if d['key'] not in best or d['pct'] < best[d['key']]['pct']:
             best[d['key']] = d
 
@@ -472,13 +478,36 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
     print(f"  [filter] {len(best)} candidates → {len(active)} after expiry filter")
 
     # Rank by weighted score (descending) — highest weighted_score = best deal
-    ranked = sorted(active, key=lambda x: x['weighted_score'], reverse=True)[:limit]
+    # Dedupe by display name so readers don't see e.g. "Ground beef" twice
+    _sorted = sorted(active, key=lambda x: x['weighted_score'], reverse=True)
+    seen_names = set()
+    ranked = []
+    for d in _sorted:
+        if d['name'] in seen_names:
+            continue
+        seen_names.add(d['name'])
+        ranked.append(d)
+        if len(ranked) >= limit:
+            break
 
     print("\nDeal ranking (weighted):")
     for i, d in enumerate(ranked, 1):
+        # Attach price-match info: other stores with same cut this week
+        others = all_by_cut.get(d['key'], [])
+        pm = []
+        seen_stores = {d['store'].lower()}
+        for o in sorted(others, key=lambda x: x['price']):
+            s_lower = o['store'].lower()
+            if s_lower in seen_stores:
+                continue
+            seen_stores.add(s_lower)
+            pm.append({'store': o['store'], 'price': o['price'], 'raw_unit': o.get('raw_unit', ''), 'raw_price': o.get('raw_price', '')})
+        d['price_match'] = pm
+
         print(f"  {i}. {d['name']} — {d['raw_pct_below_average']:.0f}% below avg "
               f"— weighted score: {d['weighted_score']:.1f} "
-              f"(multiplier: {d['category_multiplier']})")
+              f"(multiplier: {d['category_multiplier']})"
+              f"{' · PM: ' + ', '.join(p['store'] for p in pm) if pm else ''}")
 
     return ranked, rejected
 
@@ -542,6 +571,74 @@ def verdict(pct):
     return ('Fair', '#8A5A00', '~')
 
 # ── Build HTML email ──────────────────────────────────────────────────────────
+# Store-brand keywords that can't be price matched at other stores
+STORE_BRAND_KEYWORDS = {
+    'pc ':        'PC store brand',
+    'president\'s choice': 'PC store brand',
+    'no name':    'No Name store brand',
+    'great value':'Walmart store brand',
+    'life smart': 'Metro store brand',
+    'selection ': 'Metro store brand',
+    'irresistibles': 'Metro store brand',
+    'compliments':'Sobeys store brand',
+    'farmer\'s market': 'store brand',
+}
+
+# Stores that accept price matching from competitors' flyers
+PRICE_MATCH_STORES = {'no frills', 'real canadian superstore', 'freshco', 'giant tiger'}
+
+def _detect_store_brand(item_name):
+    """Return store brand label if item is a store brand, else None."""
+    name_lower = (item_name or '').lower()
+    for kw, label in STORE_BRAND_KEYWORDS.items():
+        if kw in name_lower:
+            return label
+    return None
+
+def _price_match_html(deal, dark=False):
+    """Build a price-match or store-brand line for a deal."""
+    item_name = deal.get('item_name', '')
+    brand = _detect_store_brand(item_name)
+    if brand:
+        if dark:
+            return (f'<div style="font-size:14px;color:rgba(255,255,255,0.35);font-family:monospace;margin-top:10px">'
+                    f'✗ {brand} — no price matching</div>')
+        else:
+            return (f'<div style="font-size:14px;color:#A09A90;font-family:monospace;margin-top:8px">'
+                    f'✗ {brand} — no price matching</div>')
+
+    # Build list of stores where this can be price matched
+    deal_store = deal['store'].lower().strip()
+    pm_stores = set()
+    # Add stores from our price-match data (other stores with same cut this week)
+    for pm in deal.get('price_match', []):
+        pm_stores.add(pm['store'])
+    # Always suggest the major price-match stores even if we don't have their flyer data
+    for s_name, s_lower in [('No Frills', 'no frills'), ('Real Canadian Superstore', 'real canadian superstore'),
+                             ('FreshCo', 'freshco'), ('Giant Tiger', 'giant tiger')]:
+        if s_lower != deal_store and s_lower not in {s.lower() for s in pm_stores}:
+            pm_stores.add(s_name)
+    # Remove the deal's own store and non-price-match stores
+    pm_stores = {s for s in pm_stores if s.lower() != deal_store}
+    # Only keep known price-match-friendly stores
+    pm_display = [s for s in sorted(pm_stores) if s.lower() in PRICE_MATCH_STORES]
+
+    if not pm_display:
+        return ''
+    if len(pm_display) == 1:
+        stores_text = pm_display[0]
+    elif len(pm_display) == 2:
+        stores_text = f'{pm_display[0]} or {pm_display[1]}'
+    else:
+        stores_text = ', '.join(pm_display[:-1]) + ', or ' + pm_display[-1]
+
+    if dark:
+        return (f'<div style="font-size:14px;color:#5DCAA5;font-family:monospace;margin-top:10px">'
+                f'✓ Match at {stores_text}</div>')
+    else:
+        return (f'<div style="font-size:14px;color:#0A7A3E;font-family:monospace;margin-top:8px">'
+                f'✓ Match at {stores_text}</div>')
+
 def build_email_html(deals, period, show_verify=False):
     week_str = TODAY.strftime('%B %d, %Y')
 
@@ -581,8 +678,19 @@ def build_email_html(deals, period, show_verify=False):
         # Improve price/unit display logic
         raw_unit = d.get('raw_unit', 'kg')
         is_per_kg = raw_unit not in ('pkg', 'unit', 'each')
+        is_case = raw_unit.startswith('bag_')
         # d["price"] is always price_per_kg. Convert back to /lb if that's the original unit.
-        if raw_unit in ('lb', 'defaulted_lb'):
+        if is_case and d.get('raw_price'):
+            # Case/bag items: show the original case price (e.g. "$6.97 per case")
+            try:
+                case_price = float(d['raw_price'])
+            except (ValueError, TypeError):
+                case_price = d['price'] / 2.20462
+            primary_price = f'${case_price:.2f} per case'
+            kg_price = f'${d["price"]:.2f}/kg'
+            kg_span = f'  <span style="font-size:18px;font-weight:400;color:rgba(255,255,255,0.5)">{kg_price}</span>'
+            kg_span2 = f'<span style="font-size:14px;font-weight:400;color:#8A8680;font-family:monospace">{kg_price}</span> '
+        elif raw_unit in ('lb', 'defaulted_lb'):
             lb_price = f'${d["price"]/2.20462:.2f}/lb'
             kg_price = f'${d["price"]:.2f}/kg'
             primary_price = lb_price
@@ -624,6 +732,7 @@ def build_email_html(deals, period, show_verify=False):
                 f'<div class="dw-price" style="font-size:40px;font-weight:700;color:#FAFAF7;font-family:monospace;margin-bottom:3px">{primary_price}</div>'
                 f'<div style="font-size:18px;color:rgba(255,255,255,0.45);font-family:monospace;margin-bottom:12px">{kg_price if is_per_kg or raw_unit=="lb" else ""}</div>'
                 f'<div class="dw-pct" style="font-size:19px;font-weight:700;color:#5DCAA5;font-family:monospace">{check} {pct_below}% {pct_label_long}</div>'
+                f'{_price_match_html(d, dark=True)}'
                 f'</td></tr></table></td></tr>'
                 f'<tr><td style="padding:10px 14px 6px">'
                 f'<div class="also-label" style="font-size:15px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8680;font-family:monospace">Also worth buying this week</div>'
@@ -643,11 +752,27 @@ def build_email_html(deals, period, show_verify=False):
                 f'<div class="li-price" style="font-size:28px;font-weight:700;color:#0D0D0D;font-family:monospace;margin-bottom:2px">{primary_price}</div>'
                 f'<div style="font-size:15px;color:#8A8680;font-family:monospace;margin-bottom:5px">{kg_price if is_per_kg or raw_unit=="lb" else ""}</div>'
                 f'<div style="font-size:16px;font-weight:700;color:{color};font-family:monospace">{check} {pct_below}% {pct_label_short}</div>'
+                f'{_price_match_html(d, dark=False)}'
                 f'</td></tr></table></td></tr>'
             )
 
     if not deal_rows:
         deal_rows = '<tr><td style="padding:2rem;text-align:center;color:#8A8680">No deals 15%+ below average this week.</td></tr>'
+
+    # Build best-store blurb
+    best_store_blurb = (
+        '<tr><td style="padding:16px 18px 8px">'
+        '<table width="100%" cellpadding="0" cellspacing="0" style="background:#F2F1EC;border-radius:10px">'
+        '<tr><td style="padding:16px 18px">'
+        '<div style="font-size:15px;font-weight:700;color:#0D0D0D;margin-bottom:8px">🏪 Best single stop this week</div>'
+        '<div style="font-size:15px;color:#4A4740;line-height:1.6">'
+        'No Frills or Real Canadian Superstore. Both will price match almost everything on this list. '
+        'Bring the flyer screenshots and you can hopefully get 4+ of these deals in one trip without driving all over town.</div>'
+        '<div style="font-size:13px;color:#8A8680;font-family:monospace;margin-top:10px;line-height:1.6">'
+        'Price matching requires showing a digital or print flyer at the till. Same brand, size, and weight. '
+        'Always confirm in-store. YMMV</div>'
+        '</td></tr></table></td></tr>'
+    )
 
     # Load static template and fill placeholders
     with open(EMAIL_TEMPLATE) as f:
@@ -657,6 +782,7 @@ def build_email_html(deals, period, show_verify=False):
     html = html.replace('{{PERIOD}}', period)
     html = html.replace('{{SUBJECT}}', subject)
     html = html.replace('{{DEAL_ROWS}}', deal_rows)
+    html = html.replace('{{BEST_STORE_BLURB}}', best_store_blurb)
 
     return subject, html
 
