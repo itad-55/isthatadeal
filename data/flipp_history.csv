@@ -2920,3 +2920,9 @@ date,cut_key,cut_name,store,item_name,raw_price,raw_unit,price_per_kg,postal_cod
 2026-04-09,chicken_breast_bonein,Chicken breast (bone-in),Real Canadian Superstore,BONE-IN CHICKEN BREASTS,7.79,lb,17.17,M5V3L9,2026-04-15T03:59:59+00:00,,,manual_add
 2026-04-09,mango,Mangoes,No Frills,"ATAULFO CASE MANGOES, 5 LB CASE",6.97,bag_5.0lb,3.07,M5V3L9,2026-04-16T03:59:59+00:00,,,
 2026-04-09,mango,Mangoes,Food Basics,"ATAULFO CASE MANGOES, 5 LB CASE",6.98,bag_5.0lb,3.08,M5V3L9,2026-04-16T03:59:59+00:00,,,
+2026-04-09,beef_ground_regular,Ground beef (regular),Metro,LEAN GROUND BEEF VALUE PACK,5.44,lb,11.99,M5V3L9,2026-04-16T03:59:59+00:00,1005514501,7876157,
+2026-04-09,beef_ground_regular,Ground beef (regular),Your Independent Grocer,MEDIUM GROUND BEEF,5.44,lb,11.99,M5V3L9,2026-04-16T03:59:59+00:00,1005002073,7872369,
+2026-04-09,beef_ground_regular,Ground beef (regular),Independent City Market,MEDIUM GROUND BEEF,5.44,lb,11.99,M5V3L9,2026-04-16T03:59:59+00:00,1004992542,7872502,
+2026-04-09,beef_ground_regular,Ground beef (regular),Food Basics,MEDIUM GROUND BEEF FAMILY PACK,6.99,lb,15.41,M5V3L9,2026-04-16T03:59:59+00:00,1005208312,7872190,
+2026-04-09,beef_ground_regular,Ground beef (regular),Metro,SHEFA KOSHER LEAN GROUND BEEF,11.99,lb,26.43,M5V3L9,2026-04-30T03:59:59+00:00,1005022742,7871773,
+2026-04-09,beef_ground_regular,Ground beef (regular),Sobeys,Fresh Lean Ground Beef Burgers,8.99,lb,19.82,M5V3L9,2026-04-16T03:59:59+00:00,1005313882,7874923,
