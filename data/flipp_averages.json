@@ -1,5 +1,5 @@
 {
-  "computed_on": "2026-04-09",
+  "computed_on": "2026-04-10",
   "cuts": {
     "asparagus": {
       "name": "Asparagus",
@@ -11,10 +11,10 @@
     },
     "beef_blade_roast": {
       "name": "Beef blade roast",
-      "avg": 24.54,
+      "avg": 24.0,
       "lo": 12.99,
       "hi": 33.05,
-      "observations": 24,
+      "observations": 26,
       "source": "flipp_historical"
     },
     "beef_brisket": {
@@ -27,66 +27,66 @@
     },
     "beef_ground_extra_lean": {
       "name": "Ground beef (extra lean)",
-      "avg": 19.66,
+      "avg": 19.18,
       "lo": 11.99,
       "hi": 22.02,
-      "observations": 17,
+      "observations": 18,
       "source": "flipp_historical"
     },
     "beef_ground_lean": {
       "name": "Ground beef (lean)",
-      "avg": 19.02,
+      "avg": 19.1,
       "lo": 11.99,
       "hi": 26.43,
-      "observations": 48,
+      "observations": 53,
       "source": "flipp_historical"
     },
     "beef_ground_medium": {
       "name": "Ground beef (medium)",
-      "avg": 14.74,
+      "avg": 14.37,
       "lo": 8.99,
       "hi": 22.02,
-      "observations": 29,
+      "observations": 33,
       "source": "flipp_historical"
     },
     "beef_ground_regular": {
       "name": "Ground beef (regular)",
-      "avg": 17.43,
+      "avg": 17.31,
       "lo": 10.74,
       "hi": 26.43,
-      "observations": 45,
+      "observations": 46,
       "source": "flipp_historical"
     },
     "beef_inside_round": {
       "name": "Beef inside round roast",
-      "avg": 22.2,
+      "avg": 22.45,
       "lo": 11.5,
       "hi": 26.46,
-      "observations": 18,
+      "observations": 19,
       "source": "flipp_historical"
     },
     "beef_sirloin": {
       "name": "Beef top sirloin",
-      "avg": 28.52,
+      "avg": 28.42,
       "lo": 17.61,
       "hi": 44.07,
-      "observations": 36,
+      "observations": 41,
       "source": "flipp_historical"
     },
     "beef_stewing": {
       "name": "Beef stewing cubes",
-      "avg": 24.89,
+      "avg": 24.38,
       "lo": 15.41,
       "hi": 28.64,
-      "observations": 26,
+      "observations": 28,
       "source": "flipp_historical"
     },
     "beef_striploin": {
       "name": "Beef striploin / NY strip",
-      "avg": 34.67,
+      "avg": 36.0,
       "lo": 19.58,
       "hi": 63.93,
-      "observations": 25,
+      "observations": 26,
       "source": "flipp_historical"
     },
     "carrots_bag": {
@@ -99,26 +99,26 @@
     },
     "chicken_breast": {
       "name": "Chicken breast (boneless)",
-      "avg": 14.1,
+      "avg": 14.09,
       "lo": 6.29,
       "hi": 28.64,
-      "observations": 60,
+      "observations": 64,
       "source": "flipp_historical"
     },
     "chicken_drumsticks": {
       "name": "Chicken drumsticks",
-      "avg": 8.55,
+      "avg": 8.37,
       "lo": 2.99,
       "hi": 39.68,
-      "observations": 120,
+      "observations": 133,
       "source": "flipp_historical"
     },
     "chicken_ground": {
       "name": "Ground chicken",
-      "avg": 13.86,
+      "avg": 13.39,
       "lo": 11.99,
       "hi": 17.64,
-      "observations": 5,
+      "observations": 6,
       "source": "flipp_historical"
     },
     "chicken_thigh_bonein": {
@@ -131,42 +131,42 @@
     },
     "chicken_thigh_boneless": {
       "name": "Chicken thighs (boneless)",
-      "avg": 15.27,
+      "avg": 15.41,
       "lo": 8.49,
       "hi": 55.12,
-      "observations": 25,
+      "observations": 28,
       "source": "flipp_historical"
     },
     "chicken_whole": {
       "name": "Whole chicken",
-      "avg": 10.01,
+      "avg": 10.23,
       "lo": 3.99,
       "hi": 15.0,
-      "observations": 48,
+      "observations": 53,
       "source": "flipp_historical"
     },
     "chicken_wings": {
       "name": "Chicken wings",
-      "avg": 13.03,
+      "avg": 13.88,
       "lo": 3.29,
       "hi": 30.86,
-      "observations": 30,
+      "observations": 33,
       "source": "flipp_historical"
     },
     "cod": {
       "name": "Cod fillets",
-      "avg": 26.12,
+      "avg": 26.43,
       "lo": 22.02,
       "hi": 30.86,
-      "observations": 9,
+      "observations": 10,
       "source": "flipp_historical"
     },
     "grapes": {
       "name": "Grapes",
-      "avg": 7.83,
+      "avg": 7.89,
       "lo": 2.97,
       "hi": 17.61,
-      "observations": 213,
+      "observations": 227,
       "source": "flipp_historical"
     },
     "lamb_chops": {
@@ -179,10 +179,10 @@
     },
     "lamb_leg": {
       "name": "Leg of lamb",
-      "avg": 19.5,
+      "avg": 19.51,
       "lo": 5.99,
       "hi": 33.05,
-      "observations": 72,
+      "observations": 73,
       "source": "flipp_historical"
     },
     "lettuce_romaine": {
@@ -195,10 +195,10 @@
     },
     "peppers": {
       "name": "Bell peppers",
-      "avg": 9.08,
+      "avg": 8.98,
       "lo": 4.99,
       "hi": 13.21,
-      "observations": 68,
+      "observations": 72,
       "source": "flipp_historical"
     },
     "pork_back_ribs": {
@@ -206,63 +206,63 @@
       "avg": 11.0,
       "lo": 6.49,
       "hi": 15.41,
-      "observations": 24,
+      "observations": 28,
       "source": "flipp_historical"
     },
     "pork_belly": {
       "name": "Pork belly",
-      "avg": 15.53,
+      "avg": 15.73,
       "lo": 10.76,
       "hi": 35.25,
-      "observations": 37,
+      "observations": 40,
       "source": "flipp_historical"
     },
     "pork_chop_boneless": {
       "name": "Pork chops (boneless)",
-      "avg": 9.68,
+      "avg": 9.55,
       "lo": 4.49,
       "hi": 15.41,
-      "observations": 35,
+      "observations": 37,
       "source": "flipp_historical"
     },
     "pork_ground": {
       "name": "Ground pork",
-      "avg": 10.77,
+      "avg": 11.05,
       "lo": 8.8,
       "hi": 15.43,
-      "observations": 18,
+      "observations": 19,
       "source": "flipp_historical"
     },
     "pork_shoulder": {
       "name": "Pork shoulder roast",
-      "avg": 8.82,
+      "avg": 8.7,
       "lo": 3.99,
       "hi": 13.16,
-      "observations": 35,
+      "observations": 38,
       "source": "flipp_historical"
     },
     "pork_side_ribs": {
       "name": "Pork side ribs",
-      "avg": 9.59,
+      "avg": 9.56,
       "lo": 5.51,
       "hi": 13.87,
-      "observations": 27,
+      "observations": 32,
       "source": "flipp_historical"
     },
     "pork_tenderloin": {
       "name": "Pork tenderloin",
-      "avg": 9.21,
+      "avg": 9.32,
       "lo": 3.99,
       "hi": 26.43,
-      "observations": 35,
+      "observations": 37,
       "source": "flipp_historical"
     },
     "salmon_fillet": {
       "name": "Salmon fillets",
-      "avg": 24.96,
+      "avg": 24.64,
       "lo": 8.99,
       "hi": 48.48,
-      "observations": 97,
+      "observations": 102,
       "source": "flipp_historical"
     },
     "salmon_whole": {
@@ -270,39 +270,39 @@
       "avg": 19.82,
       "lo": 19.82,
       "hi": 19.82,
-      "observations": 4,
+      "observations": 5,
       "source": "flipp_historical"
     },
     "shrimp": {
       "name": "Shrimp (300g)",
-      "avg": 26.56,
+      "avg": 26.25,
       "lo": 9.33,
       "hi": 64.71,
-      "observations": 168,
+      "observations": 189,
       "source": "flipp_historical"
     },
     "sweet_potato": {
       "name": "Sweet potatoes",
-      "avg": 5.09,
+      "avg": 5.07,
       "lo": 1.49,
       "hi": 16.51,
-      "observations": 212,
+      "observations": 215,
       "source": "flipp_historical"
     },
     "tilapia": {
       "name": "Tilapia",
-      "avg": 17.53,
+      "avg": 17.42,
       "lo": 6.61,
       "hi": 24.23,
-      "observations": 43,
+      "observations": 45,
       "source": "flipp_historical"
     },
     "tomatoes": {
       "name": "Tomatoes (loose)",
-      "avg": 5.95,
+      "avg": 6.26,
       "lo": 3.49,
       "hi": 13.23,
-      "observations": 61,
+      "observations": 67,
       "source": "flipp_historical"
     },
     "tuna_steak": {
@@ -315,82 +315,82 @@
     },
     "zucchini": {
       "name": "Zucchini",
-      "avg": 5.69,
+      "avg": 5.63,
       "lo": 2.49,
       "hi": 9.9,
-      "observations": 60,
+      "observations": 66,
       "source": "flipp_historical"
     },
     "apples_bag": {
       "name": "Apples (bag)",
-      "avg": 5.69,
+      "avg": 6.61,
       "lo": 2.92,
       "hi": 6.61,
-      "observations": 4,
+      "observations": 5,
       "source": "flipp_historical"
     },
     "broccoli": {
       "name": "Broccoli",
-      "avg": 12.91,
+      "avg": 12.24,
       "lo": 2.2,
       "hi": 19.9,
-      "observations": 12,
+      "observations": 13,
       "source": "flipp_historical"
     },
     "lemons": {
       "name": "Lemons",
-      "avg": 4.37,
+      "avg": 4.29,
       "lo": 3.17,
       "hi": 5.51,
-      "observations": 47,
+      "observations": 50,
       "source": "flipp_historical"
     },
     "limes": {
       "name": "Limes",
-      "avg": 7.36,
+      "avg": 7.44,
       "lo": 2.2,
       "hi": 9.9,
-      "observations": 43,
+      "observations": 51,
       "source": "flipp_historical"
     },
     "mango": {
       "name": "Mangoes",
-      "avg": 3.17,
+      "avg": 3.16,
       "lo": 1.9,
       "hi": 4.22,
-      "observations": 14,
+      "observations": 15,
       "source": "flipp_historical"
     },
     "onions_bag": {
       "name": "Onions (bag)",
-      "avg": 2.95,
+      "avg": 2.94,
       "lo": 2.94,
       "hi": 2.99,
-      "observations": 4,
+      "observations": 5,
       "source": "flipp_historical"
     },
     "potatoes_bag": {
       "name": "Potatoes (bag)",
-      "avg": 9.43,
+      "avg": 9.42,
       "lo": 0.63,
       "hi": 58.49,
-      "observations": 281,
+      "observations": 298,
       "source": "flipp_historical"
     },
     "cucumber": {
       "name": "Cucumber",
-      "avg": 6.67,
+      "avg": 6.94,
       "lo": 1.1,
       "hi": 14.95,
-      "observations": 32,
+      "observations": 38,
       "source": "flipp_historical"
     },
     "oranges_bag": {
       "name": "Oranges (bag)",
-      "avg": 3.81,
+      "avg": 3.67,
       "lo": 2.93,
       "hi": 4.4,
-      "observations": 7,
+      "observations": 8,
       "source": "flipp_historical"
     },
     "pineapple": {
@@ -419,26 +419,26 @@
     },
     "turkey_breast": {
       "name": "Turkey breast",
-      "avg": 21.06,
+      "avg": 20.85,
       "lo": 18.0,
       "hi": 44.9,
-      "observations": 39,
+      "observations": 40,
       "source": "flipp_historical"
     },
     "beef_ribeye": {
       "name": "Beef ribeye steak",
-      "avg": 46.11,
-      "lo": 41.87,
+      "avg": 44.66,
+      "lo": 13.49,
       "hi": 55.09,
-      "observations": 15,
+      "observations": 17,
       "source": "flipp_historical"
     },
     "beef_short_ribs": {
       "name": "Beef short ribs",
-      "avg": 30.21,
+      "avg": 30.02,
       "lo": 28.64,
       "hi": 35.25,
-      "observations": 9,
+      "observations": 10,
       "source": "flipp_historical"
     },
     "beef_tenderloin": {
@@ -459,10 +459,10 @@
     },
     "bagels": {
       "name": "Bagels",
-      "avg": 8.41,
+      "avg": 8.66,
       "lo": 4.82,
       "hi": 13.33,
-      "observations": 27,
+      "observations": 32,
       "source": "flipp_historical"
     },
     "bread_whole_wheat": {
@@ -475,10 +475,10 @@
     },
     "butter_454g": {
       "name": "Butter (454g)",
-      "avg": 13.0,
+      "avg": 12.95,
       "lo": 8.79,
       "hi": 17.6,
-      "observations": 40,
+      "observations": 42,
       "source": "flipp_historical"
     },
     "celery": {
@@ -491,58 +491,58 @@
     },
     "coffee_ground_300g": {
       "name": "Ground coffee (300g)",
-      "avg": 40.73,
+      "avg": 40.64,
       "lo": 32.32,
       "hi": 41.18,
-      "observations": 20,
+      "observations": 22,
       "source": "flipp_historical"
     },
     "cream_cheese": {
       "name": "Cream cheese",
-      "avg": 18.55,
+      "avg": 18.84,
       "lo": 8.12,
       "hi": 30.0,
-      "observations": 60,
+      "observations": 70,
       "source": "flipp_historical"
     },
     "mushrooms": {
       "name": "Mushrooms",
-      "avg": 13.43,
+      "avg": 13.22,
       "lo": 8.77,
       "hi": 26.43,
-      "observations": 25,
+      "observations": 26,
       "source": "flipp_historical"
     },
     "pasta_500g": {
       "name": "Pasta (500g)",
-      "avg": 7.05,
+      "avg": 6.63,
       "lo": 5.31,
       "hi": 13.33,
-      "observations": 18,
+      "observations": 20,
       "source": "flipp_historical"
     },
     "sausage_500g": {
       "name": "Pork sausage (500g)",
-      "avg": 14.93,
+      "avg": 15.0,
       "lo": 13.98,
       "hi": 15.0,
-      "observations": 17,
+      "observations": 22,
       "source": "flipp_historical"
     },
     "tortillas": {
       "name": "Tortillas",
-      "avg": 12.38,
+      "avg": 12.49,
       "lo": 10.0,
       "hi": 54.5,
-      "observations": 67,
+      "observations": 80,
       "source": "flipp_historical"
     },
     "yogurt_500g": {
       "name": "Yogurt (500g)",
-      "avg": 6.0,
+      "avg": 6.32,
       "lo": 3.99,
       "hi": 12.47,
-      "observations": 24,
+      "observations": 28,
       "source": "flipp_historical"
     },
     "beef_flank": {
@@ -553,12 +553,20 @@
       "observations": 10,
       "source": "flipp_historical"
     },
+    "turkey_ground": {
+      "name": "Ground turkey",
+      "avg": 11.99,
+      "lo": 11.99,
+      "hi": 11.99,
+      "observations": 4,
+      "source": "flipp_historical"
+    },
     "sour_cream": {
       "name": "Sour cream",
       "avg": 7.82,
       "lo": 7.82,
       "hi": 7.82,
-      "observations": 6,
+      "observations": 8,
       "source": "flipp_historical"
     },
     "english_muffins": {
@@ -566,7 +574,7 @@
       "avg": 6.55,
       "lo": 5.98,
       "hi": 7.12,
-      "observations": 12,
+      "observations": 16,
       "source": "flipp_historical"
     },
     "spinach": {
@@ -574,7 +582,7 @@
       "avg": 15.99,
       "lo": 15.99,
       "hi": 15.99,
-      "observations": 6,
+      "observations": 8,
       "source": "flipp_historical"
     },
     "blueberries": {
@@ -582,7 +590,15 @@
       "avg": 35.23,
       "lo": 29.35,
       "hi": 41.12,
-      "observations": 12,
+      "observations": 16,
+      "source": "flipp_historical"
+    },
+    "bacon_500g": {
+      "name": "Bacon (500g)",
+      "avg": 16.0,
+      "lo": 16.0,
+      "hi": 16.0,
+      "observations": 4,
       "source": "flipp_historical"
     },
     "chicken_breast_bonein": {
