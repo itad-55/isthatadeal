@@ -1,5 +1,5 @@
 {
-  "computed_on": "2026-04-12",
+  "computed_on": "2026-04-13",
   "cuts": {
     "asparagus": {
       "name": "Asparagus",
@@ -475,10 +475,10 @@
     },
     "butter_454g": {
       "name": "Butter (454g)",
-      "avg": 12.84,
-      "lo": 8.79,
+      "avg": 13.14,
+      "lo": 10.99,
       "hi": 17.6,
-      "observations": 44,
+      "observations": 39,
       "source": "flipp_historical"
     },
     "celery": {

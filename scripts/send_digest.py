@@ -50,7 +50,7 @@ STORE_FLYER_URLS = {
     'real canadian superstore':     'https://www.realcanadiansuperstore.ca/en/print-flyer',
     'superstore':                   'https://www.realcanadiansuperstore.ca/en/print-flyer',
     'fortinos':                     'https://www.fortinos.ca/en/print-flyer',
-    'zehrs':                        'https://www.loblaws.ca/en/print-flyer',
+    'zehrs':                        'https://www.zehrs.ca/en/print-flyer',
     'your independent grocer':      'https://www.loblaws.ca/en/print-flyer',
     'independent grocer':           'https://www.loblaws.ca/en/print-flyer',
     'valumart':                     'https://www.loblaws.ca/en/print-flyer',

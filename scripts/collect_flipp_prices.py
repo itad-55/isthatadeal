@@ -201,6 +201,8 @@ CUT_REJECT_KEYWORDS = {
     'beef_flank':         {'pork', 'porc'},
     'chicken_breast_bonein': {'boneless', 'désossé'},
     'mango': {'dried', 'séché'},
+    'butter_454g': {'cookie', 'cookies', 'biscuit', 'shortbread'},
+    'tortillas': {'chip', 'chips', 'nacho'},
 }
 
 # Maps cut_key -> set of PROCESSED_KEYWORDS to ignore for that cut.
