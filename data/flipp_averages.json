@@ -51,10 +51,10 @@
     },
     "beef_ground_regular": {
       "name": "Ground beef (regular)",
-      "avg": 17.09,
+      "avg": 16.88,
       "lo": 10.74,
       "hi": 26.43,
-      "observations": 48,
+      "observations": 54,
       "source": "flipp_historical"
     },
     "beef_inside_round": {
