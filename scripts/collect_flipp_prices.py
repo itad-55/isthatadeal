@@ -66,7 +66,7 @@ CUTS = [
     # ── Chicken ───────────────────────────────────────────────────────────────
     ('chicken_whole',          'Whole chicken',                ['whole chicken'],                               'kg'),
     ('chicken_breast',         'Chicken breast (boneless)',    ['chicken breast boneless', 'chicken breasts'],  'kg'),
-    ('chicken_breast_bonein',  'Chicken breast (bone-in)',     ['chicken breast bone in', 'chicken breast split', 'split chicken breast'], 'kg'),
+    ('chicken_breast_bonein',  'Chicken breast (bone-in)',     ['chicken breast bone in', 'chicken breast split', 'split chicken breast', 'chicken breasts'], 'kg'),
     ('chicken_thigh_bonein',   'Chicken thighs (bone-in)',     ['chicken thighs bone in', 'chicken thighs'],   'kg'),
     ('chicken_thigh_boneless', 'Chicken thighs (boneless)',    ['chicken thighs boneless'],                     'kg'),
     ('chicken_drumsticks',     'Chicken drumsticks',           ['chicken drumsticks', 'chicken legs'],          'kg'),
@@ -200,6 +200,7 @@ CUT_REJECT_KEYWORDS = {
     'beef_brisket':       {'pork', 'porc'},
     'beef_flank':         {'pork', 'porc'},
     'chicken_breast_bonein': {'boneless', 'désossé'},
+    'chicken_breast':        {'bone in', 'bone-in'},
     'mango': {'dried', 'séché'},
     'butter_454g': {'cookie', 'cookies', 'biscuit', 'shortbread'},
     'tortillas': {'chip', 'chips', 'nacho'},
@@ -369,6 +370,7 @@ def main():
 
         for postal in POSTAL_CODES:
             for query in queries:
+                rows_before = len(new_rows)
                 items = search_flipp(query, postal)
                 time.sleep(0.4)  # be polite
 
@@ -442,8 +444,8 @@ def main():
                     existing.add(dup_check)
                     print(f"  ✓ {store}: {item_name} — ${raw_price}/{raw_unit} (${price_kg}/kg) [retailer_url: {retailer_url}]")
 
-                if new_rows and len(queries) > 1:
-                    break  # found results from first query, skip fallback queries
+                if len(new_rows) > rows_before and len(queries) > 1:
+                    break  # found results from this query, skip fallback queries
 
     # Append to CSV
     write_header = not os.path.exists(HISTORY_CSV)

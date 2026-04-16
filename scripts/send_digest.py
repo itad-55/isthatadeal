@@ -200,7 +200,7 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
     # for items sold in small fixed-weight packages or by-the-each, or too niche to feature
     DIGEST_EXCLUDE = {'cream_cheese', 'cucumber', 'tilapia', 'mango',
                       'beef_ground_regular', 'beef_ground_medium', 'beef_ground_lean',
-                      'pork_side_ribs', 'broccoli'}
+                      'pork_side_ribs', 'broccoli', 'tortillas'}
 
     # Map Flipp cut_keys to StatCan keys where names differ
     STATCAN_ALIASES = {
@@ -256,7 +256,7 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
         "Pork shoulder cuts, per kilogram": "Pork shoulder cuts",
         "Whole chicken, per kilogram": "Whole chicken",
         "Chicken breasts, per kilogram": "Chicken breasts",
-        "Chicken thigh, per kilogram": "Chicken thighs",
+        "Chicken thigh, per kilogram": "Chicken thighs (bone-in)",
         "Chicken drumsticks, per kilogram": "Chicken drumsticks",
         "Salmon, per kilogram": "Salmon",
         "Bacon, 500 grams": "Bacon (500g)",
@@ -330,7 +330,8 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
             # Sanity check 0b — skip deli/processed/pre-cooked/frozen branded products
             # These are not basic groceries and contaminate price averages
             item_name_lower = row.get('item_name', '').lower()
-            DELI_KEYWORDS = ['cooked', 'sliced', 'deli', 'artisan', 'cured', 'smoked',
+            DELI_KEYWORDS = ['becel', 'plant butter', 'vegan butter',
+                             'cooked', 'sliced', 'deli', 'artisan', 'cured', 'smoked',
                              'lunch meat', 'lunchmeat', 'bologna', 'salami', 'prosciutto',
                              'pepperoni', 'pastrami', 'corned beef', 'roast beef deli',
                              'schneiders', 'maple leaf deli', 'butterball deli',
@@ -534,6 +535,7 @@ def emoji_for(name):
     if any(w in n for w in ['milk','butter','cheese','egg','cream','yogurt','cottage']): return '🥛'
     if any(w in n for w in ['sweet potato','yam']): return '🍠'
     if any(w in n for w in ['potato',]): return '🥔'
+    if any(w in n for w in ['pineapple',]): return '🍍'
     if any(w in n for w in ['apple',]): return '🍎'
     if any(w in n for w in ['banana',]): return '🍌'
     if any(w in n for w in ['orange',]): return '🍊'
@@ -543,7 +545,6 @@ def emoji_for(name):
     if any(w in n for w in ['watermelon',]): return '🍉'
     if any(w in n for w in ['avocado',]): return '🥑'
     if any(w in n for w in ['mango',]): return '🥭'
-    if any(w in n for w in ['pineapple',]): return '🍍'
     if any(w in n for w in ['lemon',]): return '🍋'
     if any(w in n for w in ['lime',]): return '🍋'
     if any(w in n for w in ['tomato',]): return '🍅'
@@ -653,11 +654,15 @@ def build_email_html(deals, period, show_verify=False):
         label, color, check = verdict(d['pct'])
         em = emoji_for(d['name'])
         _iname = (d.get('item_name') or '')
-        # Truncate at " Or " — Flipp often bundles multiple items
-        for _sep in [' Or ', ' OR ', ' or ']:
-            if _sep in _iname:
-                _iname = _iname.split(_sep)[0].strip()
-                break
+        # For combo OR items, pick the part most relevant to this deal's cut name
+        if any(_sep in _iname for _sep in [' Or ', ' OR ', ' or ']):
+            for _sep in [' Or ', ' OR ', ' or ']:
+                if _sep in _iname:
+                    parts = [p.strip() for p in _iname.split(_sep)]
+                    cut_words = [w for w in d['name'].lower().split() if len(w) > 3]
+                    best = next((p for p in parts if any(w in p.lower() for w in cut_words)), parts[0])
+                    _iname = best
+                    break
         item_name_raw = _iname[:55] + ('...' if len(_iname) > 55 else '')
         expiry = format_valid_to(d.get('valid_to', ''))
         # Prefer retailer_url for store link if available
@@ -686,7 +691,7 @@ def build_email_html(deals, period, show_verify=False):
                 case_price = float(d['raw_price'])
             except (ValueError, TypeError):
                 case_price = d['price'] / 2.20462
-            primary_price = f'${case_price:.2f} per case'
+            primary_price = f'${case_price:.2f} per unit'
             kg_price = f'${d["price"]:.2f}/kg'
             kg_span = f'  <span style="font-size:18px;font-weight:400;color:rgba(255,255,255,0.5)">{kg_price}</span>'
             kg_span2 = f'<span style="font-size:14px;font-weight:400;color:#8A8680;font-family:monospace">{kg_price}</span> '
