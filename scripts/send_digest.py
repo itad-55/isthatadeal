@@ -201,7 +201,7 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
     DIGEST_EXCLUDE = {'cream_cheese', 'cucumber', 'tilapia', 'mango',
                       'beef_ground_regular', 'beef_ground_medium', 'beef_ground_lean',
                       'pork_side_ribs', 'broccoli', 'tortillas', 'pineapple', 'blueberries',
-                      'chicken_drumsticks'}
+                      'chicken_drumsticks', 'bagels'}
 
     # Map Flipp cut_keys to StatCan keys where names differ
     STATCAN_ALIASES = {
@@ -310,7 +310,7 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
             # Per-cut item name reject: catch wrong cuts collected under a key
             # (e.g. sirloin tip ≠ top sirloin — different cut, different price point)
             SCORER_CUT_REJECTS = {
-                'beef_sirloin': {'sirloin tip', 'tip roast', 'tip steak'},
+                'beef_sirloin': {'sirloin tip', 'tip roast', 'tip steak', 'pork', 'porc'},
             }
             item_lower = row.get('item_name', '').lower()
             if any(phrase in item_lower for phrase in SCORER_CUT_REJECTS.get(key, set())):
