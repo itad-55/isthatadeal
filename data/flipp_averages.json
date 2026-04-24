@@ -99,10 +99,10 @@
     },
     "chicken_breast": {
       "name": "Chicken breast (boneless)",
-      "avg": 14.29,
+      "avg": 14.36,
       "lo": 5.99,
       "hi": 39.9,
-      "observations": 104,
+      "observations": 105,
       "source": "flipp_historical"
     },
     "chicken_drumsticks": {
@@ -283,10 +283,10 @@
     },
     "sweet_potato": {
       "name": "Sweet potatoes",
-      "avg": 5.04,
+      "avg": 5.01,
       "lo": 1.49,
       "hi": 35.01,
-      "observations": 239,
+      "observations": 240,
       "source": "flipp_historical"
     },
     "tilapia": {
@@ -299,10 +299,10 @@
     },
     "tomatoes": {
       "name": "Tomatoes (loose)",
-      "avg": 6.36,
+      "avg": 6.3,
       "lo": 1.29,
       "hi": 13.23,
-      "observations": 108,
+      "observations": 110,
       "source": "flipp_historical"
     },
     "tuna_steak": {
