@@ -200,7 +200,8 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
     # for items sold in small fixed-weight packages or by-the-each, or too niche to feature
     DIGEST_EXCLUDE = {'cream_cheese', 'cucumber', 'tilapia', 'mango',
                       'beef_ground_regular', 'beef_ground_medium', 'beef_ground_lean',
-                      'pork_side_ribs', 'broccoli', 'tortillas'}
+                      'pork_side_ribs', 'broccoli', 'tortillas', 'pineapple', 'blueberries',
+                      'chicken_drumsticks'}
 
     # Map Flipp cut_keys to StatCan keys where names differ
     STATCAN_ALIASES = {
@@ -295,6 +296,24 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '1004033505',  # Chalo FreshCo same bad salmon item
             }
             if row.get('item_id', '') in SCORER_ITEM_BLACKLIST:
+                continue
+
+            # Skip regional flyers that don't represent province-wide Ontario pricing.
+            # Metro's Ottawa/bilingual flyer (7888328) serves K1A0A1 with Quebec-region
+            # pricing — deals there are not available at Ontario Metro stores broadly.
+            BLACKLISTED_FLYER_IDS = {
+                '7888328',  # Metro Ottawa/bilingual regional flyer — Quebec pricing
+            }
+            if row.get('flyer_id', '') in BLACKLISTED_FLYER_IDS:
+                continue
+
+            # Per-cut item name reject: catch wrong cuts collected under a key
+            # (e.g. sirloin tip ≠ top sirloin — different cut, different price point)
+            SCORER_CUT_REJECTS = {
+                'beef_sirloin': {'sirloin tip', 'tip roast', 'tip steak'},
+            }
+            item_lower = row.get('item_name', '').lower()
+            if any(phrase in item_lower for phrase in SCORER_CUT_REJECTS.get(key, set())):
                 continue
             try:
                 # For pkg items that were mis-recorded as kg, use raw_price
@@ -491,6 +510,28 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
         if len(ranked) >= limit:
             break
 
+    # ── Manual editorial overrides (data/digest_overrides.json) ──────────────
+    # force_exclude: remove named cut_keys from the ranked list this week
+    # force_include: insert named cut_keys from active deals at the end of the list
+    # Edit the JSON file each week — no code changes needed.
+    OVERRIDES_FILE = os.path.join(DATA_DIR, 'digest_overrides.json')
+    if os.path.exists(OVERRIDES_FILE):
+        with open(OVERRIDES_FILE) as _f:
+            _ov = json.load(_f)
+        _excludes = set(_ov.get('force_exclude', []))
+        _includes = _ov.get('force_include', [])
+        if _excludes:
+            ranked = [d for d in ranked if d['key'] not in _excludes]
+            print(f"  [overrides] Excluded: {_excludes}")
+        for _inc_key in _includes:
+            if any(d['key'] == _inc_key for d in ranked):
+                continue  # already present
+            _inc_deal = next((d for d in sorted(active, key=lambda x: x['weighted_score'], reverse=True)
+                              if d['key'] == _inc_key), None)
+            if _inc_deal:
+                ranked.append(_inc_deal)
+                print(f"  [overrides] Force-included: {_inc_deal['name']} @ {_inc_deal['store']}")
+
     print("\nDeal ranking (weighted):")
     for i, d in enumerate(ranked, 1):
         # Attach price-match info: other stores with same cut this week
@@ -654,14 +695,20 @@ def build_email_html(deals, period, show_verify=False):
         label, color, check = verdict(d['pct'])
         em = emoji_for(d['name'])
         _iname = (d.get('item_name') or '')
-        # For combo OR items, pick the part most relevant to this deal's cut name
+        # For combo OR items, pick the part most relevant to this deal's cut name.
+        # Score by precision: fraction of each part's words that appear in the cut name.
+        # e.g. "Thighs" (1/1=100%) beats "Chicken Drumsticks" (1/2=50%) for cut "Chicken thighs"
         if any(_sep in _iname for _sep in [' Or ', ' OR ', ' or ']):
             for _sep in [' Or ', ' OR ', ' or ']:
                 if _sep in _iname:
                     parts = [p.strip() for p in _iname.split(_sep)]
-                    cut_words = [w for w in d['name'].lower().split() if len(w) > 3]
-                    best = next((p for p in parts if any(w in p.lower() for w in cut_words)), parts[0])
-                    _iname = best
+                    cut_words = set(_re.sub(r'[()]', '', d['name']).lower().split())
+                    def _or_score(part):
+                        words = [w for w in part.lower().split() if len(w) > 3]
+                        if not words:
+                            return 0
+                        return sum(1 for w in words if w in cut_words) / len(words)
+                    _iname = max(parts, key=_or_score)
                     break
         item_name_raw = _iname[:55] + ('...' if len(_iname) > 55 else '')
         expiry = format_valid_to(d.get('valid_to', ''))

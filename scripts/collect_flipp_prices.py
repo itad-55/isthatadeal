@@ -197,6 +197,7 @@ CUT_REJECT_KEYWORDS = {
     'beef_sirloin':       {'pork', 'porc'},
     'beef_striploin':     {'pork', 'porc'},
     'beef_stewing':       {'pork', 'porc'},
+    'beef_sirloin':       {'sirloin tip', 'tip roast', 'tip steak'},
     'beef_brisket':       {'pork', 'porc'},
     'beef_flank':         {'pork', 'porc'},
     'chicken_breast_bonein': {'boneless', 'désossé'},
