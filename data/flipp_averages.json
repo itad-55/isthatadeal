@@ -147,10 +147,10 @@
     },
     "chicken_wings": {
       "name": "Chicken wings",
-      "avg": 13.63,
+      "avg": 13.77,
       "lo": 3.29,
       "hi": 30.86,
-      "observations": 62,
+      "observations": 61,
       "source": "flipp_historical"
     },
     "cod": {
@@ -283,10 +283,10 @@
     },
     "sweet_potato": {
       "name": "Sweet potatoes",
-      "avg": 4.99,
+      "avg": 5.02,
       "lo": 1.49,
       "hi": 35.01,
-      "observations": 246,
+      "observations": 247,
       "source": "flipp_historical"
     },
     "tilapia": {
@@ -371,10 +371,10 @@
     },
     "potatoes_bag": {
       "name": "Potatoes (bag)",
-      "avg": 9.83,
+      "avg": 9.86,
       "lo": 0.55,
       "hi": 41.18,
-      "observations": 418,
+      "observations": 419,
       "source": "flipp_historical"
     },
     "cucumber": {
