@@ -1,4 +1,4 @@
 {
-  "force_include": ["grapes"],
-  "force_exclude": ["pork_tenderloin"]
+  "force_include": [],
+  "force_exclude": ["pork_chop_bonein"]
 }

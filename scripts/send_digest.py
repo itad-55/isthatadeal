@@ -201,7 +201,7 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
     DIGEST_EXCLUDE = {'cream_cheese', 'cucumber', 'tilapia', 'mango',
                       'beef_ground_regular', 'beef_ground_medium', 'beef_ground_lean',
                       'pork_side_ribs', 'broccoli', 'tortillas', 'pineapple', 'blueberries',
-                      'chicken_drumsticks', 'bagels'}
+                      'chicken_drumsticks', 'bagels', 'salad_mix'}
 
     # Map Flipp cut_keys to StatCan keys where names differ
     STATCAN_ALIASES = {
@@ -302,7 +302,8 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
             # Metro's Ottawa/bilingual flyer (7888328) serves K1A0A1 with Quebec-region
             # pricing — deals there are not available at Ontario Metro stores broadly.
             BLACKLISTED_FLYER_IDS = {
-                '7888328',  # Metro Ottawa/bilingual regional flyer — Quebec pricing
+                '7888328',  # Metro Ottawa/bilingual regional flyer — Quebec pricing (week of Apr 24)
+                '7903490',  # Metro Ottawa/bilingual regional flyer — Quebec pricing (week of Apr 30)
             }
             if row.get('flyer_id', '') in BLACKLISTED_FLYER_IDS:
                 continue
