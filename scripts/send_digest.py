@@ -304,6 +304,8 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
             BLACKLISTED_FLYER_IDS = {
                 '7888328',  # Metro Ottawa/bilingual regional flyer — Quebec pricing (week of Apr 24)
                 '7903490',  # Metro Ottawa/bilingual regional flyer — Quebec pricing (week of Apr 30)
+                '7911858',  # Metro Ottawa/bilingual regional flyer — Quebec pricing (week of May 7)
+                '7912968',  # No Frills regional flyer — K1A0A1 only, not province-wide (week of May 7)
             }
             if row.get('flyer_id', '') in BLACKLISTED_FLYER_IDS:
                 continue
@@ -552,6 +554,49 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
               f"(multiplier: {d['category_multiplier']})"
               f"{' · PM: ' + ', '.join(p['store'] for p in pm) if pm else ''}")
 
+    # ── 8-week low badge ──────────────────────────────────────────────────────
+    # For each ranked deal, check if this week's price is the lowest in 8 weeks.
+    # Requires at least 2 distinct collection dates in history to show the badge.
+    _8wk_cutoff = (datetime.date.fromisoformat(today_str) - datetime.timedelta(weeks=8)).isoformat()
+    _hist_min   = {}   # cut_key → (min_price, num_distinct_dates)
+    _hist_dates = {}   # cut_key → set of date strings
+    SCORER_ITEM_BLACKLIST_8WK = {
+        '1000407057', '1004049334', '1004068593', '1004033505',
+    }
+    BLACKLISTED_FLYER_IDS_8WK = {
+        '7888328', '7903490', '7911858', '7912968',
+    }
+    SCORER_CUT_REJECTS_8WK = {
+        'beef_sirloin': {'sirloin tip', 'tip roast', 'tip steak', 'pork', 'porc'},
+    }
+    ranked_keys = {d['key'] for d in ranked}
+    with open(HISTORY_CSV, newline='') as _hf:
+        for _hr in csv.DictReader(_hf):
+            if _hr['date'] < _8wk_cutoff or _hr['date'] >= today_str:
+                continue
+            _hk = _hr['cut_key']
+            if _hk not in ranked_keys:
+                continue
+            if _hr.get('item_id', '') in SCORER_ITEM_BLACKLIST_8WK:
+                continue
+            if _hr.get('flyer_id', '') in BLACKLISTED_FLYER_IDS_8WK:
+                continue
+            _item_lower = _hr.get('item_name', '').lower()
+            if any(p in _item_lower for p in SCORER_CUT_REJECTS_8WK.get(_hk, set())):
+                continue
+            try:
+                _hp = float(_hr['raw_price']) if _hk in PKG_OVERRIDES else float(_hr['price_per_kg'])
+            except ValueError:
+                continue
+            if _hk not in _hist_min or _hp < _hist_min[_hk]:
+                _hist_min[_hk] = _hp
+            _hist_dates.setdefault(_hk, set()).add(_hr['date'])
+
+    for d in ranked:
+        _hmin = _hist_min.get(d['key'])
+        _ndates = len(_hist_dates.get(d['key'], set()))
+        d['lowest_8wk'] = bool(_hmin is not None and _ndates >= 2 and d['price'] <= _hmin)
+
     return ranked, rejected
 
 # ── Emoji for product categories ──────────────────────────────────────────────
@@ -785,7 +830,8 @@ def build_email_html(deals, period, show_verify=False):
                 f'<div class="dw-price" style="font-size:40px;font-weight:700;color:#FAFAF7;font-family:monospace;margin-bottom:3px">{primary_price}</div>'
                 f'<div style="font-size:18px;color:rgba(255,255,255,0.45);font-family:monospace;margin-bottom:12px">{kg_price if is_per_kg or raw_unit=="lb" else ""}</div>'
                 f'<div class="dw-pct" style="font-size:19px;font-weight:700;color:#5DCAA5;font-family:monospace">{check} {pct_below}% {pct_label_long}</div>'
-                f'{_price_match_html(d, dark=True)}'
+                + (f'<div style="font-size:14px;color:rgba(255,255,255,0.5);font-family:monospace;margin-top:4px">Lowest price in 8 weeks</div>' if d.get('lowest_8wk') else '')
+                + f'{_price_match_html(d, dark=True)}'
                 f'</td></tr></table></td></tr>'
                 f'<tr><td style="padding:10px 14px 6px">'
                 f'<div class="also-label" style="font-size:15px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8680;font-family:monospace">Also worth buying this week</div>'
@@ -805,7 +851,8 @@ def build_email_html(deals, period, show_verify=False):
                 f'<div class="li-price" style="font-size:28px;font-weight:700;color:#0D0D0D;font-family:monospace;margin-bottom:2px">{primary_price}</div>'
                 f'<div style="font-size:15px;color:#8A8680;font-family:monospace;margin-bottom:5px">{kg_price if is_per_kg or raw_unit=="lb" else ""}</div>'
                 f'<div style="font-size:16px;font-weight:700;color:{color};font-family:monospace">{check} {pct_below}% {pct_label_short}</div>'
-                f'{_price_match_html(d, dark=False)}'
+                + (f'<div style="font-size:13px;color:#8A8680;font-family:monospace;margin-top:3px">Lowest price in 8 weeks</div>' if d.get('lowest_8wk') else '')
+                + f'{_price_match_html(d, dark=False)}'
                 f'</td></tr></table></td></tr>'
             )
 
