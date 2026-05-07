@@ -211,10 +211,10 @@
     },
     "pork_back_ribs": {
       "name": "Pork back ribs",
-      "avg": 11.26,
-      "lo": 4.44,
+      "avg": 11.32,
+      "lo": 6.49,
       "hi": 15.41,
-      "observations": 53,
+      "observations": 52,
       "source": "flipp_historical"
     },
     "pork_belly": {
@@ -227,7 +227,7 @@
     },
     "pork_chop_boneless": {
       "name": "Pork chops (boneless)",
-      "avg": 9.4,
+      "avg": 9.57,
       "lo": 2.99,
       "hi": 15.41,
       "observations": 62,
@@ -251,15 +251,15 @@
     },
     "pork_side_ribs": {
       "name": "Pork side ribs",
-      "avg": 9.86,
+      "avg": 9.8,
       "lo": 5.51,
       "hi": 17.61,
-      "observations": 66,
+      "observations": 67,
       "source": "flipp_historical"
     },
     "pork_tenderloin": {
       "name": "Pork tenderloin",
-      "avg": 9.53,
+      "avg": 9.69,
       "lo": 3.99,
       "hi": 26.43,
       "observations": 75,
@@ -267,10 +267,10 @@
     },
     "salmon_fillet": {
       "name": "Salmon fillets",
-      "avg": 26.05,
+      "avg": 25.98,
       "lo": 8.99,
       "hi": 48.48,
-      "observations": 165,
+      "observations": 166,
       "source": "flipp_historical"
     },
     "salmon_whole": {
@@ -294,7 +294,7 @@
       "avg": 5.0,
       "lo": 1.49,
       "hi": 35.01,
-      "observations": 280,
+      "observations": 281,
       "source": "flipp_historical"
     },
     "tilapia": {
@@ -411,7 +411,7 @@
     },
     "pork_chop_bonein": {
       "name": "Pork chops (bone-in)",
-      "avg": 8.93,
+      "avg": 8.98,
       "lo": 2.5,
       "hi": 26.43,
       "observations": 81,
@@ -539,10 +539,10 @@
     },
     "sausage_500g": {
       "name": "Pork sausage (500g)",
-      "avg": 14.54,
+      "avg": 14.51,
       "lo": 8.0,
       "hi": 27.96,
-      "observations": 60,
+      "observations": 61,
       "source": "flipp_historical"
     },
     "tortillas": {
