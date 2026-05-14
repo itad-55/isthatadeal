@@ -75,10 +75,10 @@
     },
     "beef_sirloin": {
       "name": "Beef top sirloin",
-      "avg": 31.71,
+      "avg": 31.83,
       "lo": 7.98,
       "hi": 44.07,
-      "observations": 90,
+      "observations": 91,
       "source": "flipp_historical"
     },
     "beef_stewing": {
@@ -107,10 +107,10 @@
     },
     "chicken_breast": {
       "name": "Chicken breast (boneless)",
-      "avg": 14.94,
+      "avg": 15.0,
       "lo": 5.99,
       "hi": 39.9,
-      "observations": 161,
+      "observations": 164,
       "source": "flipp_historical"
     },
     "chicken_drumsticks": {
@@ -307,10 +307,10 @@
     },
     "tomatoes": {
       "name": "Tomatoes (loose)",
-      "avg": 6.4,
+      "avg": 6.43,
       "lo": 1.29,
       "hi": 15.41,
-      "observations": 134,
+      "observations": 136,
       "source": "flipp_historical"
     },
     "tuna_steak": {
@@ -411,10 +411,10 @@
     },
     "pork_chop_bonein": {
       "name": "Pork chops (bone-in)",
-      "avg": 9.2,
+      "avg": 9.26,
       "lo": 2.5,
       "hi": 28.64,
-      "observations": 87,
+      "observations": 88,
       "source": "flipp_historical"
     },
     "strawberries": {
@@ -459,10 +459,10 @@
     },
     "veal_cutlets": {
       "name": "Veal cutlets",
-      "avg": 34.06,
+      "avg": 34.38,
       "lo": 4.88,
       "hi": 66.12,
-      "observations": 36,
+      "observations": 37,
       "source": "flipp_historical"
     },
     "bagels": {
