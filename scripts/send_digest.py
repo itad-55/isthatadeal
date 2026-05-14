@@ -306,6 +306,7 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '7903490',  # Metro Ottawa/bilingual regional flyer — Quebec pricing (week of Apr 30)
                 '7911858',  # Metro Ottawa/bilingual regional flyer — Quebec pricing (week of May 7)
                 '7912968',  # No Frills regional flyer — K1A0A1 only, not province-wide (week of May 7)
+                '7923378',  # Loblaws regional flyer — L4T0A1 only, not province-wide (week of May 14)
             }
             if row.get('flyer_id', '') in BLACKLISTED_FLYER_IDS:
                 continue
@@ -564,7 +565,7 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
         '1000407057', '1004049334', '1004068593', '1004033505',
     }
     BLACKLISTED_FLYER_IDS_8WK = {
-        '7888328', '7903490', '7911858', '7912968',
+        '7888328', '7903490', '7911858', '7912968', '7923378',
     }
     SCORER_CUT_REJECTS_8WK = {
         'beef_sirloin': {'sirloin tip', 'tip roast', 'tip steak', 'pork', 'porc'},
