@@ -201,7 +201,7 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
     DIGEST_EXCLUDE = {'cream_cheese', 'cucumber', 'tilapia', 'mango',
                       'beef_ground_regular', 'beef_ground_medium', 'beef_ground_lean',
                       'pork_side_ribs', 'broccoli', 'tortillas', 'pineapple', 'blueberries',
-                      'chicken_drumsticks', 'bagels', 'salad_mix'}
+                      'chicken_drumsticks', 'bagels', 'salad_mix', 'coffee_ground_300g'}
 
     # Map Flipp cut_keys to StatCan keys where names differ
     STATCAN_ALIASES = {
@@ -307,6 +307,8 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '7911858',  # Metro Ottawa/bilingual regional flyer — Quebec pricing (week of May 7)
                 '7912968',  # No Frills regional flyer — K1A0A1 only, not province-wide (week of May 7)
                 '7924290',  # Zehrs regional flyer — N2L3G1 only, not province-wide (week of May 14)
+                '7921219',  # Metro Ottawa/bilingual regional flyer — Quebec pricing (week of May 21)
+                '7934713',  # Metro Ottawa/bilingual regional flyer — Quebec pricing (week of May 21)
             }
             if row.get('flyer_id', '') in BLACKLISTED_FLYER_IDS:
                 continue
@@ -315,6 +317,7 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
             # (e.g. sirloin tip ≠ top sirloin — different cut, different price point)
             SCORER_CUT_REJECTS = {
                 'beef_sirloin': {'sirloin tip', 'tip roast', 'tip steak', 'pork', 'porc'},
+                'veal_cutlets': {'trio', 'ground beef', 'ground pork'},
             }
             item_lower = row.get('item_name', '').lower()
             if any(phrase in item_lower for phrase in SCORER_CUT_REJECTS.get(key, set())):
@@ -565,7 +568,7 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
         '1000407057', '1004049334', '1004068593', '1004033505',
     }
     BLACKLISTED_FLYER_IDS_8WK = {
-        '7888328', '7903490', '7911858', '7912968', '7924290',
+        '7888328', '7903490', '7911858', '7912968', '7924290', '7921219', '7934713',
     }
     SCORER_CUT_REJECTS_8WK = {
         'beef_sirloin': {'sirloin tip', 'tip roast', 'tip steak', 'pork', 'porc'},
