@@ -108,9 +108,9 @@
     "chicken_breast": {
       "name": "Chicken breast (boneless)",
       "avg": 15.01,
-      "lo": 5.99,
+      "lo": 5.49,
       "hi": 39.9,
-      "observations": 174,
+      "observations": 176,
       "source": "flipp_historical"
     },
     "chicken_drumsticks": {
@@ -203,10 +203,10 @@
     },
     "peppers": {
       "name": "Bell peppers",
-      "avg": 8.19,
+      "avg": 8.18,
       "lo": 4.14,
       "hi": 13.21,
-      "observations": 140,
+      "observations": 141,
       "source": "flipp_historical"
     },
     "pork_back_ribs": {
@@ -270,7 +270,7 @@
       "avg": 26.15,
       "lo": 8.99,
       "hi": 48.48,
-      "observations": 185,
+      "observations": 186,
       "source": "flipp_historical"
     },
     "salmon_whole": {
@@ -294,7 +294,7 @@
       "avg": 5.02,
       "lo": 1.49,
       "hi": 35.01,
-      "observations": 296,
+      "observations": 297,
       "source": "flipp_historical"
     },
     "tilapia": {
@@ -411,10 +411,10 @@
     },
     "pork_chop_bonein": {
       "name": "Pork chops (bone-in)",
-      "avg": 9.0,
+      "avg": 9.02,
       "lo": 2.5,
       "hi": 28.64,
-      "observations": 95,
+      "observations": 96,
       "source": "flipp_historical"
     },
     "strawberries": {
@@ -459,10 +459,10 @@
     },
     "veal_cutlets": {
       "name": "Veal cutlets",
-      "avg": 33.64,
+      "avg": 34.6,
       "lo": 4.88,
       "hi": 66.12,
-      "observations": 41,
+      "observations": 42,
       "source": "flipp_historical"
     },
     "bagels": {
@@ -515,10 +515,10 @@
     },
     "mushrooms": {
       "name": "Mushrooms",
-      "avg": 12.1,
+      "avg": 12.11,
       "lo": 6.34,
       "hi": 26.43,
-      "observations": 68,
+      "observations": 69,
       "source": "flipp_historical"
     },
     "pasta_500g": {
@@ -595,10 +595,10 @@
     },
     "spinach": {
       "name": "Spinach",
-      "avg": 15.89,
+      "avg": 15.69,
       "lo": 6.67,
       "hi": 35.14,
-      "observations": 27,
+      "observations": 28,
       "source": "flipp_historical"
     },
     "blueberries": {
@@ -611,10 +611,10 @@
     },
     "bacon_500g": {
       "name": "Bacon (500g)",
-      "avg": 14.86,
+      "avg": 14.95,
       "lo": 10.0,
       "hi": 22.64,
-      "observations": 26,
+      "observations": 27,
       "source": "flipp_historical"
     },
     "chicken_breast_bonein": {
