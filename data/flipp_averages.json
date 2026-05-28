@@ -107,10 +107,10 @@
     },
     "chicken_breast": {
       "name": "Chicken breast (boneless)",
-      "avg": 14.99,
+      "avg": 14.95,
       "lo": 5.44,
       "hi": 39.9,
-      "observations": 184,
+      "observations": 186,
       "source": "flipp_historical"
     },
     "chicken_drumsticks": {
@@ -131,10 +131,10 @@
     },
     "chicken_thigh_bonein": {
       "name": "Chicken thighs (bone-in)",
-      "avg": 13.64,
+      "avg": 13.67,
       "lo": 4.39,
       "hi": 26.46,
-      "observations": 83,
+      "observations": 84,
       "source": "flipp_historical"
     },
     "chicken_thigh_boneless": {
@@ -291,10 +291,10 @@
     },
     "sweet_potato": {
       "name": "Sweet potatoes",
-      "avg": 5.0,
+      "avg": 4.99,
       "lo": 1.49,
       "hi": 35.01,
-      "observations": 305,
+      "observations": 309,
       "source": "flipp_historical"
     },
     "tilapia": {
@@ -363,10 +363,10 @@
     },
     "mango": {
       "name": "Mangoes",
-      "avg": 12.61,
+      "avg": 12.42,
       "lo": 1.9,
       "hi": 106.67,
-      "observations": 60,
+      "observations": 61,
       "source": "flipp_historical"
     },
     "onions_bag": {
@@ -475,10 +475,10 @@
     },
     "bread_whole_wheat": {
       "name": "Whole wheat bread",
-      "avg": 5.28,
+      "avg": 5.4,
       "lo": 3.39,
       "hi": 8.89,
-      "observations": 37,
+      "observations": 38,
       "source": "flipp_historical"
     },
     "butter_454g": {
@@ -539,10 +539,10 @@
     },
     "sausage_500g": {
       "name": "Pork sausage (500g)",
-      "avg": 14.39,
+      "avg": 14.29,
       "lo": 7.98,
       "hi": 27.96,
-      "observations": 72,
+      "observations": 73,
       "source": "flipp_historical"
     },
     "tortillas": {
@@ -619,10 +619,10 @@
     },
     "chicken_breast_bonein": {
       "name": "Chicken breast (bone-in)",
-      "avg": 14.61,
+      "avg": 14.54,
       "lo": 5.49,
       "hi": 39.9,
-      "observations": 61,
+      "observations": 62,
       "source": "flipp_historical"
     },
     "salad_mix": {
