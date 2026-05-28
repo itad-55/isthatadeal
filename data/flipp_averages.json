@@ -179,10 +179,10 @@
     },
     "lamb_chops": {
       "name": "Lamb chops",
-      "avg": 27.5,
+      "avg": 27.38,
       "lo": 13.21,
       "hi": 44.07,
-      "observations": 101,
+      "observations": 102,
       "source": "flipp_historical"
     },
     "lamb_leg": {
