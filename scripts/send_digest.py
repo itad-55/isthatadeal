@@ -294,6 +294,8 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '1004049334',  # Sobeys pork shoulder blade collected under beef_blade_roast
                 '1004068593',  # FreshCo salmon: $9.99/lb stored as /kg
                 '1004033505',  # Chalo FreshCo same bad salmon item
+                '1015476197',  # Loblaws PC Shrimp OR High Liner Salmon 400g — unit stored as /lb, actually $8/400g pkg
+                '1015442208',  # Zehrs same OR-item combo deal
             }
             if row.get('item_id', '') in SCORER_ITEM_BLACKLIST:
                 continue
