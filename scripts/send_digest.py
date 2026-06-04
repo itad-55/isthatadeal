@@ -311,6 +311,11 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '7924290',  # Zehrs regional flyer — N2L3G1 only, not province-wide (week of May 14)
                 '7921219',  # Metro Ottawa/bilingual regional flyer — Quebec pricing (week of May 21)
                 '7934713',  # Metro Ottawa/bilingual regional flyer — Quebec pricing (week of May 21)
+                '7945553',  # Metro Ottawa/bilingual regional flyer — Quebec pricing (week of May 28)
+                '7951085',  # IGA K1A0A1 flyer — Quebec chain, not Ontario (week of May 28)
+                '7962329',  # Metro Ottawa/bilingual regional flyer — Quebec pricing (week of Jun 4)
+                '7964175',  # IGA K1A0A1 flyer — Quebec chain, not Ontario (week of Jun 4)
+                '7964249',  # Maxi K1A0A1 flyer — Quebec chain, not Ontario (week of Jun 4)
             }
             if row.get('flyer_id', '') in BLACKLISTED_FLYER_IDS:
                 continue
@@ -571,6 +576,7 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
     }
     BLACKLISTED_FLYER_IDS_8WK = {
         '7888328', '7903490', '7911858', '7912968', '7924290', '7921219', '7934713',
+        '7945553', '7951085', '7962329', '7964175', '7964249',
     }
     SCORER_CUT_REJECTS_8WK = {
         'beef_sirloin': {'sirloin tip', 'tip roast', 'tip steak', 'pork', 'porc'},
