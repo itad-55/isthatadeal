@@ -75,10 +75,10 @@
     },
     "beef_sirloin": {
       "name": "Beef top sirloin",
-      "avg": 31.8,
+      "avg": 31.91,
       "lo": 7.98,
       "hi": 44.07,
-      "observations": 107,
+      "observations": 108,
       "source": "flipp_historical"
     },
     "beef_stewing": {
@@ -107,10 +107,10 @@
     },
     "chicken_breast": {
       "name": "Chicken breast (boneless)",
-      "avg": 14.99,
-      "lo": 5.44,
+      "avg": 14.97,
+      "lo": 4.99,
       "hi": 89.9,
-      "observations": 195,
+      "observations": 198,
       "source": "flipp_historical"
     },
     "chicken_drumsticks": {
@@ -267,10 +267,10 @@
     },
     "salmon_fillet": {
       "name": "Salmon fillets",
-      "avg": 25.72,
+      "avg": 25.76,
       "lo": 8.99,
       "hi": 48.48,
-      "observations": 203,
+      "observations": 206,
       "source": "flipp_historical"
     },
     "salmon_whole": {
@@ -411,10 +411,10 @@
     },
     "pork_chop_bonein": {
       "name": "Pork chops (bone-in)",
-      "avg": 9.02,
+      "avg": 8.97,
       "lo": 2.5,
       "hi": 28.64,
-      "observations": 104,
+      "observations": 105,
       "source": "flipp_historical"
     },
     "strawberries": {
@@ -459,10 +459,10 @@
     },
     "veal_cutlets": {
       "name": "Veal cutlets",
-      "avg": 34.04,
+      "avg": 33.65,
       "lo": 4.88,
       "hi": 66.12,
-      "observations": 48,
+      "observations": 51,
       "source": "flipp_historical"
     },
     "bagels": {
@@ -619,10 +619,10 @@
     },
     "chicken_breast_bonein": {
       "name": "Chicken breast (bone-in)",
-      "avg": 14.36,
+      "avg": 14.46,
       "lo": 4.99,
       "hi": 89.9,
-      "observations": 70,
+      "observations": 71,
       "source": "flipp_historical"
     },
     "salad_mix": {
