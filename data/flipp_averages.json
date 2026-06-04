@@ -294,7 +294,7 @@
       "avg": 4.95,
       "lo": 1.49,
       "hi": 35.01,
-      "observations": 314,
+      "observations": 315,
       "source": "flipp_historical"
     },
     "tilapia": {
@@ -307,10 +307,10 @@
     },
     "tomatoes": {
       "name": "Tomatoes (loose)",
-      "avg": 6.46,
+      "avg": 6.48,
       "lo": 1.29,
       "hi": 15.41,
-      "observations": 160,
+      "observations": 161,
       "source": "flipp_historical"
     },
     "tuna_steak": {
