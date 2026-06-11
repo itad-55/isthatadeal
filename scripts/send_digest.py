@@ -296,6 +296,10 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '1004033505',  # Chalo FreshCo same bad salmon item
                 '1015476197',  # Loblaws PC Shrimp OR High Liner Salmon 400g — unit stored as /lb, actually $8/400g pkg
                 '1015442208',  # Zehrs same OR-item combo deal
+                # 1018675144 and 1018675141 covered by BLACKLISTED_FLYER_IDS entry for 7970271
+                '1018860083',  # Sobeys stewing beef — wrong unit ($12.99 stored as /kg, actually /lb = $28.66/kg)
+                '1018727779',  # Loblaws "PORK BACK RIBS" — pre-cooked frozen, not fresh
+                '1018632604',  # Fortinos "PORK BACK RIBS" — pre-cooked frozen, not fresh
             }
             if row.get('item_id', '') in SCORER_ITEM_BLACKLIST:
                 continue
@@ -316,6 +320,9 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '7962329',  # Metro Ottawa/bilingual regional flyer — Quebec pricing (week of Jun 4)
                 '7964175',  # IGA K1A0A1 flyer — Quebec chain, not Ontario (week of Jun 4)
                 '7964249',  # Maxi K1A0A1 flyer — Quebec chain, not Ontario (week of Jun 4)
+                '7970271',  # Sobeys flyer — systematic wrong-unit items (OR-items, /lb stored as /kg) (week of Jun 11)
+                '7972867',  # Metro Ottawa/bilingual regional flyer — Quebec pricing (week of Jun 11)
+                '7974554',  # Maxi K1A0A1 flyer — Quebec chain, not Ontario (week of Jun 11)
             }
             if row.get('flyer_id', '') in BLACKLISTED_FLYER_IDS:
                 continue
@@ -325,6 +332,7 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
             SCORER_CUT_REJECTS = {
                 'beef_sirloin': {'sirloin tip', 'tip roast', 'tip steak', 'pork', 'porc'},
                 'veal_cutlets': {'trio', 'ground beef', 'ground pork'},
+                'chicken_breast': {'split', 'halves'},  # split/half breasts are bone-in, not boneless
             }
             item_lower = row.get('item_name', '').lower()
             if any(phrase in item_lower for phrase in SCORER_CUT_REJECTS.get(key, set())):
@@ -577,6 +585,7 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
     BLACKLISTED_FLYER_IDS_8WK = {
         '7888328', '7903490', '7911858', '7912968', '7924290', '7921219', '7934713',
         '7945553', '7951085', '7962329', '7964175', '7964249',
+        '7970271', '7972867', '7974554',
     }
     SCORER_CUT_REJECTS_8WK = {
         'beef_sirloin': {'sirloin tip', 'tip roast', 'tip steak', 'pork', 'porc'},
