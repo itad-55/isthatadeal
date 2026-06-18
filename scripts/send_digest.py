@@ -300,6 +300,13 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '1018860083',  # Sobeys stewing beef — wrong unit ($12.99 stored as /kg, actually /lb = $28.66/kg)
                 '1018727779',  # Loblaws "PORK BACK RIBS" — pre-cooked frozen, not fresh
                 '1018632604',  # Fortinos "PORK BACK RIBS" — pre-cooked frozen, not fresh
+                '1020793873',  # Sobeys striploin — wrong unit ($12.88 stored as /kg, actually /lb = $28.4/kg)
+                '1020794157',  # Sobeys inside round — wrong unit ($12.99 stored as /kg, actually /lb = $28.64/kg)
+                '1019862333',  # Metro "PORK BACK RIBS OR PORK TENDERLOIN VALUE PACK" — OR-item
+                '1019889356',  # Metro same OR-item (second collection)
+                '1020179339',  # Food Basics "SWEET CORN OR RED ONIONS 3LB" — OR-item scored as cheap corn
+                '1020225340',  # Fortinos "SWEET BI-COLOUR CORN OR VEGETABLE KEBOBS" — OR-item
+                '1020127765',  # Loblaws same corn OR vegetable kebobs OR-item
             }
             if row.get('item_id', '') in SCORER_ITEM_BLACKLIST:
                 continue
@@ -323,6 +330,9 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '7970271',  # Sobeys flyer — systematic wrong-unit items (OR-items, /lb stored as /kg) (week of Jun 11)
                 '7972867',  # Metro Ottawa/bilingual regional flyer — Quebec pricing (week of Jun 11)
                 '7974554',  # Maxi K1A0A1 flyer — Quebec chain, not Ontario (week of Jun 11)
+                '7981264',  # Metro Ottawa/bilingual regional flyer — Quebec pricing (week of Jun 18)
+                '7981434',  # Metro Ottawa/bilingual regional flyer — Quebec pricing (week of Jun 18)
+                '7981913',  # No Frills K1A0A1 flyer — Ottawa-only regional pricing (week of Jun 18)
             }
             if row.get('flyer_id', '') in BLACKLISTED_FLYER_IDS:
                 continue
@@ -585,7 +595,7 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
     BLACKLISTED_FLYER_IDS_8WK = {
         '7888328', '7903490', '7911858', '7912968', '7924290', '7921219', '7934713',
         '7945553', '7951085', '7962329', '7964175', '7964249',
-        '7970271', '7972867', '7974554',
+        '7970271', '7972867', '7974554', '7981264', '7981434',
     }
     SCORER_CUT_REJECTS_8WK = {
         'beef_sirloin': {'sirloin tip', 'tip roast', 'tip steak', 'pork', 'porc'},
