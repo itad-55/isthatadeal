@@ -7837,3 +7837,8 @@ date,cut_key,cut_name,store,item_name,raw_price,raw_unit,price_per_kg,postal_cod
 2026-06-18,sausage_500g,Pork sausage (500g),Loblaws,"PC® PORK SAUSAGE, 375/500 G",7.5,bag_500g,15.0,K1A0A1,2026-06-25T03:59:59+00:00,1020031346,7983015,
 2026-06-18,sausage_500g,Pork sausage (500g),Zehrs,"PC® PORK SAUSAGE, 375/500 G",7.5,bag_500g,15.0,N2L3G1,2026-06-25T03:59:59+00:00,1020329307,7982579,
 2026-06-18,coffee_ground_300g,Ground coffee (300g),No Frills,"STARBUCKS GROUND COFFEE 340 g, PODS 10's or HOT CHOCOLATE, 240/300 g",9.99,bag_340g,29.38,M5V3L9,2026-06-25T03:59:59+00:00,1021086861,7981982,
+2026-06-18,beef_striploin,Beef striploin / NY strip,Zehrs,STRIPLOIN GRILLING STEAK,10.88,lb,23.99,N2L3G1,2026-06-22T03:59:59+00:00,1021229632,7982579,
+2026-06-18,peppers,Bell peppers,FreshCo,"Sweet Bell Peppers Red, Yellow or Orange Product of Ontario 4.39/kg or Blackberries 170 g Product of USA or Mexico",1.99,lb,4.39,M5V3L9,2026-06-25T03:59:59+00:00,1021232661,7980174,
+2026-06-18,peppers,Bell peppers,Chalo FreshCo,"Sweet Bell Peppers Red, Yellow or Orange Product of Ontario 4.39/kg or Blackberries 170 g Product of USA or Mexico",1.99,lb,4.39,L4T0A1,2026-06-25T03:59:59+00:00,1021232697,7980150,
+2026-06-18,spinach,Spinach,Chalo FreshCo,Best Buy Whole or Chopped Spinach 300 g,1.5,bag_300g,5.0,L4T0A1,2026-06-25T03:59:59+00:00,1019680455,7980150,
+2026-06-18,mango,Mangoes,Zehrs,"RED MANGOES, 9 LB AVG CASE OR PERSIMMON CASE, 6'S",8.88,bag_9.0lb,2.18,N2L3G1,2026-06-25T03:59:59+00:00,1021229493,7982579,

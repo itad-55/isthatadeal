@@ -91,10 +91,10 @@
     },
     "beef_striploin": {
       "name": "Beef striploin / NY strip",
-      "avg": 42.11,
+      "avg": 41.89,
       "lo": 12.88,
       "hi": 63.93,
-      "observations": 102,
+      "observations": 103,
       "source": "flipp_historical"
     },
     "carrots_bag": {
@@ -203,10 +203,10 @@
     },
     "peppers": {
       "name": "Bell peppers",
-      "avg": 8.17,
+      "avg": 8.12,
       "lo": 2.99,
       "hi": 13.21,
-      "observations": 159,
+      "observations": 161,
       "source": "flipp_historical"
     },
     "pork_back_ribs": {
@@ -363,10 +363,10 @@
     },
     "mango": {
       "name": "Mangoes",
-      "avg": 13.18,
+      "avg": 12.99,
       "lo": 1.9,
       "hi": 106.67,
-      "observations": 73,
+      "observations": 74,
       "source": "flipp_historical"
     },
     "onions_bag": {
@@ -595,10 +595,10 @@
     },
     "spinach": {
       "name": "Spinach",
-      "avg": 15.97,
+      "avg": 15.66,
       "lo": 5.0,
       "hi": 35.14,
-      "observations": 35,
+      "observations": 36,
       "source": "flipp_historical"
     },
     "blueberries": {
