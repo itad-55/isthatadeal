@@ -201,7 +201,7 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
     DIGEST_EXCLUDE = {'cream_cheese', 'cucumber', 'tilapia', 'mango',
                       'beef_ground_regular', 'beef_ground_medium', 'beef_ground_lean',
                       'pork_side_ribs', 'broccoli', 'tortillas', 'pineapple', 'blueberries',
-                      'chicken_drumsticks', 'bagels', 'salad_mix', 'coffee_ground_300g'}
+                      'chicken_drumsticks', 'bagels', 'salad_mix', 'coffee_ground_300g', 'spinach'}
 
     # Map Flipp cut_keys to StatCan keys where names differ
     STATCAN_ALIASES = {
