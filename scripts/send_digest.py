@@ -559,35 +559,53 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
     # ── Manual editorial overrides (data/digest_overrides.json) ──────────────
     # force_exclude: remove named cut_keys from the ranked list this week
     # force_include: insert named cut_keys from active deals at the end of the list
+    # force_positions: place specific cut_keys at exact positions (1-indexed)
     # Edit the JSON file each week — no code changes needed.
     OVERRIDES_FILE = os.path.join(DATA_DIR, 'digest_overrides.json')
+    _ov = {}
     if os.path.exists(OVERRIDES_FILE):
         with open(OVERRIDES_FILE) as _f:
             _ov = json.load(_f)
         _excludes = set(_ov.get('force_exclude', []))
         _includes = _ov.get('force_include', [])
+        _positions = _ov.get('force_positions', {})
         if _excludes:
             ranked = [d for d in ranked if d['key'] not in _excludes]
             print(f"  [overrides] Excluded: {_excludes}")
+        # Auto-include any force_positioned keys not already in ranked
+        for cut_key in _positions.values():
+            if not any(d['key'] == cut_key for d in ranked):
+                _includes = list(_includes) + [cut_key]
         for _inc_key in _includes:
             if any(d['key'] == _inc_key for d in ranked):
-                continue  # already present
+                continue
             _inc_deal = next((d for d in sorted(active, key=lambda x: x['weighted_score'], reverse=True)
                               if d['key'] == _inc_key), None)
             if _inc_deal:
                 ranked.append(_inc_deal)
                 print(f"  [overrides] Force-included: {_inc_deal['name']} @ {_inc_deal['store']}")
-
-    # force_positions: place specific cut_keys at exact positions (1-indexed)
-    _positions = _ov.get('force_positions', {}) if os.path.exists(OVERRIDES_FILE) else {}
-    if _positions:
-        for pos_str, cut_key in _positions.items():
-            pos = int(pos_str) - 1
-            item = next((d for d in ranked if d['key'] == cut_key), None)
-            if item and 0 <= pos <= len(ranked):
-                ranked.remove(item)
-                ranked.insert(pos, item)
-                print(f"  [overrides] Positioned: {item['name']} at #{pos + 1}")
+        # Backfill: if excludes removed items, pull more from active to maintain limit
+        if _excludes and len(ranked) < limit:
+            _ranked_keys = {d['key'] for d in ranked}
+            for d in _sorted:
+                if d['key'] in _ranked_keys or d['key'] in _excludes or d['key'] in DIGEST_EXCLUDE:
+                    continue
+                if d['name'] in seen_names:
+                    continue
+                seen_names.add(d['name'])
+                ranked.append(d)
+                _ranked_keys.add(d['key'])
+                print(f"  [overrides] Backfilled: {d['name']} @ {d['store']}")
+                if len(ranked) >= limit:
+                    break
+        if _positions:
+            for pos_str, cut_key in _positions.items():
+                pos = int(pos_str) - 1
+                item = next((d for d in ranked if d['key'] == cut_key), None)
+                if item and 0 <= pos <= len(ranked):
+                    ranked.remove(item)
+                    ranked.insert(pos, item)
+                    print(f"  [overrides] Positioned: {item['name']} at #{pos + 1}")
 
     print("\nDeal ranking (weighted):")
     for i, d in enumerate(ranked, 1):
