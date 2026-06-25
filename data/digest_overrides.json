@@ -1,4 +1,9 @@
 {
   "force_include": [],
-  "force_exclude": ["turkey_breast"]
+  "force_exclude": ["chicken_breast_bonein", "lamb_chops", "bread_whole_wheat", "chicken_wings"],
+  "force_positions": {
+    "3": "watermelon",
+    "7": "chicken_whole",
+    "10": "lemons"
+  }
 }

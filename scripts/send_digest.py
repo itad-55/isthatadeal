@@ -51,8 +51,9 @@ STORE_FLYER_URLS = {
     'superstore':                   'https://www.realcanadiansuperstore.ca/en/print-flyer',
     'fortinos':                     'https://www.fortinos.ca/en/print-flyer',
     'zehrs':                        'https://www.zehrs.ca/en/print-flyer',
-    'your independent grocer':      'https://www.loblaws.ca/en/print-flyer',
-    'independent grocer':           'https://www.loblaws.ca/en/print-flyer',
+    'your independent grocer':      'https://www.yourindependentgrocer.ca/en/print-flyer',
+    'independent grocer':           'https://www.yourindependentgrocer.ca/en/print-flyer',
+    'independent city market':      'https://www.yourindependentgrocer.ca/en/print-flyer',
     'valumart':                     'https://www.loblaws.ca/en/print-flyer',
     'valu-mart':                    'https://www.loblaws.ca/en/print-flyer',
     'giant tiger':                  'https://www.gianttiger.com/en/flyer',
@@ -201,7 +202,8 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
     DIGEST_EXCLUDE = {'cream_cheese', 'cucumber', 'tilapia', 'mango',
                       'beef_ground_regular', 'beef_ground_medium', 'beef_ground_lean',
                       'pork_side_ribs', 'broccoli', 'tortillas', 'pineapple', 'blueberries',
-                      'chicken_drumsticks', 'bagels', 'salad_mix', 'coffee_ground_300g', 'spinach'}
+                      'chicken_drumsticks', 'bagels', 'salad_mix', 'coffee_ground_300g', 'spinach',
+                      'peppers', 'olive_oil_1l'}
 
     # Map Flipp cut_keys to StatCan keys where names differ
     STATCAN_ALIASES = {
@@ -302,11 +304,18 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '1018632604',  # Fortinos "PORK BACK RIBS" — pre-cooked frozen, not fresh
                 '1020793873',  # Sobeys striploin — wrong unit ($12.88 stored as /kg, actually /lb = $28.4/kg)
                 '1020794157',  # Sobeys inside round — wrong unit ($12.99 stored as /kg, actually /lb = $28.64/kg)
+                '1020123944',  # Loblaws PC Fresh Whole Chicken Wings — flyer shows flat $14/pack, not $3.99/lb; no pack weight given
                 '1019862333',  # Metro "PORK BACK RIBS OR PORK TENDERLOIN VALUE PACK" — OR-item
                 '1019889356',  # Metro same OR-item (second collection)
                 '1020179339',  # Food Basics "SWEET CORN OR RED ONIONS 3LB" — OR-item scored as cheap corn
                 '1020225340',  # Fortinos "SWEET BI-COLOUR CORN OR VEGETABLE KEBOBS" — OR-item
                 '1020127765',  # Loblaws same corn OR vegetable kebobs OR-item
+                '1020862533',  # Sobeys salmon — wrong unit ($10.99 stored as /kg, actually /lb) + OR-item with trout
+                '1022392159',  # Sobeys "I CAN'T BELIEVE IT'S NOT BUTTER!" — not real butter
+                '1021348844',  # FreshCo pork chops — wrong unit ($4.49 stored as /kg, actually /lb)
+                '1020950537',  # Chalo FreshCo pork chops — wrong unit ($4.49 stored as /kg, actually /lb)
+                '1022033643',  # Fortinos "PORK BUTT CHOPS OR GROUND PORK" — OR-item scored as ground pork
+                '1022042424',  # Loblaws same "PORK BUTT CHOPS OR GROUND PORK" OR-item
             }
             if row.get('item_id', '') in SCORER_ITEM_BLACKLIST:
                 continue
@@ -332,7 +341,12 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '7974554',  # Maxi K1A0A1 flyer — Quebec chain, not Ontario (week of Jun 11)
                 '7981264',  # Metro Ottawa/bilingual regional flyer — Quebec pricing (week of Jun 18)
                 '7981434',  # Metro Ottawa/bilingual regional flyer — Quebec pricing (week of Jun 18)
-                '7981913',  # No Frills K1A0A1 flyer — Ottawa-only regional pricing (week of Jun 18)
+                '7981913',  # No Frills K1A0A1 flyer — not available in GTA (week of Jun 18)
+                '7985219',  # IGA K1A0A1 flyer — Quebec chain, not Ontario (week of Jun 18)
+                '7982891',  # Maxi K1A0A1 flyer — Quebec chain, not Ontario (week of Jun 18)
+                '7988635',  # Metro Ottawa/bilingual regional flyer — Quebec pricing (week of Jun 25)
+                '7994337',  # Maxi K1A0A1 flyer — Quebec chain, not Ontario (week of Jun 25)
+                '7999851',  # IGA K1A0A1 flyer — Quebec chain, not Ontario (week of Jun 25)
             }
             if row.get('flyer_id', '') in BLACKLISTED_FLYER_IDS:
                 continue
@@ -564,6 +578,17 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 ranked.append(_inc_deal)
                 print(f"  [overrides] Force-included: {_inc_deal['name']} @ {_inc_deal['store']}")
 
+    # force_positions: place specific cut_keys at exact positions (1-indexed)
+    _positions = _ov.get('force_positions', {}) if os.path.exists(OVERRIDES_FILE) else {}
+    if _positions:
+        for pos_str, cut_key in _positions.items():
+            pos = int(pos_str) - 1
+            item = next((d for d in ranked if d['key'] == cut_key), None)
+            if item and 0 <= pos <= len(ranked):
+                ranked.remove(item)
+                ranked.insert(pos, item)
+                print(f"  [overrides] Positioned: {item['name']} at #{pos + 1}")
+
     print("\nDeal ranking (weighted):")
     for i, d in enumerate(ranked, 1):
         # Attach price-match info: other stores with same cut this week
@@ -596,6 +621,7 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
         '7888328', '7903490', '7911858', '7912968', '7924290', '7921219', '7934713',
         '7945553', '7951085', '7962329', '7964175', '7964249',
         '7970271', '7972867', '7974554', '7981264', '7981434',
+        '7981913', '7985219', '7982891', '7988635', '7994337', '7999851',
     }
     SCORER_CUT_REJECTS_8WK = {
         'beef_sirloin': {'sirloin tip', 'tip roast', 'tip steak', 'pork', 'porc'},
