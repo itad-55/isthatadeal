@@ -316,6 +316,9 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '1020950537',  # Chalo FreshCo pork chops — wrong unit ($4.49 stored as /kg, actually /lb)
                 '1022033643',  # Fortinos "PORK BUTT CHOPS OR GROUND PORK" — OR-item scored as ground pork
                 '1022042424',  # Loblaws same "PORK BUTT CHOPS OR GROUND PORK" OR-item
+                '1024623414',  # FreshCo pork back ribs — $5.99 stored as /kg, actually /lb ($13.21/kg)
+                '1024623403',  # FreshCo avocados 5pk OR Compliments Oranges — OR-item
+                '1024729624',  # Metro avocados 5pk OR WANNABEEZ SWEET PEPPERS — OR-item
             }
             if row.get('item_id', '') in SCORER_ITEM_BLACKLIST:
                 continue
@@ -349,6 +352,13 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '7999851',  # IGA K1A0A1 flyer — Quebec chain, not Ontario (week of Jun 25)
             }
             if row.get('flyer_id', '') in BLACKLISTED_FLYER_IDS:
+                continue
+
+            # Skip K1A0A1 (Ottawa federal postal code) entries from the digest ranking.
+            # This catches regional flyers (Metro bilingual, No Frills Ottawa, IGA, Maxi)
+            # that aren't available to most Ontario shoppers. Data is still written to
+            # flipp_history.csv so it contributes to 8-week price averages.
+            if row.get('postal_code', '') == 'K1A0A1':
                 continue
 
             # Per-cut item name reject: catch wrong cuts collected under a key
