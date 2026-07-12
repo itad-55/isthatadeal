@@ -1,9 +1,5 @@
 {
   "force_include": [],
-  "force_exclude": ["beef_inside_round", "beef_short_ribs", "sour_cream", "mushrooms", "chicken_breast_bonein", "salmon_fillet"],
-  "force_positions": {
-    "4": "watermelon",
-    "9": "potatoes_bag",
-    "10": "zucchini"
-  }
+  "force_exclude": [],
+  "force_positions": {}
 }
