@@ -1,5 +1,9 @@
 {
   "force_include": [],
-  "force_exclude": [],
-  "force_positions": {}
+  "force_exclude": ["bacon_500g", "yogurt_500g", "chicken_wings"],
+  "force_positions": {
+    "5": "mushrooms",
+    "7": "chicken_breast",
+    "8": "cherries"
+  }
 }

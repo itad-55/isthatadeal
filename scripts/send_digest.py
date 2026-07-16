@@ -319,6 +319,9 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '1024623414',  # FreshCo pork back ribs — $5.99 stored as /kg, actually /lb ($13.21/kg)
                 '1024623403',  # FreshCo avocados 5pk OR Compliments Oranges — OR-item
                 '1024729624',  # Metro avocados 5pk OR WANNABEEZ SWEET PEPPERS — OR-item
+                '1025978545',  # Zehrs chicken thighs — displaying Loblaws entry instead (same price)
+                '1025972655',  # Fortinos LEAN GROUND VEAL misfiled as veal_cutlets ($8.99/lb stored as /lb but wrong cut)
+                '1025854801',  # Your Independent Grocer ground chicken — $9.00 stored as /kg, actually /lb ($19.84/kg)
             }
             if row.get('item_id', '') in SCORER_ITEM_BLACKLIST:
                 continue

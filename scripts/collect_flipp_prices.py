@@ -138,6 +138,17 @@ CUTS = [
     ('pineapple',              'Pineapple',                    ['pineapple'],                                   'pkg'),
     ('lemons',                 'Lemons',                       ['lemons'],                                      'pkg'),
     ('limes',                  'Limes',                        ['limes'],                                       'pkg'),
+    ('cherries',               'Cherries',                     ['cherries', 'red cherries', 'bing cherries'],   'kg'),
+    ('raspberries',            'Raspberries',                  ['raspberries'],                                 'pkg'),
+    ('peaches',                'Peaches',                      ['peaches'],                                     'kg'),
+    ('nectarines',             'Nectarines',                   ['nectarines'],                                  'kg'),
+    ('plums',                  'Plums',                        ['plums'],                                       'kg'),
+    ('cantaloupe',             'Cantaloupe',                   ['cantaloupe'],                                  'pkg'),
+    ('honeydew',               'Honeydew',                     ['honeydew'],                                    'pkg'),
+    ('kale',                   'Kale',                         ['kale'],                                        'pkg'),
+    ('green_beans',            'Green beans',                  ['green beans', 'string beans'],                 'kg'),
+    ('cabbage',                'Cabbage',                      ['cabbage'],                                     'pkg'),
+    ('pears',                  'Pears',                        ['pears'],                                       'kg'),
     # ── Pantry staples ────────────────────────────────────────────────────────
     ('pasta_500g',             'Pasta (500g)',                 ['pasta 500g', 'spaghetti 500', 'penne 500'],    'pkg'),
     ('rice_2kg',               'White rice (2kg)',             ['white rice 2kg', 'rice 2kg'],                  'pkg'),
@@ -322,7 +333,8 @@ def extract_price_per_kg(item, unit_hint):
     }
     store = (item.get('merchant') or item.get('merchant_name') or '').strip().lower()
     # Only fallback for zucchini and similar loose produce
-    loose_produce = ['zucchini', 'asparagus', 'bananas', 'grapes', 'peppers', 'tomatoes', 'sweet potato']
+    loose_produce = ['zucchini', 'asparagus', 'bananas', 'grapes', 'peppers', 'tomatoes', 'sweet potato',
+                     'cherries', 'peaches', 'nectarines', 'plums', 'pears', 'green beans']
     # Exclude packaged/processed items
     if unit_hint == 'kg' and store in lb_first_stores:
         # Only fallback for loose produce, not for packaged
