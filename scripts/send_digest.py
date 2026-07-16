@@ -368,7 +368,7 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
             # (e.g. sirloin tip ≠ top sirloin — different cut, different price point)
             SCORER_CUT_REJECTS = {
                 'beef_sirloin': {'sirloin tip', 'tip roast', 'tip steak', 'pork', 'porc'},
-                'veal_cutlets': {'trio', 'ground beef', 'ground pork'},
+                'veal_cutlets': {'trio', 'ground beef', 'ground pork', 'ground veal', 'lean ground', 'veal shank', 'veal loin', 'veal rib'},
                 'chicken_breast': {'split', 'halves'},  # split/half breasts are bone-in, not boneless
             }
             item_lower = row.get('item_name', '').lower()
