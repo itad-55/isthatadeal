@@ -715,10 +715,10 @@
     },
     "cherries": {
       "name": "Cherries",
-      "avg": 11.7,
+      "avg": 11.08,
       "lo": 2.88,
       "hi": 17.64,
-      "observations": 13,
+      "observations": 15,
       "source": "flipp_historical"
     },
     "peaches": {
