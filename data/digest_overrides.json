@@ -1,9 +1,16 @@
 {
   "force_include": [],
-  "force_exclude": ["bacon_500g", "yogurt_500g", "chicken_wings", "veal_cutlets", "plums"],
+  "force_exclude": ["pork_chop_boneless", "chicken_wings"],
   "force_positions": {
-    "5": "mushrooms",
-    "7": "chicken_breast",
-    "8": "cherries"
+    "1": "beef_flank",
+    "2": "beef_striploin",
+    "3": "pork_back_ribs",
+    "4": "beef_brisket",
+    "5": "grapes",
+    "6": "pork_chop_bonein",
+    "7": "plums",
+    "8": "avocado",
+    "9": "chicken_breast_bonein",
+    "10": "cherries"
   }
 }
