@@ -323,6 +323,8 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '1025972655',  # Fortinos LEAN GROUND VEAL misfiled as veal_cutlets ($8.99/lb stored as /lb but wrong cut)
                 '1025854801',  # Your Independent Grocer ground chicken — $9.00 stored as /kg, actually /lb ($19.84/kg)
                 '1027044921',  # FreshCo chicken wings — $4.99 stored as /kg, actually /lb ($11.00/kg); item name confirms "11:00/kg"
+                '1029076753',  # FreshCo pork chops (boneless) — $4.99 stored as /kg, actually /lb ($11.00/kg)
+                '1029044805',  # Chalo FreshCo pork chops (boneless) — same bad entry
             }
             if row.get('item_id', '') in SCORER_ITEM_BLACKLIST:
                 continue

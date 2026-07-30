@@ -1,16 +1,16 @@
 {
   "force_include": [],
-  "force_exclude": ["pork_chop_boneless", "chicken_wings"],
+  "force_exclude": ["chicken_wings", "pork_back_ribs", "salmon_fillet", "yogurt_500g"],
   "force_positions": {
-    "1": "beef_flank",
-    "2": "beef_striploin",
-    "3": "pork_back_ribs",
-    "4": "beef_brisket",
-    "5": "grapes",
-    "6": "pork_chop_bonein",
+    "1": "beef_striploin",
+    "2": "peaches",
+    "3": "raspberries",
+    "4": "lamb_chops",
+    "5": "chicken_breast_bonein",
+    "6": "salmon_whole",
     "7": "plums",
-    "8": "avocado",
-    "9": "chicken_breast_bonein",
-    "10": "cherries"
+    "8": "oranges_bag",
+    "9": "pears",
+    "10": "beef_sirloin"
   }
 }
