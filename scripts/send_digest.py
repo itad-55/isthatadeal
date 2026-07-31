@@ -26,6 +26,8 @@ EMAIL_TEMPLATE   = os.path.join(SCRIPT_DIR, 'email_template.html')
 
 MAILERLITE_API_KEY = os.environ.get('MAILERLITE_API_KEY', '')
 ONTARIO_GROUP_ID   = '182297132531713316'
+PAID_GROUP_ID      = '194513284349559924'  # Ontario - Paid
+STRIPE_LINK        = 'YOUR_STRIPE_LINK_HERE'  # TODO: replace when Stripe page is live
 FROM_EMAIL         = 'deals@isthatadeal.ca'
 FROM_NAME          = 'Is That a Deal?'
 
@@ -818,14 +820,16 @@ def _price_match_html(deal, dark=False):
         return (f'<div style="font-size:14px;color:#0A7A3E;font-family:monospace;margin-top:8px">'
                 f'✓ Match at {stores_text}</div>')
 
-def build_email_html(deals, period, show_verify=False):
+def build_email_html(deals, period, show_verify=False, paid=False):
     week_str = TODAY.strftime('%B %d, %Y')
 
     best = deals[0] if deals else None
-    if best:
-        subject = f"This week: {best['name']} is {abs(best['pct']):.0f}% below average"
+    if paid:
+        subject  = f"Top 20: {best['name']} is {abs(best['pct']):.0f}% below average" if best else f"Top 20 Ontario grocery deals — {week_str}"
+        headline = 'The Top 20 best Ontario<br>grocery deals this week'
     else:
-        subject = f"This week's Ontario grocery deals — {week_str}"
+        subject  = f"This week: {best['name']} is {abs(best['pct']):.0f}% below average" if best else f"This week's Ontario grocery deals — {week_str}"
+        headline = "This week's best<br>Ontario grocery deals"
 
     deal_rows = ''
     for i, d in enumerate(deals):
@@ -965,6 +969,23 @@ def build_email_html(deals, period, show_verify=False):
         '</td></tr></table></td></tr>'
     )
 
+    upgrade_block = '' if paid else (
+        '<tr><td style="padding:16px 18px 8px"><table width="100%" cellpadding="0" cellspacing="0" style="background:#a9e8c6;border-radius:10px">'
+        '<tr><td style="padding:16px 18px"><div style="font-size:15px;font-weight:700;color:#0D0D0D;margin-bottom:8px">'
+        '⭐ Get 20 deals every Thursday for $2.99/month'
+        '</div>'
+        '<div style="font-size:15px;color:#0D0D0D;line-height:1.6">'
+        'The free digest includes the top 10 deals of the week. Paid subscribers get all 20 — double the savings opportunities, same data, same scoring. One extra deal acted on pays for months of subscription.'
+        '</div>'
+        '<div style="font-size:15px;color:#0D0D0D;line-height:1.6;margin-top:10px">'
+        'It also helps keep the project alive.'
+        '</div>'
+        '<div style="font-size:15px;color:#0D0D0D;font-weight:700;margin-top:12px">'
+        f'<a href="{STRIPE_LINK}" style="color:#0D0D0D;text-decoration:underline;text-underline-offset:2px;">Upgrade to 20 deals a week →</a>'
+        '</div>'
+        '</td></tr></table></td></tr>'
+    )
+
     # Load static template and fill placeholders
     with open(EMAIL_TEMPLATE) as f:
         tmpl = f.read()
@@ -974,22 +995,25 @@ def build_email_html(deals, period, show_verify=False):
     html = html.replace('{{SUBJECT}}', subject)
     html = html.replace('{{DEAL_ROWS}}', deal_rows)
     html = html.replace('{{BEST_STORE_BLURB}}', best_store_blurb)
+    html = html.replace('{{HEADLINE}}', headline)
+    html = html.replace('{{UPGRADE_BLOCK}}', upgrade_block)
 
     return subject, html
 
 
-def create_draft(subject, html_content):
+def create_draft(subject, html_content, group_id=None, label='digest'):
+    group_id = group_id or ONTARIO_GROUP_ID
     if not MAILERLITE_API_KEY:
-        print("No MAILERLITE_API_KEY — saving email HTML to data/digest_draft.html instead")
-        with open(os.path.join(DATA_DIR, 'digest_draft.html'), 'w') as f:
+        out = os.path.join(DATA_DIR, f'{label}_draft.html')
+        print(f"No MAILERLITE_API_KEY — saving email HTML to data/{label}_draft.html instead")
+        with open(out, 'w') as f:
             f.write(html_content)
-        print("Saved to data/digest_draft.html")
         return
 
     payload = json.dumps({
         'type':     'regular',
         'status':   'draft',
-        'name':     f'Weekly Digest {TODAY.isoformat()}',
+        'name':     f'Weekly Digest {TODAY.isoformat()}' + (' — Paid Top 20' if group_id == PAID_GROUP_ID else ''),
         'language': {'id': 1},
         'emails': [{
             'subject':   subject,
@@ -998,7 +1022,7 @@ def create_draft(subject, html_content):
             'reply_to':  FROM_EMAIL,
             'content':   html_content,
         }],
-        'groups': [ONTARIO_GROUP_ID],
+        'groups': [group_id],
     }).encode('utf-8')
 
     req = urllib.request.Request(
@@ -1120,7 +1144,7 @@ def main():
     if review_mode:
         deals, rejected = score_deals(statcan, flipp, baselines=baselines, limit=50)
     else:
-        deals, rejected = score_deals(statcan, flipp, baselines=baselines)  # limit=10
+        deals, rejected = score_deals(statcan, flipp, baselines=baselines, limit=20)
 
     print(f"Deals found: {len(deals)}")
     for d in deals:
@@ -1142,10 +1166,22 @@ def main():
         print(f"  Open data/digest_review.html in your browser to review the top 50 deals.")
         return
 
-    subject, html        = build_email_html(deals, period, show_verify=False)
-    _,       html_verify = build_email_html(deals, period, show_verify=True)
-    print(f"\nSubject: {subject}")
-    create_draft(subject, html)
+    top10 = deals[:10]
+    top20 = deals[:20]
+
+    # Free top 10 digest
+    subject, html        = build_email_html(top10, period, show_verify=False, paid=False)
+    _,       html_verify = build_email_html(top10, period, show_verify=True,  paid=False)
+    print(f"\nSubject (free): {subject}")
+    create_draft(subject, html, group_id=ONTARIO_GROUP_ID, label='digest')
+
+    # Paid top 20 digest
+    if PAID_GROUP_ID:
+        subject_paid, html_paid = build_email_html(top20, period, show_verify=False, paid=True)
+        print(f"Subject (paid): {subject_paid}")
+        create_draft(subject_paid, html_paid, group_id=PAID_GROUP_ID, label='digest_paid')
+    else:
+        print("⚠ PAID_GROUP_ID not set — skipping paid draft")
 
     # Save public version as thisweek.html
     thisweek_path = os.path.join(DATA_DIR, 'digest_thisweek.html')
