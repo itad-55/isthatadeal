@@ -75,10 +75,10 @@
     },
     "beef_sirloin": {
       "name": "Beef top sirloin",
-      "avg": 35.69,
+      "avg": 35.79,
       "lo": 7.98,
       "hi": 46.3,
-      "observations": 247,
+      "observations": 249,
       "source": "flipp_historical"
     },
     "beef_stewing": {
@@ -307,10 +307,10 @@
     },
     "tomatoes": {
       "name": "Tomatoes (loose)",
-      "avg": 5.41,
+      "avg": 5.4,
       "lo": 1.29,
       "hi": 15.41,
-      "observations": 410,
+      "observations": 411,
       "source": "flipp_historical"
     },
     "tuna_steak": {
