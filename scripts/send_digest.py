@@ -27,7 +27,7 @@ EMAIL_TEMPLATE   = os.path.join(SCRIPT_DIR, 'email_template.html')
 MAILERLITE_API_KEY = os.environ.get('MAILERLITE_API_KEY', '')
 ONTARIO_GROUP_ID   = '182297132531713316'
 PAID_GROUP_ID      = '194513284349559924'  # Ontario - Paid
-STRIPE_LINK        = 'YOUR_STRIPE_LINK_HERE'  # TODO: replace when Stripe page is live
+STRIPE_LINK        = 'https://buy.stripe.com/00w6oH5y72Ys5KT0cnd7q00'
 FROM_EMAIL         = 'deals@isthatadeal.ca'
 FROM_NAME          = 'Is That a Deal?'
 
@@ -983,6 +983,7 @@ def build_email_html(deals, period, show_verify=False, paid=False):
         '<div style="font-size:15px;color:#0D0D0D;font-weight:700;margin-top:12px">'
         f'<a href="{STRIPE_LINK}" style="color:#0D0D0D;text-decoration:underline;text-underline-offset:2px;">Upgrade to 20 deals a week →</a>'
         '</div>'
+        '<div style="font-size:13px;color:#0D0D0D;opacity:0.6;margin-top:6px">$2.99/month · Cancel any time</div>'
         '</td></tr></table></td></tr>'
     )
 
