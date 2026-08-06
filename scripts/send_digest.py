@@ -111,7 +111,8 @@ def make_flipp_url(item_id, store, postal_code, valid_from, valid_to, flyer_id='
     if flyer_id:
         return f'https://flipp.com/en-ca/item/{item_id}?flyer_id={flyer_id}'
     return f'https://flipp.com/en-ca/item/{item_id}'
-VERIFY_FILE   = 'digest_verify_2833151ff2ae0f3d.html'  # secret review URL — do not share
+VERIFY_FILE       = 'digest_verify_2833151ff2ae0f3d.html'  # secret review URL — do not share
+PAID_TOP20_FILE   = 'digest_paid_itad889975.html'          # secret paid top 20 URL — do not share
 
 # ── Load StatCan averages ─────────────────────────────────────────────────────
 def load_statcan():
@@ -1197,6 +1198,11 @@ def main():
         subject_paid, html_paid = build_email_html(top20, period, show_verify=False, paid=True)
         print(f"Subject (paid): {subject_paid}")
         create_draft(subject_paid, html_paid, group_id=PAID_GROUP_ID, label='digest_paid')
+        paid_path = os.path.join(DATA_DIR, PAID_TOP20_FILE)
+        with open(paid_path, 'w') as f:
+            f.write(html_paid)
+        print(f"✓ Saved paid top 20 to data/{PAID_TOP20_FILE}")
+        print(f"  Share at: {SITE_URL}/{PAID_TOP20_FILE.replace('digest_', '')}")
     else:
         print("⚠ PAID_GROUP_ID not set — skipping paid draft")
 

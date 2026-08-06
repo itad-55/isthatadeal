@@ -62,6 +62,7 @@ jobs:
             ${{ secrets.FTP_USERNAME }}@${{ secrets.FTP_SERVER }} << 'SFTP'
           -put data/digest_thisweek.html /home/dh_idwckm/isthatadeal.ca/thisweek.html
           -put data/digest_verify_2833151ff2ae0f3d.html /home/dh_idwckm/isthatadeal.ca/verify_2833151ff2ae0f3d.html
+          -put data/digest_paid_itad889975.html /home/dh_idwckm/isthatadeal.ca/paid_itad889975.html
           bye
           SFTP
       - name: No changes
