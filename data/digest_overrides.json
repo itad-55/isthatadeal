@@ -1,16 +1,26 @@
 {
   "force_include": [],
-  "force_exclude": ["chicken_wings", "pork_back_ribs", "salmon_fillet", "yogurt_500g"],
+  "force_exclude": [],
   "force_positions": {
-    "1": "beef_striploin",
-    "2": "peaches",
-    "3": "raspberries",
-    "4": "lamb_chops",
-    "5": "chicken_breast_bonein",
-    "6": "salmon_whole",
-    "7": "plums",
-    "8": "oranges_bag",
-    "9": "pears",
-    "10": "beef_sirloin"
+    "1": "pork_back_ribs",
+    "2": "chicken_wings",
+    "3": "chicken_breast",
+    "4": "cottage_cheese",
+    "5": "beef_brisket",
+    "6": "peaches",
+    "7": "oranges_bag",
+    "8": "pork_chop_bonein",
+    "9": "butter_454g",
+    "10": "tomatoes",
+    "11": "salmon_fillet",
+    "12": "lettuce_romaine",
+    "13": "chicken_breast_bonein",
+    "14": "pork_tenderloin",
+    "15": "chicken_thigh_boneless",
+    "16": "limes",
+    "17": "grapes",
+    "18": "pork_shoulder",
+    "19": "carrots_bag",
+    "20": "english_muffins"
   }
 }

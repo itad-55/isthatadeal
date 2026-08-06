@@ -327,6 +327,16 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '1027044921',  # FreshCo chicken wings — $4.99 stored as /kg, actually /lb ($11.00/kg); item name confirms "11:00/kg"
                 '1029076753',  # FreshCo pork chops (boneless) — $4.99 stored as /kg, actually /lb ($11.00/kg)
                 '1029044805',  # Chalo FreshCo pork chops (boneless) — same bad entry
+                '1030536892',  # RCSS "CHICKEN BREASTS" misfiled as chicken_breast_bonein
+                '1030539096',  # RCSS "NONG SHIM SHRIMP CRACKERS" misfiled as shrimp
+                '1030613812',  # Fortinos "MINA HALAL CHICKEN DRUMSTICKS OR THIGHS" — OR item as chicken_thigh_bonein
+                '1030538190',  # RCSS "CATHEDRAL CITY CHEDDAR 200G" misfiled as cheese_block_500g (wrong size)
+                '1030537086',  # RCSS "PC COCKTAIL SAUSAGE SMOKIES" misfiled as cheese_block_500g
+                '1031157051',  # Sobeys "Golden Cherries" — package price treated as /lb (actually $3.99/170g)
+                '1030599297',  # Fortinos "TALLOW & FRIES SWEET POTATO FRIES" — frozen fries misfiled as sweet_potato
+                '1030600607',  # Fortinos Caribbean Sweet Potatoes $1.49/lb — unverifiable in flyer
+                '1030703435',  # Loblaws "CHICKEN BREASTS" misfiled as chicken_breast_bonein — actually boneless skinless
+                '1030739133',  # Zehrs "CHICKEN BREASTS" misfiled as chicken_breast_bonein — same Loblaw-family bad entry
             }
             if row.get('item_id', '') in SCORER_ITEM_BLACKLIST:
                 continue
