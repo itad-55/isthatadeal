@@ -1008,6 +1008,12 @@ def build_email_html(deals, period, show_verify=False, paid=False):
     html = html.replace('{{BEST_STORE_BLURB}}', best_store_blurb)
     html = html.replace('{{HEADLINE}}', headline)
     html = html.replace('{{UPGRADE_BLOCK}}', upgrade_block)
+    manage_sub = (
+        '<div style="margin-top:14px;font-size:13px;color:#8A8680;font-family:monospace">'
+        '<a href="https://billing.stripe.com/p/login/00w6oH5y72Ys5KT0cnd7q00" style="color:#8A8680">Manage your subscription</a>'
+        '</div>'
+    ) if paid else ''
+    html = html.replace('{{MANAGE_SUBSCRIPTION}}', manage_sub)
 
     return subject, html
 
