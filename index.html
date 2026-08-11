@@ -532,8 +532,14 @@ function handleModalSignup(e){
   })
   .then(r => r.json())
   .then(data => {
+    console.log('[subscribe] response:', data);
     if (data.success) {
-      if (typeof fbq === 'function') fbq('track', 'Lead');
+      console.log('[subscribe] firing Lead pixel event');
+      if (typeof fbq === 'function') {
+        fbq('track', 'Lead');
+      } else {
+        console.warn('[subscribe] fbq not available');
+      }
       document.getElementById('modalContent').innerHTML =
         '<div class="modal-success">'
         + '<div class="check">&#127881;</div>'
