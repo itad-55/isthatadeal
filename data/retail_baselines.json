@@ -50,6 +50,12 @@
       "median_kg": 19.82,
       "notes": "Bone-in leg only. Excludes boneless rolled roasts. Walmart removed — product delisted/OOS."
     },
+    "english_muffins": {
+      "name": "English muffins (6-pack)",
+      "prices_kg": {"no_frills": 10.20, "walmart": 10.14, "metro": 11.67, "loblaws": 11.67},
+      "median_kg": 10.94,
+      "notes": "No Name 342g 6-pack. Regular price ~$3.49 at No Frills/Walmart, ~$3.99 at Metro/Loblaws. Flipp avg ($6.32/kg) is unreliable — contaminated by bread-OR-muffin OR items filed under this cut."
+    },
     "pork_back_ribs": {
       "name": "Pork back ribs",
       "prices_kg": {

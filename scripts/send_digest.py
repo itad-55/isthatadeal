@@ -338,6 +338,13 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '1030600607',  # Fortinos Caribbean Sweet Potatoes $1.49/lb — unverifiable in flyer
                 '1030703435',  # Loblaws "CHICKEN BREASTS" misfiled as chicken_breast_bonein — actually boneless skinless
                 '1030739133',  # Zehrs "CHICKEN BREASTS" misfiled as chicken_breast_bonein — same Loblaw-family bad entry
+                '1032106824',  # Food Basics bacon 375g OR Zabiha Halal — wrong size for 500g average
+                '1031835009',  # YIG "CHICKEN BREASTS" misfiled as chicken_breast_bonein — confirmed boneless
+                '1031957483',  # Zehrs chicken thighs — blacklisted to feature Loblaws (same price, GTA store)
+                '1031965108',  # Zehrs lemons — blacklisted to feature Loblaws (same price, GTA store)
+                '1032452654',  # Loblaws "PORK BUTT CHOP OR ROAST" — could not verify in flyer
+                '1032100849',  # FreshCo "Bread 675g OR Sourdough English Muffins 6pk" — weight is bread's (675g), not muffins; inflates per-kg
+                '1032457260',  # Chalo FreshCo same OR item
             }
             if row.get('item_id', '') in SCORER_ITEM_BLACKLIST:
                 continue
@@ -635,6 +642,11 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                     ranked.remove(item)
                     ranked.insert(pos, item)
                     print(f"  [overrides] Positioned: {item['name']} at #{pos + 1}")
+        _force_names = _ov.get('force_names', {})
+        for d in ranked:
+            if d['key'] in _force_names:
+                d['name'] = _force_names[d['key']]
+                print(f"  [overrides] Renamed: {d['key']} → {d['name']}")
 
     print("\nDeal ranking (weighted):")
     for i, d in enumerate(ranked, 1):
@@ -856,7 +868,8 @@ def build_email_html(deals, period, show_verify=False, paid=False):
                     parts = [p.strip() for p in _iname.split(_sep)]
                     cut_words = set(_re.sub(r'[()]', '', d['name']).lower().split())
                     def _or_score(part):
-                        words = [w for w in part.lower().split() if len(w) > 3]
+                        words = [_re.sub(r'[^a-z]', '', w.lower()) for w in part.split() if len(w) > 3]
+                        words = [w for w in words if w]
                         if not words:
                             return 0
                         return sum(1 for w in words if w in cut_words) / len(words)
@@ -904,6 +917,15 @@ def build_email_html(deals, period, show_verify=False, paid=False):
             lb_price = f'${d["price"]/2.20462:.2f}/lb'
             kg_price = f'${d["price"]:.2f}/kg'
             primary_price = lb_price
+            kg_span = f'  <span style="font-size:18px;font-weight:400;color:rgba(255,255,255,0.5)">{kg_price}</span>'
+            kg_span2 = f'<span style="font-size:14px;font-weight:400;color:#8A8680;font-family:monospace">{kg_price}</span> '
+        elif raw_unit in ('pkg', 'unit', 'each') and d.get('raw_price'):
+            try:
+                pkg_price = float(d['raw_price'])
+            except (ValueError, TypeError):
+                pkg_price = d['price']
+            primary_price = f'${pkg_price:.2f} per unit'
+            kg_price = f'${d["price"]:.2f}/kg'
             kg_span = f'  <span style="font-size:18px;font-weight:400;color:rgba(255,255,255,0.5)">{kg_price}</span>'
             kg_span2 = f'<span style="font-size:14px;font-weight:400;color:#8A8680;font-family:monospace">{kg_price}</span> '
         else:
