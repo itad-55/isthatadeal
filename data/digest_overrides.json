@@ -1,6 +1,6 @@
 {
   "force_include": [],
-  "force_exclude": ["yogurt_500g", "pork_ground"],
+  "force_exclude": [],
   "force_positions": {},
   "force_names": {}
 }
