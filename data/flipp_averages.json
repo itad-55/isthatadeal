@@ -310,7 +310,7 @@
       "avg": 5.08,
       "lo": 1.29,
       "hi": 28.64,
-      "observations": 558,
+      "observations": 559,
       "source": "flipp_historical"
     },
     "tuna_steak": {
@@ -459,10 +459,10 @@
     },
     "veal_cutlets": {
       "name": "Veal cutlets",
-      "avg": 29.22,
+      "avg": 29.19,
       "lo": 4.88,
       "hi": 66.12,
-      "observations": 145,
+      "observations": 147,
       "source": "flipp_historical"
     },
     "bagels": {
@@ -539,10 +539,10 @@
     },
     "sausage_500g": {
       "name": "Pork sausage (500g)",
-      "avg": 14.53,
+      "avg": 14.52,
       "lo": 7.98,
       "hi": 28.0,
-      "observations": 198,
+      "observations": 199,
       "source": "flipp_historical"
     },
     "tortillas": {

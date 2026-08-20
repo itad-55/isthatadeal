@@ -20239,3 +20239,7 @@ date,cut_key,cut_name,store,item_name,raw_price,raw_unit,price_per_kg,postal_cod
 2026-08-20,coffee_ground_300g,Ground coffee (300g),Chalo FreshCo,Tim Hortons Ground Coffee 300 g or Single Serve K-Cups 10-12 pk,11.99,bag_300g,39.97,L4T0A1,2026-08-27T03:59:59+00:00,1033372138,8084591,
 2026-08-20,coffee_ground_300g,Ground coffee (300g),No Frills,"STARBUCKS K-CUP PODS, 10's, HOT CHOCOLATE MIX, 300 g or GROUND COFFEE, 340 g",11.99,bag_300g,39.97,L4T0A1,2026-08-27T03:59:59+00:00,1033458213,8084671,
 2026-08-20,oranges_bag,Oranges (bag),Real Canadian Superstore,"AVOCADOS, 5 PK OR BAGGED ORANGES, 3 LB",5.00,bag_3.0lb,3.67,M5V3L9,2026-08-27T03:59:59+00:00,MANUAL_RCSS_ORANGES_20260820,8084617,
+2026-08-20,veal_cutlets,Veal cutlets,Loblaws,LEAN GROUND VEAL,8.99,lb,19.82,M5V3L9,2026-08-27T03:59:59+00:00,1033613757,8085096,
+2026-08-20,veal_cutlets,Veal cutlets,Loblaws,VEAL LOIN OR RIB CHOPS,15.99,lb,35.25,M5V3L9,2026-08-27T03:59:59+00:00,1033472457,8085096,
+2026-08-20,tomatoes,Tomatoes (loose),Loblaws,ROMA TOMATOES,2.49,lb,5.49,M5V3L9,2026-08-27T03:59:59+00:00,1033474516,8085096,
+2026-08-20,sausage_500g,Pork sausage (500g),Chalo FreshCo,Compliments Breakfast or Dinner Sausages 375-500 g,5.0,bag_500g,10.0,L4T0A1,2026-08-27T03:59:59+00:00,1033372167,8084591,
