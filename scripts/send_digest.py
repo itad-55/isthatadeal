@@ -345,6 +345,9 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '1032452654',  # Loblaws "PORK BUTT CHOP OR ROAST" — could not verify in flyer
                 '1032100849',  # FreshCo "Bread 675g OR Sourdough English Muffins 6pk" — weight is bread's (675g), not muffins; inflates per-kg
                 '1032457260',  # Chalo FreshCo same OR item
+                '1033372371',  # FreshCo "Avocados 5pk OR Bagged Oranges 3lb" — recurring OR-item, unverifiable by Craig in-store; RCSS has a manual verified entry instead
+                '1033372131',  # Chalo FreshCo same OR item
+                '1033376454',  # RCSS "TETLEY ORANGE PEKOE TEA BAGS" misfiled as oranges_bag — "orange" keyword match, not actually oranges
             }
             if row.get('item_id', '') in SCORER_ITEM_BLACKLIST:
                 continue

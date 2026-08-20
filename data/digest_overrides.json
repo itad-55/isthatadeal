@@ -1,29 +1,6 @@
 {
   "force_include": [],
-  "force_exclude": [],
-  "force_positions": {
-    "1":  "beef_striploin",
-    "2":  "lamb_chops",
-    "3":  "peaches",
-    "4":  "chicken_thigh_bonein",
-    "5":  "yogurt_500g",
-    "6":  "chicken_whole",
-    "7":  "pears",
-    "8":  "beef_brisket",
-    "9":  "beef_sirloin",
-    "10": "tomatoes",
-    "11": "salmon_fillet",
-    "12": "chicken_wings",
-    "13": "nectarines",
-    "14": "english_muffins",
-    "15": "oranges_bag",
-    "16": "grapes",
-    "17": "heavy_cream",
-    "18": "pork_shoulder",
-    "19": "cod",
-    "20": "mushrooms"
-  },
-  "force_names": {
-    "yogurt_500g": "Liberté Yogurt"
-  }
+  "force_exclude": ["yogurt_500g", "pork_ground"],
+  "force_positions": {},
+  "force_names": {}
 }
