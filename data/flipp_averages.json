@@ -59,10 +59,10 @@
     },
     "beef_ground_regular": {
       "name": "Ground beef (regular)",
-      "avg": 17.76,
+      "avg": 17.77,
       "lo": 4.99,
       "hi": 30.84,
-      "observations": 493,
+      "observations": 494,
       "source": "flipp_historical"
     },
     "beef_inside_round": {
@@ -107,10 +107,10 @@
     },
     "chicken_breast": {
       "name": "Chicken breast (boneless)",
-      "avg": 14.95,
+      "avg": 14.98,
       "lo": 3.77,
       "hi": 89.9,
-      "observations": 544,
+      "observations": 545,
       "source": "flipp_historical"
     },
     "chicken_drumsticks": {
@@ -299,18 +299,18 @@
     },
     "tilapia": {
       "name": "Tilapia",
-      "avg": 16.45,
+      "avg": 16.48,
       "lo": 3.0,
       "hi": 24.25,
-      "observations": 286,
+      "observations": 287,
       "source": "flipp_historical"
     },
     "tomatoes": {
       "name": "Tomatoes (loose)",
-      "avg": 5.15,
+      "avg": 5.17,
       "lo": 1.29,
       "hi": 33.05,
-      "observations": 622,
+      "observations": 623,
       "source": "flipp_historical"
     },
     "tuna_steak": {
@@ -475,10 +475,10 @@
     },
     "bread_whole_wheat": {
       "name": "Whole wheat bread",
-      "avg": 5.08,
+      "avg": 5.1,
       "lo": 2.96,
       "hi": 90.42,
-      "observations": 145,
+      "observations": 146,
       "source": "flipp_historical"
     },
     "butter_454g": {
@@ -723,10 +723,10 @@
     },
     "cherries": {
       "name": "Cherries",
-      "avg": 11.0,
+      "avg": 10.99,
       "lo": 2.88,
       "hi": 17.64,
-      "observations": 209,
+      "observations": 210,
       "source": "flipp_historical"
     },
     "raspberries": {
