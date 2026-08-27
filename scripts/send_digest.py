@@ -348,6 +348,11 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '1033372371',  # FreshCo "Avocados 5pk OR Bagged Oranges 3lb" — recurring OR-item, unverifiable by Craig in-store; RCSS has a manual verified entry instead
                 '1033372131',  # Chalo FreshCo same OR item
                 '1033376454',  # RCSS "TETLEY ORANGE PEKOE TEA BAGS" misfiled as oranges_bag — "orange" keyword match, not actually oranges
+                '1035825900',  # Fortinos "CLIC Vermicelli 500g OR Suraj Dahi Yogurt 750g" — recurring OR-item, weight/price is vermicelli's not yogurt's
+                '1035595707',  # Metro "Local Fruit Baskets ... Blue Plum 2L ..." — 2L-basket raw_unit=defaulted_lb bug, $4.99/2L treated as $4.99/lb; Craig confirmed no $4.99/lb plums deal exists
+                '1035729960',  # Loblaws "PC Club Pack OR Mina Halal Chicken Drumsticks or Thighs" — Craig couldn't find in his M5V3L9 flyer, likely select-locations Halal SKU
+                '1035825396',  # Fortinos same Mina Halal combo item
+                '1035559269',  # RCSS "CHICKEN BREASTS" (M5V3L9) — generic name with no bone-in/boneless qualifier matches both chicken_breast and chicken_breast_bonein keyword lists, showing as a duplicate; kept under chicken_breast (boneless), the more common default cut
             }
             if row.get('item_id', '') in SCORER_ITEM_BLACKLIST:
                 continue
@@ -379,6 +384,7 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '7988635',  # Metro Ottawa/bilingual regional flyer — Quebec pricing (week of Jun 25)
                 '7994337',  # Maxi K1A0A1 flyer — Quebec chain, not Ontario (week of Jun 25)
                 '7999851',  # IGA K1A0A1 flyer — Quebec chain, not Ontario (week of Jun 25)
+                '8105283',  # No Frills regional flyer — N2L3G1 (Waterloo/Kitchener), Craig confirmed chicken breast deal not in his Toronto-area flyer (week of Aug 27)
             }
             if row.get('flyer_id', '') in BLACKLISTED_FLYER_IDS:
                 continue
@@ -649,6 +655,7 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
         for d in ranked:
             if d['key'] in _force_names:
                 d['name'] = _force_names[d['key']]
+                d['item_name'] = _force_names[d['key']]
                 print(f"  [overrides] Renamed: {d['key']} → {d['name']}")
 
     print("\nDeal ranking (weighted):")

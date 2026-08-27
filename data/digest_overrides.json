@@ -1,6 +1,8 @@
 {
   "force_include": [],
-  "force_exclude": [],
+  "force_exclude": ["sour_cream"],
   "force_positions": {},
-  "force_names": {}
+  "force_names": {
+    "beef_ground_extra_lean": "Lean Ground Beef Value Pack"
+  }
 }
