@@ -353,6 +353,8 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '1035729960',  # Loblaws "PC Club Pack OR Mina Halal Chicken Drumsticks or Thighs" — Craig couldn't find in his M5V3L9 flyer, likely select-locations Halal SKU
                 '1035825396',  # Fortinos same Mina Halal combo item
                 '1035559269',  # RCSS "CHICKEN BREASTS" (M5V3L9) — generic name with no bone-in/boneless qualifier matches both chicken_breast and chicken_breast_bonein keyword lists, showing as a duplicate; kept under chicken_breast (boneless), the more common default cut
+                '1037323390',  # Loblaws "TruGourmet Korean Style Beef Short Ribs, BBQ Flavoured Pork OR Pork Belly Slices" — prepared/marinated combo product, not a plain fresh cut
+                '1037452597',  # Metro "Fresh Skinless Chicken Breast" (flyer 8114858) — same generic-name duplicate bug as RCSS above, recurring under chicken_breast_bonein; kept under chicken_breast (boneless)
             }
             if row.get('item_id', '') in SCORER_ITEM_BLACKLIST:
                 continue
