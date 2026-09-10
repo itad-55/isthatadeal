@@ -869,33 +869,6 @@ def build_email_html(deals, period, show_verify=False, paid=False):
         subject  = f"This week: {best['name']} is {abs(best['pct']):.0f}% below average" if best else f"This week's Ontario grocery deals — {week_str}"
         headline = "This week's best<br>Ontario grocery deals"
 
-    teaser_row = '' if paid else (
-        '<tr><td style="padding:6px 16px 10px;text-align:center;border-bottom:1px solid #E8E6DF">'
-        f'<div style="font-size:13px;color:#8A8680;font-family:monospace;">Paid subscribers are seeing 10 more deals this week. <a href="{STRIPE_LINK}" style="color:#0A7A3E;font-weight:600;text-decoration:none;">Upgrade here →</a></div>'
-        '</td></tr>'
-    )
-
-    upgrade_block = '' if paid else (
-        '<tr><td style="padding:16px 18px 8px"><table width="100%" cellpadding="0" cellspacing="0" style="background:#a9e8c6;border-radius:10px">'
-        '<tr><td style="padding:16px 18px"><div style="font-size:15px;font-weight:700;color:#0D0D0D;margin-bottom:8px">'
-        '⭐ Get 10 more deals like this for $2.99/month'
-        '</div>'
-        '<div style="font-size:15px;color:#0D0D0D;line-height:1.6">'
-        'Paid subscribers get all 20 deals every Thursday. One extra deal acted on pays for months of subscription. It also helps keep the project alive.'
-        '</div>'
-        '<div style="font-size:15px;color:#0D0D0D;font-weight:700;margin-top:12px">'
-        f'<a href="{STRIPE_LINK}" style="color:#0D0D0D;text-decoration:underline;text-underline-offset:2px;">Upgrade to 20 deals a week →</a>'
-        '</div>'
-        '<div style="font-size:13px;color:#0D0D0D;opacity:0.6;margin-top:6px">$2.99/month · Cancel any time</div>'
-        '</td></tr></table></td></tr>'
-    )
-
-    midlist_cta = '' if paid else (
-        '<tr><td style="padding:10px 18px;text-align:center;border-top:1px solid #E8E6DF;border-bottom:1px solid #E8E6DF;background:#FAFAF7">'
-        f'<div style="font-size:13px;color:#4A4740;">Enjoying this? <a href="{STRIPE_LINK}" style="color:#0A7A3E;font-weight:600;text-decoration:none;">Get 10 more deals for $2.99/month →</a></div>'
-        '</td></tr>'
-    )
-
     deal_rows = ''
     for i, d in enumerate(deals):
         label, color, check = verdict(d['pct'])
@@ -1003,7 +976,6 @@ def build_email_html(deals, period, show_verify=False, paid=False):
                 + (f'<div style="font-size:14px;color:rgba(255,255,255,0.5);font-family:monospace;margin-top:4px">Lowest price in 8 weeks</div>' if d.get('lowest_8wk') else '')
                 + f'{_price_match_html(d, dark=True)}'
                 f'</td></tr></table></td></tr>'
-                + upgrade_block +
                 f'<tr><td style="padding:10px 14px 6px">'
                 f'<div class="also-label" style="font-size:15px;letter-spacing:0.08em;text-transform:uppercase;color:#8A8680;font-family:monospace">Also worth buying this week</div>'
                 f'</td></tr>'
@@ -1026,8 +998,6 @@ def build_email_html(deals, period, show_verify=False, paid=False):
                 + f'{_price_match_html(d, dark=False)}'
                 f'</td></tr></table></td></tr>'
             )
-            if not paid and i == 5:
-                deal_rows += midlist_cta
 
     if not deal_rows:
         deal_rows = '<tr><td style="padding:2rem;text-align:center;color:#8A8680">No deals 15%+ below average this week.</td></tr>'
@@ -1047,6 +1017,24 @@ def build_email_html(deals, period, show_verify=False, paid=False):
         '</td></tr></table></td></tr>'
     )
 
+    upgrade_block = '' if paid else (
+        '<tr><td style="padding:16px 18px 8px"><table width="100%" cellpadding="0" cellspacing="0" style="background:#a9e8c6;border-radius:10px">'
+        '<tr><td style="padding:16px 18px"><div style="font-size:15px;font-weight:700;color:#0D0D0D;margin-bottom:8px">'
+        '⭐ Get 20 deals every Thursday for $2.99/month'
+        '</div>'
+        '<div style="font-size:15px;color:#0D0D0D;line-height:1.6">'
+        'The free digest includes the top 10 deals of the week. Paid subscribers get all 20 — double the savings opportunities, same data, same scoring. One extra deal acted on pays for months of subscription.'
+        '</div>'
+        '<div style="font-size:15px;color:#0D0D0D;line-height:1.6;margin-top:10px">'
+        'It also helps keep the project alive.'
+        '</div>'
+        '<div style="font-size:15px;color:#0D0D0D;font-weight:700;margin-top:12px">'
+        f'<a href="{STRIPE_LINK}" style="color:#0D0D0D;text-decoration:underline;text-underline-offset:2px;">Upgrade to 20 deals a week →</a>'
+        '</div>'
+        '<div style="font-size:13px;color:#0D0D0D;opacity:0.6;margin-top:6px">$2.99/month · Cancel any time</div>'
+        '</td></tr></table></td></tr>'
+    )
+
     # Load static template and fill placeholders
     with open(EMAIL_TEMPLATE) as f:
         tmpl = f.read()
@@ -1057,7 +1045,6 @@ def build_email_html(deals, period, show_verify=False, paid=False):
     html = html.replace('{{DEAL_ROWS}}', deal_rows)
     html = html.replace('{{BEST_STORE_BLURB}}', best_store_blurb)
     html = html.replace('{{HEADLINE}}', headline)
-    html = html.replace('{{TEASER_ROW}}', teaser_row)
     html = html.replace('{{UPGRADE_BLOCK}}', upgrade_block)
     manage_sub = (
         '<div style="margin-top:14px;font-size:13px;color:#8A8680;font-family:monospace">'
