@@ -355,6 +355,9 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '1035559269',  # RCSS "CHICKEN BREASTS" (M5V3L9) — generic name with no bone-in/boneless qualifier matches both chicken_breast and chicken_breast_bonein keyword lists, showing as a duplicate; kept under chicken_breast (boneless), the more common default cut
                 '1037323390',  # Loblaws "TruGourmet Korean Style Beef Short Ribs, BBQ Flavoured Pork OR Pork Belly Slices" — prepared/marinated combo product, not a plain fresh cut
                 '1037452597',  # Metro "Fresh Skinless Chicken Breast" (flyer 8114858) — same generic-name duplicate bug as RCSS above, recurring under chicken_breast_bonein; kept under chicken_breast (boneless)
+                '1038781680',  # Loblaws "TruGourmet Korean Style Beef Short Ribs, Pork Belly Slices OR BBQ Flavoured Pork" — same recurring prepared/marinated combo product as 1037323390, new item_id, same $12.00/kg
+                '1039234615',  # Sobeys "Fresh Atlantic Salmon Roasts with Mediterranean-Style Stuffing" (N2L3G1) — prepared/stuffed product, not a plain fillet, and from the regional Waterloo flyer (not province-wide)
+                '1038790190',  # Fortinos "Wonder Bread 675g, PC English Muffins Crumpets 6's OR Naan 180g" — priced using bread's 675g weight, not the muffins' actual (much smaller) package
             }
             if row.get('item_id', '') in SCORER_ITEM_BLACKLIST:
                 continue
