@@ -59,10 +59,10 @@
     },
     "beef_ground_regular": {
       "name": "Ground beef (regular)",
-      "avg": 17.81,
+      "avg": 17.82,
       "lo": 4.99,
       "hi": 30.84,
-      "observations": 556,
+      "observations": 557,
       "source": "flipp_historical"
     },
     "beef_inside_round": {
@@ -107,10 +107,10 @@
     },
     "chicken_breast": {
       "name": "Chicken breast (boneless)",
-      "avg": 15.05,
+      "avg": 15.07,
       "lo": 3.77,
       "hi": 89.9,
-      "observations": 610,
+      "observations": 611,
       "source": "flipp_historical"
     },
     "chicken_drumsticks": {
@@ -174,7 +174,7 @@
       "avg": 8.67,
       "lo": 1.97,
       "hi": 22.02,
-      "observations": 1085,
+      "observations": 1086,
       "source": "flipp_historical"
     },
     "lamb_chops": {
@@ -267,10 +267,10 @@
     },
     "salmon_fillet": {
       "name": "Salmon fillets",
-      "avg": 25.6,
+      "avg": 25.59,
       "lo": 8.53,
       "hi": 48.48,
-      "observations": 606,
+      "observations": 609,
       "source": "flipp_historical"
     },
     "salmon_whole": {
@@ -414,7 +414,7 @@
       "avg": 8.35,
       "lo": 2.49,
       "hi": 28.64,
-      "observations": 519,
+      "observations": 521,
       "source": "flipp_historical"
     },
     "strawberries": {
@@ -539,10 +539,10 @@
     },
     "sausage_500g": {
       "name": "Pork sausage (500g)",
-      "avg": 13.96,
+      "avg": 13.93,
       "lo": 7.0,
       "hi": 28.0,
-      "observations": 270,
+      "observations": 271,
       "source": "flipp_historical"
     },
     "tortillas": {
@@ -627,10 +627,10 @@
     },
     "salad_mix": {
       "name": "Salad mix",
-      "avg": 23.42,
+      "avg": 23.33,
       "lo": 10.99,
       "hi": 38.66,
-      "observations": 105,
+      "observations": 106,
       "source": "flipp_historical"
     },
     "bananas": {
