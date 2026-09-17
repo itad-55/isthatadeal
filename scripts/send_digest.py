@@ -198,7 +198,12 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
     # Build unified averages lookup: cut_key or statcan_key → avg
     # Override raw_unit for cut_keys that were historically mis-recorded
     # (CSV may still have old 'kg' values before the fix was deployed)
-    PKG_OVERRIDES = {'shrimp', 'turkey_breast', 'pork_ham', 'canned_tuna_170g', 'canned_salmon_213g'}
+    # turkey_breast and pork_ham were removed from this set — neither has a StatCan or
+    # retail_baseline package-based average (only the Flipp per-kg historical average),
+    # so comparing raw_price directly against a per-kg avg produced a false ~50%-below
+    # "deal" that was actually well above average (e.g. Sep 17: $14.99/300g bag = $49.97/kg
+    # vs $30.32/kg avg — really +65% above average, not -50% below).
+    PKG_OVERRIDES = {'shrimp', 'canned_tuna_170g', 'canned_salmon_213g'}
 
     # Cut keys to never surface in the digest — per-kg comparison doesn't make sense
     # for items sold in small fixed-weight packages or by-the-each, or too niche to feature
@@ -206,6 +211,10 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                       'beef_ground_regular', 'beef_ground_medium', 'beef_ground_lean',
                       'pork_side_ribs', 'broccoli', 'tortillas', 'pineapple', 'blueberries',
                       'chicken_drumsticks', 'bagels', 'salad_mix', 'coffee_ground_300g', 'spinach',
+                      # english_muffins: chronically collected as part of bagel/bread/bun/snack-cake
+                      # OR-combo ads where the weight applied is the OTHER product's, not the
+                      # muffins' — wrong for 3+ consecutive weeks (Aug 27, Sep 3, Sep 17)
+                      'english_muffins',
                       'peppers', 'olive_oil_1l'}
 
     # Map Flipp cut_keys to StatCan keys where names differ
@@ -358,6 +367,9 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '1038781680',  # Loblaws "TruGourmet Korean Style Beef Short Ribs, Pork Belly Slices OR BBQ Flavoured Pork" — same recurring prepared/marinated combo product as 1037323390, new item_id, same $12.00/kg
                 '1039234615',  # Sobeys "Fresh Atlantic Salmon Roasts with Mediterranean-Style Stuffing" (N2L3G1) — prepared/stuffed product, not a plain fillet, and from the regional Waterloo flyer (not province-wide)
                 '1038790190',  # Fortinos "Wonder Bread 675g, PC English Muffins Crumpets 6's OR Naan 180g" — priced using bread's 675g weight, not the muffins' actual (much smaller) package
+                '1040199207',  # Food Basics "Polka Plums OR S&F Spread OR Cuétara Maria Cookies" — garbled 3-way OR-item mixing fruit, jam, and cookies; defaulted_lb unit-fallback bug
+                '1038674933',  # RCSS "Marcangelo Pork Sausage, 250-500g" — Craig confirmed not in his flyer; last actually re-collected Sep 14, absent from Sep 17 fresh scrape despite Flipp's valid_to metadata (Oct 1) claiming it's still active — the promo appears to have ended in stores before Flipp's stated expiry
+                '1040081249',  # Zehrs "Carrots or Yellow Onions 3lb" (N2L3G1) — regional Waterloo flyer, Craig confirmed not in his flyer
             }
             if row.get('item_id', '') in SCORER_ITEM_BLACKLIST:
                 continue
