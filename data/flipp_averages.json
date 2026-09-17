@@ -107,10 +107,10 @@
     },
     "chicken_breast": {
       "name": "Chicken breast (boneless)",
-      "avg": 15.17,
+      "avg": 15.16,
       "lo": 3.77,
       "hi": 89.9,
-      "observations": 654,
+      "observations": 655,
       "source": "flipp_historical"
     },
     "chicken_drumsticks": {
@@ -134,7 +134,7 @@
       "avg": 13.29,
       "lo": 4.39,
       "hi": 30.84,
-      "observations": 463,
+      "observations": 464,
       "source": "flipp_historical"
     },
     "chicken_thigh_boneless": {
@@ -267,10 +267,10 @@
     },
     "salmon_fillet": {
       "name": "Salmon fillets",
-      "avg": 25.42,
+      "avg": 25.43,
       "lo": 8.53,
       "hi": 48.48,
-      "observations": 640,
+      "observations": 641,
       "source": "flipp_historical"
     },
     "salmon_whole": {
@@ -307,10 +307,10 @@
     },
     "tomatoes": {
       "name": "Tomatoes (loose)",
-      "avg": 5.14,
+      "avg": 5.13,
       "lo": 1.29,
       "hi": 33.05,
-      "observations": 722,
+      "observations": 725,
       "source": "flipp_historical"
     },
     "tuna_steak": {
@@ -459,10 +459,10 @@
     },
     "veal_cutlets": {
       "name": "Veal cutlets",
-      "avg": 28.75,
+      "avg": 28.62,
       "lo": 4.88,
       "hi": 66.12,
-      "observations": 195,
+      "observations": 203,
       "source": "flipp_historical"
     },
     "bagels": {
@@ -611,10 +611,10 @@
     },
     "bacon_500g": {
       "name": "Bacon (500g)",
-      "avg": 17.54,
+      "avg": 17.51,
       "lo": 7.95,
       "hi": 58.71,
-      "observations": 194,
+      "observations": 195,
       "source": "flipp_historical"
     },
     "chicken_breast_bonein": {
