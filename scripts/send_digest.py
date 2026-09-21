@@ -238,6 +238,10 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
         'beef_ground_medium':  'Ground beef, per kilogram',
         'beef_ground_lean':    'Ground beef, per kilogram',
         'beef_sirloin':        'Beef top sirloin cuts, per kilogram',
+        # StatCan doesn't split by bone status — these ride the same figure as
+        # their bone-in/boneless sibling above, used only as a thin-history fallback
+        'chicken_breast_bonein': 'Chicken breasts, per kilogram',
+        'chicken_thigh_boneless': 'Chicken thigh, per kilogram',
     }
 
     averages = {}
@@ -245,13 +249,27 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
     for key, v in flipp.items():
         if v.get('avg') and v.get('observations', 0) >= 4:
             averages[key] = {'avg': v['avg'], 'name': v['name'], 'source': 'flipp'}
-    # Priority 2: StatCan official Ontario averages (overwrites Flipp)
+    # Priority 2: StatCan official Ontario averages (available as fallback / package-unit source)
     for key, v in statcan.items():
         averages[key] = {'avg': v['avg'], 'name': key, 'source': 'statcan'}
-    # Add aliases so Flipp cut_keys can match StatCan entries
+    # Add aliases so Flipp cut_keys can match StatCan entries. We trust our own
+    # 6-month Flipp historical average over StatCan's single snapshot whenever we
+    # have a solid sample size for that cut_key — StatCan is a single external
+    # number we don't control, while our own history is a real time series we
+    # collect every week. StatCan only overrides when our own history is thin
+    # (< FLIPP_TRUST_THRESHOLD observations), or for PKG_OVERRIDES cuts, where
+    # Flipp's average is always computed per-kg but the comparison is done
+    # per-package — Flipp's own average is in the wrong unit there regardless
+    # of sample size, so StatCan (a genuine per-package figure) must be used.
+    FLIPP_TRUST_THRESHOLD = 50
     for flipp_key, statcan_key in STATCAN_ALIASES.items():
-        if statcan_key in averages:
+        if statcan_key not in averages:
+            continue
+        flipp_obs = flipp.get(flipp_key, {}).get('observations', 0)
+        has_solid_flipp_history = flipp_key in averages and flipp_obs >= FLIPP_TRUST_THRESHOLD
+        if flipp_key in PKG_OVERRIDES or not has_solid_flipp_history:
             averages[flipp_key] = averages[statcan_key].copy()
+        # else: keep the Flipp-historical average already set above (Priority 3)
     # Priority 1 (highest): manually-verified retail shelf prices
     if baselines:
         for key, v in baselines.items():
