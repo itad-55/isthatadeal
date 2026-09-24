@@ -67,10 +67,10 @@
     },
     "beef_inside_round": {
       "name": "Beef inside round roast",
-      "avg": 21.91,
+      "avg": 21.84,
       "lo": 11.5,
       "hi": 28.64,
-      "observations": 73,
+      "observations": 74,
       "source": "flipp_historical"
     },
     "beef_sirloin": {
@@ -110,7 +110,7 @@
       "avg": 15.22,
       "lo": 3.77,
       "hi": 89.9,
-      "observations": 701,
+      "observations": 702,
       "source": "flipp_historical"
     },
     "chicken_drumsticks": {
@@ -243,10 +243,10 @@
     },
     "pork_shoulder": {
       "name": "Pork shoulder roast",
-      "avg": 8.83,
+      "avg": 8.8,
       "lo": 1.97,
       "hi": 15.41,
-      "observations": 241,
+      "observations": 242,
       "source": "flipp_historical"
     },
     "pork_side_ribs": {
@@ -310,7 +310,7 @@
       "avg": 5.05,
       "lo": 1.29,
       "hi": 33.05,
-      "observations": 762,
+      "observations": 763,
       "source": "flipp_historical"
     },
     "tuna_steak": {
@@ -363,10 +363,10 @@
     },
     "mango": {
       "name": "Mangoes",
-      "avg": 15.57,
+      "avg": 15.55,
       "lo": 1.9,
       "hi": 106.67,
-      "observations": 234,
+      "observations": 235,
       "source": "flipp_historical"
     },
     "onions_bag": {
@@ -539,10 +539,10 @@
     },
     "sausage_500g": {
       "name": "Pork sausage (500g)",
-      "avg": 12.94,
+      "avg": 12.92,
       "lo": 7.0,
       "hi": 28.0,
-      "observations": 330,
+      "observations": 331,
       "source": "flipp_historical"
     },
     "tortillas": {
@@ -675,10 +675,10 @@
     },
     "bread_white": {
       "name": "White bread",
-      "avg": 5.22,
+      "avg": 5.25,
       "lo": 2.96,
       "hi": 18.0,
-      "observations": 96,
+      "observations": 97,
       "source": "flipp_historical"
     },
     "corn": {
