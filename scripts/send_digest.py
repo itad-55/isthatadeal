@@ -388,6 +388,13 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '1040199207',  # Food Basics "Polka Plums OR S&F Spread OR Cuétara Maria Cookies" — garbled 3-way OR-item mixing fruit, jam, and cookies; defaulted_lb unit-fallback bug
                 '1038674933',  # RCSS "Marcangelo Pork Sausage, 250-500g" — Craig confirmed not in his flyer; last actually re-collected Sep 14, absent from Sep 17 fresh scrape despite Flipp's valid_to metadata (Oct 1) claiming it's still active — the promo appears to have ended in stores before Flipp's stated expiry
                 '1040081249',  # Zehrs "Carrots or Yellow Onions 3lb" (N2L3G1) — regional Waterloo flyer, Craig confirmed not in his flyer
+                '1042728958',  # Sobeys "Compliments Boneless Skinless Chicken Breasts" — raw_unit stored as plain 'kg' giving $5.99/kg, implausibly cheap; matches the known Sobeys wrong-unit pattern (almost certainly $5.99/lb = ~$13.21/kg)
+                '1041513345',  # Food Basics "Mushrooms 454g Romaine Hearts 3pk" — two-product combo priced using the mushroom's weight, not the romaine's
+                '1041661821',  # No Frills "Heluva Good! French Onion Sour Cream Dip, 680g" — dip, not sour cream; recurring misfiling
+                '1041660815',  # No Frills "Farmer's Market Sweet Corn, Pkg of 5, PC Little Gems Mini Potatoes 680g" — combo priced using the potatoes' weight, not the corn's
+                '1041512790',  # Food Basics "Cantaloupes, Avocadoes 5/6pk, Lemons 2lb" — 3-way combo, ambiguous weight assignment for avocados
+                '1041753338',  # YIG "Inside Round Steak Family Size OR Roast" — same $17.61/kg promo as Loblaws (manual entry added, Craig verified it at Loblaws specifically); Loblaws' own listing was collected under the excluded K1A0A1 postal
+                '1041664935',  # Zehrs "Inside Round Steak or Roast" — same $17.61/kg promo, same reason as YIG above
             }
             if row.get('item_id', '') in SCORER_ITEM_BLACKLIST:
                 continue
