@@ -395,6 +395,17 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '1041512790',  # Food Basics "Cantaloupes, Avocadoes 5/6pk, Lemons 2lb" — 3-way combo, ambiguous weight assignment for avocados
                 '1041753338',  # YIG "Inside Round Steak Family Size OR Roast" — same $17.61/kg promo as Loblaws (manual entry added, Craig verified it at Loblaws specifically); Loblaws' own listing was collected under the excluded K1A0A1 postal
                 '1041664935',  # Zehrs "Inside Round Steak or Roast" — same $17.61/kg promo, same reason as YIG above
+                '1043728859',  # RCSS "CHICKEN BREASTS" (chicken_breast_bonein, flyer 8163652) — recurring generic-name duplicate; kept under chicken_breast (boneless)
+                '1043781957',  # No Frills "Romaine Hearts, Farmer's Market Red Onions 3lb Bag" — priced using the onion bag's weight, not the romaine's
+                '1043803757',  # Fortinos "PC Easy-Carve Turkey Breast Roast, Butterball or Saha Boneless Turkey Roast" — branded pre-formed/frozen roast product, Craig flagged it's not a plain fresh cut
+                '1043742970',  # Loblaws same Easy-Carve Roast item
+                '1043806013',  # Fortinos "Tofurky Veggie Roast 737g OR Glazed Ham-Style Roast 539g" (pork_ham) — Tofurky is a vegetarian/vegan product, not real meat; "Glazed Ham-Style Roast" is also a prepared product, not comparable
+                '1043741729',  # Loblaws "Fortinos Boneless Turkey Breast, 800g" — Craig flagged as not comparable
+                '1043803453',  # Fortinos same item
+                '1044029130',  # Metro "Boneless Strip Loin Steak Value Pack or Roast" — flyer image confirms "Cut from Australian Graded Beef" (Aussie Beef badge), Flipp's text never captured the origin; not comparable to our Canadian-sourced baseline
+                '1044029636',  # Metro "Whole Beef Tenderloin" — same flyer, also confirmed "Cut from Australian Graded Beef"
+                '1043743024',  # Loblaws "No Name Maraschino Cherries, 375mL OR Crisco Shortening, 454g" — jarred preserved cherries, not fresh; Craig confirmed. Also defaulted_lb bug
+                '1043809757',  # Zehrs same Maraschino Cherries item
             }
             if row.get('item_id', '') in SCORER_ITEM_BLACKLIST:
                 continue
