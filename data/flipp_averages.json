@@ -75,10 +75,10 @@
     },
     "beef_sirloin": {
       "name": "Beef top sirloin",
-      "avg": 35.66,
+      "avg": 35.61,
       "lo": 7.98,
       "hi": 46.3,
-      "observations": 365,
+      "observations": 366,
       "source": "flipp_historical"
     },
     "beef_stewing": {
@@ -435,10 +435,10 @@
     },
     "beef_ribeye": {
       "name": "Beef ribeye steak",
-      "avg": 34.45,
+      "avg": 34.31,
       "lo": 13.49,
       "hi": 68.34,
-      "observations": 74,
+      "observations": 75,
       "source": "flipp_historical"
     },
     "beef_short_ribs": {
@@ -603,10 +603,10 @@
     },
     "spinach": {
       "name": "Spinach",
-      "avg": 15.98,
+      "avg": 15.87,
       "lo": 3.74,
       "hi": 35.14,
-      "observations": 107,
+      "observations": 108,
       "source": "flipp_historical"
     },
     "blueberries": {
