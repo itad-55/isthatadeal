@@ -215,6 +215,11 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                       # OR-combo ads where the weight applied is the OTHER product's, not the
                       # muffins' — wrong for 3+ consecutive weeks (Aug 27, Sep 3, Sep 17)
                       'english_muffins',
+                      # turkey_breast: every week's candidates have been either the branded
+                      # "PC Easy-Carve Turkey Breast Roast" (prepared/pre-formed product) or
+                      # the plain "Fortinos Boneless Turkey Breast, 800g" which Craig flagged
+                      # as not comparable — 2 consecutive weeks (Oct 1, Oct 8), no other source
+                      'turkey_breast',
                       'peppers', 'olive_oil_1l'}
 
     # Map Flipp cut_keys to StatCan keys where names differ
@@ -406,6 +411,13 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '1044029636',  # Metro "Whole Beef Tenderloin" — same flyer, also confirmed "Cut from Australian Graded Beef"
                 '1043743024',  # Loblaws "No Name Maraschino Cherries, 375mL OR Crisco Shortening, 454g" — jarred preserved cherries, not fresh; Craig confirmed. Also defaulted_lb bug
                 '1043809757',  # Zehrs same Maraschino Cherries item
+                '1045388581',  # FreshCo "Raspberries 170g OR Red Cherry Tomatoes 340g" — keyword contamination, not actual cherries at all
+                '1045417601',  # Fortinos "Tofurky Veggie Roast 737g OR Glazed Ham-Style Roast 539g" (pork_ham) — same recurring item as last week, new item_id
+                '1045327701',  # Loblaws "Fortinos Boneless Turkey Breast, 800g" — Craig flagged as not comparable last week, same item recurring
+                '1045328195',  # Loblaws "PC Easy-Carve Turkey Breast Roast, Butterball or Saha" — same recurring branded roast product as last week
+                '1045416255',  # Fortinos "Fortinos Boneless Turkey Breast, 800g" — same item as 1045327701, Craig flagged as not comparable
+                '1045416382',  # Fortinos "PC Easy-Carve Turkey Breast Roast, Butterball or Saha" — same recurring branded roast product
+                '1045368325',  # No Frills "Khaas Halal or Parmalat Dahi Yogurt, 750g" — Craig couldn't find the Parmalat side in his flyer
             }
             if row.get('item_id', '') in SCORER_ITEM_BLACKLIST:
                 continue
@@ -563,6 +575,7 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                     'valid_to':  row.get('valid_to', ''),
                     'raw_unit':  'pkg' if key in PKG_OVERRIDES else row.get('raw_unit', ''),
                     'raw_price': row.get('raw_price', ''),
+                    'postal_code': row.get('postal_code', ''),
                     '_item_id':  row.get('item_id', ''),  # for cross-cut dedup
                     'flipp_url': make_flipp_url(
                                       row.get('item_id', ''),
@@ -710,6 +723,11 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 d['name'] = _force_names[d['key']]
                 d['item_name'] = _force_names[d['key']]
                 print(f"  [overrides] Renamed: {d['key']} → {d['name']}")
+        _origin_tags = _ov.get('origin_tags', {})
+        for d in ranked:
+            if d['key'] in _origin_tags:
+                d['origin_tag'] = _origin_tags[d['key']]
+                print(f"  [overrides] Origin-tagged: {d['key']} → {_origin_tags[d['key']]}")
 
     print("\nDeal ranking (weighted):")
     for i, d in enumerate(ranked, 1):
@@ -966,6 +984,8 @@ def build_email_html(deals, period, show_verify=False, paid=False):
                     _iname = max(parts, key=_or_score)
                     break
         item_name_raw = _iname[:55] + ('...' if len(_iname) > 55 else '')
+        if d.get('origin_tag'):
+            item_name_raw += f" ({d['origin_tag']})"
         expiry = format_valid_to(d.get('valid_to', ''))
         # Prefer retailer_url for store link if available
         retailer_url = d.get('retailer_url', '')
@@ -980,6 +1000,8 @@ def build_email_html(deals, period, show_verify=False, paid=False):
                 flipp_verify = f' · <a href="{_furl}" style="color:inherit;text-decoration:underline;text-underline-offset:2px;font-size:11px">verify ↗</a>'
             else:
                 flipp_verify = ' · <span style="color:#C00;font-size:11px">No Flipp verify link available</span>'
+            if d.get('postal_code'):
+                flipp_verify += f' · <span style="font-size:11px">postal: {d["postal_code"]}</span>'
         else:
             flipp_verify = ''
         # Improve price/unit display logic

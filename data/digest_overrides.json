@@ -2,5 +2,9 @@
   "force_include": [],
   "force_exclude": [],
   "force_positions": {},
-  "force_names": {}
+  "force_names": {},
+  "origin_tags": {
+    "beef_striploin": "Aussie Beef",
+    "beef_tenderloin": "Aussie Beef"
+  }
 }
