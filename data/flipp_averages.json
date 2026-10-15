@@ -75,10 +75,10 @@
     },
     "beef_sirloin": {
       "name": "Beef top sirloin",
-      "avg": 35.55,
+      "avg": 35.46,
       "lo": 7.98,
       "hi": 46.3,
-      "observations": 373,
+      "observations": 375,
       "source": "flipp_historical"
     },
     "beef_stewing": {
@@ -107,10 +107,10 @@
     },
     "chicken_breast": {
       "name": "Chicken breast (boneless)",
-      "avg": 15.31,
+      "avg": 15.29,
       "lo": 3.77,
       "hi": 89.9,
-      "observations": 806,
+      "observations": 808,
       "source": "flipp_historical"
     },
     "chicken_drumsticks": {
@@ -310,7 +310,7 @@
       "avg": 5.05,
       "lo": 1.29,
       "hi": 33.05,
-      "observations": 890,
+      "observations": 891,
       "source": "flipp_historical"
     },
     "tuna_steak": {
@@ -411,10 +411,10 @@
     },
     "pork_chop_bonein": {
       "name": "Pork chops (bone-in)",
-      "avg": 8.44,
+      "avg": 8.43,
       "lo": 2.49,
       "hi": 28.64,
-      "observations": 649,
+      "observations": 651,
       "source": "flipp_historical"
     },
     "strawberries": {
@@ -459,10 +459,10 @@
     },
     "veal_cutlets": {
       "name": "Veal cutlets",
-      "avg": 29.31,
+      "avg": 29.21,
       "lo": 4.88,
       "hi": 66.12,
-      "observations": 249,
+      "observations": 253,
       "source": "flipp_historical"
     },
     "bagels": {
@@ -603,10 +603,10 @@
     },
     "spinach": {
       "name": "Spinach",
-      "avg": 15.4,
+      "avg": 15.38,
       "lo": 3.74,
       "hi": 35.14,
-      "observations": 123,
+      "observations": 124,
       "source": "flipp_historical"
     },
     "blueberries": {
@@ -627,10 +627,10 @@
     },
     "chicken_breast_bonein": {
       "name": "Chicken breast (bone-in)",
-      "avg": 14.92,
+      "avg": 14.91,
       "lo": 3.77,
       "hi": 89.9,
-      "observations": 485,
+      "observations": 486,
       "source": "flipp_historical"
     },
     "salad_mix": {
@@ -747,10 +747,10 @@
     },
     "raspberries": {
       "name": "Raspberries",
-      "avg": 21.33,
-      "lo": 11.71,
+      "avg": 21.27,
+      "lo": 9.88,
       "hi": 29.41,
-      "observations": 201,
+      "observations": 202,
       "source": "flipp_historical"
     },
     "peaches": {
