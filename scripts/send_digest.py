@@ -97,20 +97,14 @@ def _fmt_flipp_date(iso_str):
         return ''
 
 def make_flipp_url(item_id, store, postal_code, valid_from, valid_to, flyer_id=''):
-    """Build canonical Flipp item URL in the city/item/id-store-flyer-dates format."""
-    if not item_id:
-        return ''
-    city = _POSTAL_TO_CITY.get((postal_code or '')[:1], 'toronto-on')
-    from_slug = _fmt_flipp_date(valid_from)
-    to_slug   = _fmt_flipp_date(valid_to)
-    if from_slug and to_slug:
-        store_slug = _re.sub(r'[^a-z0-9]+', '-', (store or '').lower()).strip('-')
-        slug = f'{item_id}-{store_slug}-weekly-flyer-valid-{from_slug}-{to_slug}'
-        return f'https://flipp.com/en-ca/{city}/item/{slug}'
-    # Fallback to legacy format if dates unavailable
-    if flyer_id:
-        return f'https://flipp.com/en-ca/item/{item_id}?flyer_id={flyer_id}'
-    return f'https://flipp.com/en-ca/item/{item_id}'
+    """Disabled as of Oct 19 — verified (via WebFetch) that neither the dated-slug
+    'canonical' format nor the legacy ?flyer_id= format resolve on flipp.com anymore;
+    both return Flipp's generic error page even with real, freshly-fetched valid_from/
+    valid_to. The backflipp.wishabi.com API we use for collection doesn't expose any
+    field that reconstructs a working flipp.com deep-link. Returning '' so the review
+    page shows the honest "No Flipp verify link available" message instead of a dead
+    link. If Flipp's real item-page URL scheme is ever identified, rebuild this."""
+    return ''
 VERIFY_FILE       = 'digest_verify_2833151ff2ae0f3d.html'  # secret review URL — do not share
 PAID_TOP20_FILE   = 'digest_paid_itad889975.html'          # secret paid top 20 URL — do not share
 
