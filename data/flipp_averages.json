@@ -267,10 +267,10 @@
     },
     "salmon_fillet": {
       "name": "Salmon fillets",
-      "avg": 26.01,
+      "avg": 26.02,
       "lo": 8.53,
       "hi": 48.48,
-      "observations": 797,
+      "observations": 798,
       "source": "flipp_historical"
     },
     "salmon_whole": {
@@ -310,7 +310,7 @@
       "avg": 5.08,
       "lo": 1.29,
       "hi": 33.05,
-      "observations": 925,
+      "observations": 926,
       "source": "flipp_historical"
     },
     "tuna_steak": {
@@ -459,10 +459,10 @@
     },
     "veal_cutlets": {
       "name": "Veal cutlets",
-      "avg": 29.47,
+      "avg": 29.38,
       "lo": 4.88,
       "hi": 66.12,
-      "observations": 266,
+      "observations": 273,
       "source": "flipp_historical"
     },
     "bagels": {
