@@ -409,6 +409,8 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '1046641387',  # FreshCo "Boneless Pork Loin Thick Centre Cut Chops" — raw_unit stored as plain 'kg' giving $4.99/kg, far below every other store this week (all ~$6.59-12.10/kg); matches known wrong-unit pattern, almost certainly $4.99/lb
                 '1046877772',  # No Frills "Heluva Good! Sour Cream Dip, 680g" — dip, not sour cream, recurring misfiling
                 '1046922534',  # YIG "High Liner Fish Sticks, Fillets, Burgers, Fish & Chips OR Shrimp" — frozen breaded seafood product, not real shrimp
+                '1048127013',  # Loblaws "Romaine Hearts, 3's OR Farmers Market Oranges, 3 LB" — priced using the orange bag's weight, not the romaine's; same recurring combo pattern as Sep 24 and Oct 1
+                '1048263106',  # Food Basics "Fresh Skinless Chicken Breast Family Pack" — Craig confirmed this is actually bone-in; "skinless" isn't the same as "boneless", misclassified into chicken_breast (boneless)
                 '1045388581',  # FreshCo "Raspberries 170g OR Red Cherry Tomatoes 340g" — keyword contamination, not actual cherries at all
                 '1045417601',  # Fortinos "Tofurky Veggie Roast 737g OR Glazed Ham-Style Roast 539g" (pork_ham) — same recurring item as last week, new item_id
                 '1045327701',  # Loblaws "Fortinos Boneless Turkey Breast, 800g" — Craig flagged as not comparable last week, same item recurring
