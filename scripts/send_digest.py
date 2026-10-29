@@ -408,6 +408,12 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '1047300884',  # Sobeys "Fresh Medium Ground Chuck Burgers, Family Size Boneless Beef Stewing Cubes or Boneless Cross Rib Pot Roast or Family Size Simmering Steak" (beef_blade_roast) — garbled 4-way combo, doesn't mention blade roast at all
                 '1046641387',  # FreshCo "Boneless Pork Loin Thick Centre Cut Chops" — raw_unit stored as plain 'kg' giving $4.99/kg, far below every other store this week (all ~$6.59-12.10/kg); matches known wrong-unit pattern, almost certainly $4.99/lb
                 '1046877772',  # No Frills "Heluva Good! Sour Cream Dip, 680g" — dip, not sour cream, recurring misfiling
+                '1050204285',  # FreshCo "Angus Beef Top Sirloin Roast, Cut From Canada AA Beef or Higher" — raw_unit stored as plain 'kg' giving $13.49/kg, far below Metro's $19.82-24.23/kg (properly /lb-converted); matches known wrong-unit pattern
+                '1050136127',  # No Frills "Extra Lean Ground Beef, 19.82 kg" — the "19.82" is the item's own embedded true $/kg (confirms $8.99 is actually /lb, not /kg as stored); same wrong-unit bug, just missed the embedded-price regex since there's no "/" before "kg"
+                '1050242363',  # Metro "Veal Shoulder Chops" classified as veal_cutlets — shoulder chops are a different, cheaper cut than cutlets
+                '1050136248',  # No Frills "Heluva Good! Sour Cream Dip, 680g" — same recurring dip misfiling, new item_id
+                '1050152565',  # RCSS "Striploin Grilling Steak" (N2L3G1, Waterloo) — Craig confirmed not available in Toronto/GTA; the M5V3L9 entry at $23.99/kg is the real broadly-available price
+                '1051155881',  # Zehrs "Striploin Grilling Steak" (N2L3G1, Waterloo) — same regional-only flyer/price as the RCSS N2L3G1 entry above, same exclusion reason
                 '1046922534',  # YIG "High Liner Fish Sticks, Fillets, Burgers, Fish & Chips OR Shrimp" — frozen breaded seafood product, not real shrimp
                 '1048127013',  # Loblaws "Romaine Hearts, 3's OR Farmers Market Oranges, 3 LB" — priced using the orange bag's weight, not the romaine's; same recurring combo pattern as Sep 24 and Oct 1
                 '1048263106',  # Food Basics "Fresh Skinless Chicken Breast Family Pack" — Craig confirmed this is actually bone-in; "skinless" isn't the same as "boneless", misclassified into chicken_breast (boneless)
