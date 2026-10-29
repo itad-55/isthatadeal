@@ -62,7 +62,7 @@
       "avg": 17.59,
       "lo": 4.99,
       "hi": 30.84,
-      "observations": 687,
+      "observations": 689,
       "source": "flipp_historical"
     },
     "beef_inside_round": {
@@ -102,7 +102,7 @@
       "avg": 2.07,
       "lo": 0.66,
       "hi": 5.87,
-      "observations": 231,
+      "observations": 232,
       "source": "flipp_historical"
     },
     "chicken_breast": {
@@ -206,7 +206,7 @@
       "avg": 7.67,
       "lo": 1.99,
       "hi": 37.46,
-      "observations": 593,
+      "observations": 594,
       "source": "flipp_historical"
     },
     "pork_back_ribs": {
@@ -267,10 +267,10 @@
     },
     "salmon_fillet": {
       "name": "Salmon fillets",
-      "avg": 26.38,
+      "avg": 26.39,
       "lo": 8.53,
       "hi": 48.48,
-      "observations": 831,
+      "observations": 832,
       "source": "flipp_historical"
     },
     "salmon_whole": {
@@ -603,10 +603,10 @@
     },
     "spinach": {
       "name": "Spinach",
-      "avg": 15.39,
+      "avg": 15.61,
       "lo": 3.74,
       "hi": 35.14,
-      "observations": 140,
+      "observations": 142,
       "source": "flipp_historical"
     },
     "blueberries": {
@@ -619,18 +619,18 @@
     },
     "bacon_500g": {
       "name": "Bacon (500g)",
-      "avg": 17.82,
+      "avg": 17.8,
       "lo": 7.95,
       "hi": 61.54,
-      "observations": 278,
+      "observations": 279,
       "source": "flipp_historical"
     },
     "chicken_breast_bonein": {
       "name": "Chicken breast (bone-in)",
-      "avg": 14.68,
+      "avg": 14.7,
       "lo": 3.77,
       "hi": 89.9,
-      "observations": 532,
+      "observations": 533,
       "source": "flipp_historical"
     },
     "salad_mix": {
