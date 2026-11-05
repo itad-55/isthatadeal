@@ -424,6 +424,12 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '1045416255',  # Fortinos "Fortinos Boneless Turkey Breast, 800g" — same item as 1045327701, Craig flagged as not comparable
                 '1045416382',  # Fortinos "PC Easy-Carve Turkey Breast Roast, Butterball or Saha" — same recurring branded roast product
                 '1045368325',  # No Frills "Khaas Halal or Parmalat Dahi Yogurt, 750g" — Craig couldn't find the Parmalat side in his flyer
+                '1052406711',  # RCSS "Sirloin Tip Roast, Steak or Stew Beef" — raw_unit stored as plain 'kg' giving $7.99/kg, roughly half Metro's $17.61/kg for a comparable stewing-beef cut from the same week; matches known wrong-unit pattern
+                '1052406627',  # RCSS "Fresh Atlantic Salmon Fillets" — raw_unit stored as plain 'kg' giving $9.98/kg; Food Basics has the identical $9.98 price correctly /lb-converted to $22.00/kg same week, confirming the unit error
+                '1052406725',  # RCSS "Pork Tenderloin, 2 Pack" — raw_unit stored as plain 'kg' giving $2.99/kg, implausibly low for tenderloin; same flyer (8214702) and same wrong-unit bug as the two items above
+                '1051518267',  # Fortinos "Fresh Atlantic Salmon Fillet" — raw_unit stored as plain 'kg' giving $14.99/kg; Craig confirmed the flyer price is $14.99/lb (≈$33.05/kg, matching Loblaws' identical $14.99/lb entry same week)
+                '1051592306',  # Walmart "Lao Gan Ma chili sauce with black beans, 280g" — keyword contamination on "black beans", not canned beans; Craig confirmed it's a chili crisp/sauce
+                '1052030268',  # Metro "Wild Wonders or Sweet Cherry Tomatoes, Mini Cucumbers or Red Onions" — keyword contamination on "cherry", Craig confirmed it's cherry tomatoes not cherries
             }
             if row.get('item_id', '') in SCORER_ITEM_BLACKLIST:
                 continue
@@ -473,6 +479,7 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 'beef_sirloin': {'sirloin tip', 'tip roast', 'tip steak', 'pork', 'porc'},
                 'veal_cutlets': {'trio', 'ground beef', 'ground pork', 'ground veal', 'lean ground', 'veal shank', 'veal loin', 'veal rib'},
                 'chicken_breast': {'split', 'halves'},  # split/half breasts are bone-in, not boneless
+                'chicken_wings': {'buffalo', 'cajun', 'no name'},  # marinated/breaded/bagged convenience products, not plain fresh wings — matches retail_baselines.json's own stated scope ("Excludes frozen bags and pre-marinated/breaded products"); "No Name ... 1.8 KG" also has a separate bug where the bag total price is stored directly as the per-kg price
             }
             item_lower = row.get('item_name', '').lower()
             if any(phrase in item_lower for phrase in SCORER_CUT_REJECTS.get(key, set())):

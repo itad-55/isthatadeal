@@ -34,9 +34,9 @@
     },
     "chicken_wings": {
       "name": "Chicken wings (fresh)",
-      "prices_kg": {"metro": 17.61, "loblaws": 19.82, "walmart": 13.00},
-      "median_kg": 17.61,
-      "notes": "Fresh whole wings only. Excludes frozen bags and pre-marinated/breaded products."
+      "prices_kg": {"food_basics": 11.00, "no_frills": 14.33, "metro": 17.61},
+      "median_kg": 14.33,
+      "notes": "Fresh whole wings only. Excludes frozen bags and pre-marinated/breaded products. Craig verified in-store 2026-11-05: Food Basics $4.99/lb, No Frills $6.50/lb, Metro $7.99/lb, all regular (non-sale) price. Replaces the 2026-03-23 figures (Metro/Loblaws/Walmart), which had gone stale."
     },
     "beef_brisket": {
       "name": "Beef brisket",
