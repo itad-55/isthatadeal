@@ -203,10 +203,10 @@
     },
     "peppers": {
       "name": "Bell peppers",
-      "avg": 7.7,
+      "avg": 7.69,
       "lo": 1.99,
       "hi": 37.46,
-      "observations": 615,
+      "observations": 616,
       "source": "flipp_historical"
     },
     "pork_back_ribs": {
@@ -243,10 +243,10 @@
     },
     "pork_shoulder": {
       "name": "Pork shoulder roast",
-      "avg": 8.2,
+      "avg": 8.19,
       "lo": 1.97,
       "hi": 15.41,
-      "observations": 307,
+      "observations": 308,
       "source": "flipp_historical"
     },
     "pork_side_ribs": {
@@ -310,7 +310,7 @@
       "avg": 5.22,
       "lo": 1.29,
       "hi": 33.05,
-      "observations": 984,
+      "observations": 985,
       "source": "flipp_historical"
     },
     "tuna_steak": {
@@ -363,10 +363,10 @@
     },
     "mango": {
       "name": "Mangoes",
-      "avg": 11.42,
+      "avg": 11.4,
       "lo": 1.9,
       "hi": 106.67,
-      "observations": 354,
+      "observations": 355,
       "source": "flipp_historical"
     },
     "onions_bag": {
@@ -411,10 +411,10 @@
     },
     "pork_chop_bonein": {
       "name": "Pork chops (bone-in)",
-      "avg": 8.36,
+      "avg": 8.35,
       "lo": 2.49,
       "hi": 28.64,
-      "observations": 743,
+      "observations": 744,
       "source": "flipp_historical"
     },
     "strawberries": {
