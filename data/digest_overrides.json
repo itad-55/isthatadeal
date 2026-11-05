@@ -2,8 +2,6 @@
   "force_include": [],
   "force_exclude": [],
   "force_positions": {},
-  "force_names": {
-    "chicken_breast": "Chicken breast (boneless, skinless)"
-  },
+  "force_names": {},
   "origin_tags": {}
 }
