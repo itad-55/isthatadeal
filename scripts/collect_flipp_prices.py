@@ -66,7 +66,7 @@ CUTS = [
     # ── Chicken ───────────────────────────────────────────────────────────────
     ('chicken_whole',          'Whole chicken',                ['whole chicken'],                               'kg'),
     ('chicken_breast',         'Chicken breast (boneless, skinless)', ['chicken breast boneless', 'chicken breasts'],  'kg'),
-    ('chicken_breast_bonein',  'Chicken breast (bone-in)',     ['chicken breast bone in', 'chicken breast split', 'split chicken breast', 'chicken breasts'], 'kg'),
+    ('chicken_breast_bonein',  'Chicken breast (bone-in)',     ['chicken breast bone in', 'chicken breast split', 'split chicken breast'], 'kg'),
     ('chicken_thigh_bonein',   'Chicken thighs (bone-in)',     ['chicken thighs bone in', 'chicken thighs'],   'kg'),
     ('chicken_thigh_boneless', 'Chicken thighs (boneless)',    ['chicken thighs boneless'],                     'kg'),
     ('chicken_drumsticks',     'Chicken drumsticks',           ['chicken drumsticks', 'chicken legs'],          'kg'),

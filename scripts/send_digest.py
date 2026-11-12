@@ -430,6 +430,14 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 '1051518267',  # Fortinos "Fresh Atlantic Salmon Fillet" — raw_unit stored as plain 'kg' giving $14.99/kg; Craig confirmed the flyer price is $14.99/lb (≈$33.05/kg, matching Loblaws' identical $14.99/lb entry same week)
                 '1051592306',  # Walmart "Lao Gan Ma chili sauce with black beans, 280g" — keyword contamination on "black beans", not canned beans; Craig confirmed it's a chili crisp/sauce
                 '1052030268',  # Metro "Wild Wonders or Sweet Cherry Tomatoes, Mini Cucumbers or Red Onions" — keyword contamination on "cherry", Craig confirmed it's cherry tomatoes not cherries
+                '1052956655',  # FreshCo "Angus Beef Boneless Top Sirloin Steaks" — raw_unit stored as plain 'kg' giving $13.99/kg; Sobeys has the same cut at $33.05/kg ($14.99/lb) same week, confirming the unit error
+                '1052954721',  # Chalo FreshCo — same item, same wrong-unit bug, separate item_id
+                '1053056943',  # Metro "The Keg Prime Rib Beef Burg 908g-1.02kg OR Pork Back Rib 700g" — OR-combo mismatching two unrelated products (beef burgers vs. pork ribs) at one blended price
+                '1052956832',  # FreshCo "Fresh Bone-In Pork Loin Centre Chops" — raw_unit stored as plain 'kg' giving $4.49/kg; Craig confirmed the flyer price is $4.49/lb. Same flyer (8222380) as the top sirloin wrong-unit bug above — a flyer-wide unit error
+                '1052954827',  # Chalo FreshCo — same item, same flyer-wide wrong-unit bug, separate item_id
+                '1052892360',  # RCSS "Halal Chicken Breast" filed as chicken_breast_bonein — identical name/price/item to RCSS's own boneless listing (1052892605); no bone-in signal in the text, Craig confirmed no bone-in product exists at RCSS here
+                '1052884416',  # Loblaws "Chicken Breasts" filed as chicken_breast_bonein — same literal item_id as its own boneless listing; generic unqualified name, not actually bone-in
+                '1052871595',  # Zehrs "Chicken Breasts" — same duplication issue as the Loblaws item above
             }
             if row.get('item_id', '') in SCORER_ITEM_BLACKLIST:
                 continue
@@ -480,6 +488,8 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
                 'veal_cutlets': {'trio', 'ground beef', 'ground pork', 'ground veal', 'lean ground', 'veal shank', 'veal loin', 'veal rib'},
                 'chicken_breast': {'split', 'halves'},  # split/half breasts are bone-in, not boneless
                 'chicken_wings': {'buffalo', 'cajun', 'no name'},  # marinated/breaded/bagged convenience products, not plain fresh wings — matches retail_baselines.json's own stated scope ("Excludes frozen bags and pre-marinated/breaded products"); "No Name ... 1.8 KG" also has a separate bug where the bag total price is stored directly as the per-kg price
+                'cantaloupe': {'oranges'},  # "Cantaloupe or Farmer's Market Oranges, 3 LB Bag" — bag-format promo is really the oranges deal; cantaloupe isn't sold in 3lb bags, same priced-by-the-other-item's-weight pattern as the Sep/Oct romaine-vs-oranges combo
+                'canned_beans': {'lao gan ma', 'chili sauce'},  # recurring misfiling (3rd occurrence) — chili sauce/condiment, not canned beans
             }
             item_lower = row.get('item_name', '').lower()
             if any(phrase in item_lower for phrase in SCORER_CUT_REJECTS.get(key, set())):
@@ -642,6 +652,13 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
     best = {}
     all_by_cut = {}   # cut_key → list of all valid deals (for price-match info)
     seen_item_ids = set()
+    # When two stores tie on price, prefer the discount banner — a shopper visiting
+    # that store for this one item also pays less on the rest of their basket, so
+    # it's the more useful recommendation even at an identical unit price.
+    STORE_TIER = {
+        'Real Canadian Superstore': 0, 'No Frills': 0, 'FreshCo': 0, 'Chalo FreshCo': 0,
+        'Food Basics': 0, 'Walmart': 0, 'Giant Tiger': 0, 'Independent City Market': 0,
+    }
     for d in sorted(deals, key=lambda x: x['pct']):  # best deal wins on item_id collision
         # Skip expired items before building the best-per-cut dict
         vt = _eastern_date(d.get('valid_to') or '')
@@ -656,6 +673,8 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
         # Track all valid deals per cut for price-match display
         all_by_cut.setdefault(d['key'], []).append(d)
         if d['key'] not in best or d['pct'] < best[d['key']]['pct']:
+            best[d['key']] = d
+        elif d['pct'] == best[d['key']]['pct'] and STORE_TIER.get(d['store'], 1) < STORE_TIER.get(best[d['key']]['store'], 1):
             best[d['key']] = d
 
     print(f"  [filter] today_str={today_str}")
