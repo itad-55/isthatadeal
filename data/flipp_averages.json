@@ -110,7 +110,7 @@
       "avg": 15.02,
       "lo": 3.77,
       "hi": 89.9,
-      "observations": 964,
+      "observations": 966,
       "source": "flipp_historical"
     },
     "chicken_drumsticks": {
@@ -515,10 +515,10 @@
     },
     "mushrooms": {
       "name": "Mushrooms",
-      "avg": 10.85,
+      "avg": 10.84,
       "lo": 1.83,
       "hi": 78.09,
-      "observations": 441,
+      "observations": 442,
       "source": "flipp_historical"
     },
     "pasta_500g": {
