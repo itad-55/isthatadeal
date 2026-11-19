@@ -75,10 +75,10 @@
     },
     "beef_sirloin": {
       "name": "Beef top sirloin",
-      "avg": 33.66,
+      "avg": 33.61,
       "lo": 7.98,
       "hi": 46.3,
-      "observations": 433,
+      "observations": 434,
       "source": "flipp_historical"
     },
     "beef_stewing": {
@@ -134,7 +134,7 @@
       "avg": 13.38,
       "lo": 4.39,
       "hi": 30.84,
-      "observations": 660,
+      "observations": 661,
       "source": "flipp_historical"
     },
     "chicken_thigh_boneless": {
@@ -310,7 +310,7 @@
       "avg": 5.3,
       "lo": 1.29,
       "hi": 33.05,
-      "observations": 1035,
+      "observations": 1036,
       "source": "flipp_historical"
     },
     "tuna_steak": {
@@ -459,10 +459,10 @@
     },
     "veal_cutlets": {
       "name": "Veal cutlets",
-      "avg": 29.17,
+      "avg": 29.12,
       "lo": 4.88,
       "hi": 66.12,
-      "observations": 315,
+      "observations": 319,
       "source": "flipp_historical"
     },
     "bagels": {
@@ -619,10 +619,10 @@
     },
     "bacon_500g": {
       "name": "Bacon",
-      "avg": 17.85,
+      "avg": 17.82,
       "lo": 7.39,
       "hi": 61.54,
-      "observations": 305,
+      "observations": 306,
       "source": "flipp_historical"
     },
     "chicken_breast_bonein": {
