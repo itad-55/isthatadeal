@@ -291,7 +291,7 @@ def score_deals(statcan, flipp, baselines=None, limit=10):
         "Chicken thigh, per kilogram": "Chicken thighs (bone-in)",
         "Chicken drumsticks, per kilogram": "Chicken drumsticks",
         "Salmon, per kilogram": "Salmon",
-        "Bacon, 500 grams": "Bacon (500g)",
+        "Bacon, 500 grams": "Bacon",
         "Butter, 454 grams": "Butter (454g)",
         "Block cheese, 500 grams": "Block cheese (500g)",
         "Eggs, 1 dozen": "Eggs (dozen)",

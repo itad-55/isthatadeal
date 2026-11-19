@@ -56,6 +56,12 @@
       "median_kg": 10.94,
       "notes": "No Name 342g 6-pack. Regular price ~$3.49 at No Frills/Walmart, ~$3.99 at Metro/Loblaws. Flipp avg ($6.32/kg) is unreliable — contaminated by bread-OR-muffin OR items filed under this cut."
     },
+    "bacon_500g": {
+      "name": "Bacon",
+      "prices_kg": {"walmart": 10.59},
+      "median_kg": 10.59,
+      "notes": "Great Value bacon, 375g pack at $3.97, regular (non-sale) price. Craig verified in-store 2026-11-19."
+    },
     "pork_back_ribs": {
       "name": "Pork back ribs",
       "prices_kg": {

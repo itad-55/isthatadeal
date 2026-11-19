@@ -165,7 +165,7 @@ CUTS = [
     ('frozen_peas',            'Frozen peas (750g)',           ['frozen peas 750'],                             'pkg'),
     ('frozen_fries',           'Frozen french fries (750g)',   ['frozen french fries 750', 'frozen fries 750'], 'pkg'),
     # ── Bacon & sausage ───────────────────────────────────────────────────────
-    ('bacon_500g',             'Bacon (500g)',                 ['bacon 500g', 'bacon 375g', 'bacon 500'],       'pkg'),
+    ('bacon_500g',             'Bacon',                        ['bacon 500g', 'bacon 375g', 'bacon 500'],       'pkg'),
     ('sausage_500g',           'Pork sausage (500g)',          ['pork sausage 500', 'italian sausage 500', 'breakfast sausage 500'], 'pkg'),
     # ── Beverages ─────────────────────────────────────────────────────────────
     ('coffee_ground_300g',     'Ground coffee (300g)',         ['ground coffee 300', 'ground coffee 325', 'ground coffee 326'], 'pkg'),
@@ -217,6 +217,15 @@ CUT_REJECT_KEYWORDS = {
     'tortillas': {'chip', 'chips', 'nacho'},
 }
 
+# Maps cut_key -> set of keywords where AT LEAST ONE must appear in the item
+# name for the match to be trusted. Used when a cut's generic/unqualified name
+# ("CHICKEN BREAST") is unreliable — Craig confirmed a No Frills listing with no
+# bone/skin qualifier at all turned out to actually be bone-in, skin-on, not
+# boneless/skinless. Rather than guess, we drop ambiguous listings entirely.
+CUT_REQUIRE_KEYWORDS = {
+    'chicken_breast': {'boneless', 'skinless', 'désossé', 'sans peau'},
+}
+
 # Maps cut_key -> set of PROCESSED_KEYWORDS to ignore for that cut.
 # Use when a cut's ingredient would otherwise be flagged by a keyword
 # (e.g. bacon is cured & smoked by nature; frozen items contain 'frozen').
@@ -254,7 +263,7 @@ def is_grocery(item):
     return any(s in merchant for s in GROCERY_STORES)
 
 # ── Price extraction ───────────────────────────────────────────────────────────
-def extract_price_per_kg(item, unit_hint):
+def extract_price_per_kg(item, unit_hint, cut_key=None):
     """
     Returns (price_per_kg, raw_price, raw_unit) or (None, None, None).
     Handles $/kg, $/100g, $/lb price formats found in Flipp data.
@@ -284,9 +293,23 @@ def extract_price_per_kg(item, unit_hint):
     # Must check BEFORE the generic /lb detection, because "10 LB BAG" contains
     # \blb\b but the $X is the total bag price, not a per-lb rate.
     if unit_hint == 'pkg':
-        pkg_kg_m = re.search(r'(\d+(?:\.\d+)?)\s*kg\b', all_text)
-        pkg_g_m  = re.search(r'(\d+)\s*g\b', all_text)   # e.g. 300g, 375g, 500g
-        pkg_lb_m = re.search(r'(\d+(?:\.\d+)?)\s*(?:lb|lbs)\b', all_text)
+        # ── OR-combo items (e.g. "Lean Ground Pork 450 g or Carver's Choice Bacon
+        # 375 g") list two unrelated products, each with its own weight. Taking the
+        # first weight in the text grabs whichever product happens to be named
+        # first, not the one we're actually tracking. If this is an OR-combo and we
+        # know our cut's keyword, narrow the search to the text segment naming it.
+        search_text = all_text
+        if cut_key and re.search(r'\bor\b', all_text):
+            keyword = cut_key.split('_')[0]
+            # split on " or " and keep only the segment(s) mentioning our keyword
+            segments = re.split(r'\bor\b', all_text)
+            matching = [s for s in segments if keyword in s]
+            if matching:
+                search_text = ' '.join(matching)
+
+        pkg_kg_m = re.search(r'(\d+(?:\.\d+)?)\s*kg\b', search_text)
+        pkg_g_m  = re.search(r'(\d+)\s*g\b', search_text)   # e.g. 300g, 375g, 500g
+        pkg_lb_m = re.search(r'(\d+(?:\.\d+)?)\s*(?:lb|lbs)\b', search_text)
         if pkg_kg_m:
             pkg_kg = float(pkg_kg_m.group(1))
             if pkg_kg > 0:
@@ -306,11 +329,14 @@ def extract_price_per_kg(item, unit_hint):
     if re.search(r'/\s*100\s*g', all_text):
         return round(price * 10, 2), price, '100g'
 
-    # ── Catch mis-labelled units: item name shows "$X.XX/kg" but listed price
-    # is clearly per-lb.  E.g. FreshCo salmon: price=9.99, name contains "22.02/kg".
+    # ── Catch mis-labelled units: item name OR post/pre_price_text shows "$X.XX/kg"
+    # but listed price is clearly per-lb.  E.g. FreshCo salmon post_price_text
+    # "/lb 28.64 /kg", price=12.99 — the /kg figure is the real $/kg, and the /lb
+    # prefix confirms the listed price is per-lb. Must check all_text (not just
+    # name/desc) since Flipp commonly puts this in post_price_text/pre_price_text.
     # If the text says $Y/kg and Y is between 1.8x and 2.5x of the listed price,
     # the listed price is almost certainly per-lb.
-    embedded_kg = re.search(r'(\d+(?:\.\d+)?)\s*/\s*kg', text)
+    embedded_kg = re.search(r'(\d+(?:\.\d+)?)\s*/\s*kg', all_text)
     if embedded_kg:
         embedded_val = float(embedded_kg.group(1))
         ratio = embedded_val / price if price > 0 else 0
@@ -412,8 +438,18 @@ def main():
                         continue
                     seen_items.add(dedup_key)
 
-                    price_kg, raw_price, raw_unit = extract_price_per_kg(item, unit_hint)
+                    price_kg, raw_price, raw_unit = extract_price_per_kg(item, unit_hint, cut_key=key)
                     if price_kg is None:
+                        continue
+
+                    # Flipp's search is fuzzy and sometimes returns items with no
+                    # real relation to the query (e.g. searching "peaches" can
+                    # return a walnuts/dried-apricots OR-combo from the same
+                    # category). Require that at least one distinctive word from
+                    # the query that actually found this item appears in its name.
+                    query_words = [w for w in re.findall(r'[a-z]+', query.lower()) if len(w) >= 4]
+                    if query_words and not any(w in item_name.lower() for w in query_words):
+                        print(f"  ✗ Skipping irrelevant match for '{query}': {item_name[:60]}")
                         continue
 
                     # Skip pre-cooked, frozen, and processed branded items
@@ -427,6 +463,11 @@ def main():
                     name_lower = item_name.lower()
                     if any(rw in name_lower for rw in reject_words):
                         print(f"  ✗ Skipping wrong-species item for {key}: {item_name[:60]}")
+                        continue
+
+                    require_words = CUT_REQUIRE_KEYWORDS.get(key, set())
+                    if require_words and not any(rq in name_lower for rq in require_words):
+                        print(f"  ✗ Skipping unqualified/ambiguous item for {key}: {item_name[:60]}")
                         continue
 
                     raw_price_str = str(raw_price)
