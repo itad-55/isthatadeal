@@ -367,6 +367,23 @@ def extract_price_per_kg(item, unit_hint, cut_key=None):
         if any(prod in name for prod in loose_produce) and not re.search(r'swirls|noodles|spirals|pack|pkg|tray|bag|container|pre-cut|precut|sliced|sticks|snack|kit|mix|medley|steam|frozen|prepared|zoodles|spiralized', all_text):
             return round(price * 2.20462, 2), price, 'defaulted_lb'
 
+        # Cut-specific no-unit-text fallbacks: a few recurring items are posted
+        # with NO unit marker at all (not even "kg"/"lb") in some weeks' Flipp
+        # data, though the identical item/price has appeared with an explicit
+        # "/lb" in other weeks. max_lb_price is a sanity ceiling — above it we'd
+        # rather drop the row than silently guess a unit.
+        NO_UNIT_LB_FALLBACK = {
+            # No Frills/Loblaws-banner generic "WHOLE CHICKEN" w/ no weight
+            # qualifier recurs at $1.99-$2.99/lb (confirmed /lb in prior weeks'
+            # Flipp data); $1.99-2.99/kg would be far below any observed price.
+            'chicken_whole': 6.0,
+        }
+        max_lb_price = NO_UNIT_LB_FALLBACK.get(cut_key)
+        if max_lb_price and 'whole chicken' in name and 'up to' not in all_text and price <= max_lb_price:
+            print(f"  ⚠ No unit text at all for {store}: {item.get('name')!r} (${price}) — "
+                  f"falling back to /lb based on historical precedent for this item")
+            return round(price * 2.20462, 2), price, 'defaulted_lb_no_unit_text'
+
     # No fallback to $/kg
     return None, None, None
 
@@ -445,9 +462,19 @@ def main():
                     # Flipp's search is fuzzy and sometimes returns items with no
                     # real relation to the query (e.g. searching "peaches" can
                     # return a walnuts/dried-apricots OR-combo from the same
-                    # category). Require that at least one distinctive word from
+                    # category). Require that at least one DISTINCTIVE word from
                     # the query that actually found this item appears in its name.
-                    query_words = [w for w in re.findall(r'[a-z]+', query.lower()) if len(w) >= 4]
+                    # Generic words like "roast"/"steak"/"chop" are excluded from
+                    # this check — they're common to many unrelated cuts (e.g. a
+                    # "chuck roast" search returning an inside-round/ground-beef
+                    # OR-combo passed the old check purely on the word "roast").
+                    GENERIC_CUT_WORDS = {
+                        'roast', 'roasts', 'steak', 'steaks', 'chop', 'chops',
+                        'fresh', 'cut', 'cuts', 'grade', 'family', 'size', 'from',
+                        'your', 'meat', 'expert', 'canada',
+                    }
+                    query_words = [w for w in re.findall(r'[a-z]+', query.lower())
+                                   if len(w) >= 4 and w not in GENERIC_CUT_WORDS]
                     if query_words and not any(w in item_name.lower() for w in query_words):
                         print(f"  ✗ Skipping irrelevant match for '{query}': {item_name[:60]}")
                         continue
