@@ -363,10 +363,10 @@
     },
     "mango": {
       "name": "Mangoes",
-      "avg": 10.89,
+      "avg": 10.87,
       "lo": 1.9,
       "hi": 106.67,
-      "observations": 387,
+      "observations": 388,
       "source": "flipp_historical"
     },
     "onions_bag": {
@@ -411,10 +411,10 @@
     },
     "pork_chop_bonein": {
       "name": "Pork chops (bone-in)",
-      "avg": 8.29,
+      "avg": 8.3,
       "lo": 2.49,
       "hi": 28.64,
-      "observations": 836,
+      "observations": 838,
       "source": "flipp_historical"
     },
     "strawberries": {
